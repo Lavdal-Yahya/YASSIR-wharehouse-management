@@ -1,0 +1,55 @@
+{
+  "app": {
+    "name": "Gestion Entrepôt"
+  },
+  "nav": {
+    "dashboard": "Tableau de bord",
+    "warehouse": "Entrepôt",
+    "shop": "Boutique",
+    "settings": "Réglages",
+    "logout": "Se déconnecter"
+  },
+  "login": {
+    "title": "Connexion",
+    "subtitle": "Accédez à votre espace",
+    "username": "Nom d'utilisateur ou téléphone",
+    "password": "Mot de passe",
+    "submit": "Se connecter",
+    "loading": "Connexion…"
+  },
+  "language": {
+    "label": "Langue",
+    "fr": "Français",
+    "ar": "العربية"
+  },
+  "role": {
+    "OWNER": "Propriétaire",
+    "WAREHOUSE": "Entrepôt",
+    "SHOP": "Boutique"
+  },
+  "loading": "Chargement…",
+  "errors": {
+    "INTERNAL": "Une erreur est survenue. Réessayez.",
+    "BAD_REQUEST": "Requête invalide.",
+    "UNAUTHORIZED": "Session expirée. Reconnectez-vous.",
+    "FORBIDDEN": "Accès refusé.",
+    "NOT_FOUND": "Introuvable.",
+    "TOO_MANY_REQUESTS": "Trop de tentatives. Attendez une minute.",
+    "AUTH_INVALID_CREDENTIALS": "Nom d'utilisateur ou mot de passe incorrect.",
+    "AUTH_USER_DISABLED": "Ce compte est désactivé."
+  },
+  "notFound": {
+    "title": "Page introuvable",
+    "back": "Retour à l'accueil"
+  },
+  "forbidden": {
+    "title": "Accès refusé",
+    "message": "Vous n'avez pas la permission d'accéder à cette page."
+  },
+  "placeholder": {
+    "dashboard": "Le tableau de bord sera disponible en phase 7.",
+    "warehouse": "L'entrepôt sera disponible en phase 3.",
+    "shop": "La boutique sera disponible en phase 5.",
+    "settings": "Les réglages seront disponibles en phase 2."
+  }
+}

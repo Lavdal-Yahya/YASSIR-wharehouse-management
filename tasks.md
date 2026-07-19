@@ -31,11 +31,11 @@ Goal: running skeleton — login works, role-appropriate empty shell, fr/ar with
 - [x] P1-12 Global exception filter: clean user-facing errors, no stack traces; error logging
 
 ### Frontend shell
-- [ ] P1-13 Vite + Tailwind + React Router setup; use logical properties (`ms-`/`me-`) only
-- [ ] P1-14 i18next setup: fr + ar resource files, language switcher, `dir` flip on `<html>`
-- [ ] P1-15 Login page wired to API; auth context; route guards by role
-- [ ] P1-16 App layout: bottom nav (mobile) / sidebar (desktop), role-filtered menu items
-- [ ] P1-17 TanStack Query setup + API client (fetch wrapper with credentials, error normalization)
+- [x] P1-13 Vite + Tailwind + React Router setup; use logical properties (`ms-`/`me-`) only
+- [x] P1-14 i18next setup: fr + ar resource files, language switcher, `dir` flip on `<html>`
+- [x] P1-15 Login page wired to API; auth context; route guards by role
+- [x] P1-16 App layout: bottom nav (mobile) / sidebar (desktop), role-filtered menu items
+- [x] P1-17 TanStack Query setup + API client (fetch wrapper with credentials, error normalization)
 
 ### PWA
 - [ ] P1-18 `vite-plugin-pwa`: manifest, icons, name, theme/background color, standalone mode
