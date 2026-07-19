@@ -11,6 +11,8 @@ import ShopPage from '@/pages/ShopPage';
 import SettingsPage from '@/pages/SettingsPage';
 import NotFoundPage from '@/pages/NotFoundPage';
 import CategoriesPage from '@/features/categories/pages/CategoriesPage';
+import ProductsListPage from '@/features/products/pages/ProductsListPage';
+import ProductFormPage from '@/features/products/pages/ProductFormPage';
 
 export function AppRoutes() {
   return (
@@ -29,6 +31,9 @@ export function AppRoutes() {
 
           <Route element={<RequireRole allowed={[Role.OWNER, Role.WAREHOUSE]} />}>
             <Route path="warehouse" element={<WarehousePage />} />
+            <Route path="products" element={<ProductsListPage />} />
+            <Route path="products/new" element={<ProductFormPage />} />
+            <Route path="products/:id" element={<ProductFormPage />} />
           </Route>
 
           <Route element={<RequireRole allowed={[Role.OWNER, Role.SHOP]} />}>

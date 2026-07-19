@@ -7,6 +7,7 @@
     "warehouse": "المستودع",
     "shop": "المحل",
     "categories": "الفئات",
+    "products": "المنتجات",
     "settings": "الإعدادات",
     "logout": "تسجيل الخروج"
   },
@@ -44,7 +45,8 @@
     "cancel": "إلغاء",
     "confirm": "تأكيد",
     "delete": "حذف",
-    "optional": "اختياري"
+    "optional": "اختياري",
+    "chooseImage": "اختر صورة"
   },
   "loading": "جارٍ التحميل…",
   "errors": {
@@ -57,7 +59,14 @@
     "AUTH_INVALID_CREDENTIALS": "اسم المستخدم أو كلمة المرور غير صحيحة.",
     "AUTH_USER_DISABLED": "هذا الحساب معطّل.",
     "CATEGORY_NOT_FOUND": "الفئة غير موجودة.",
-    "CATEGORY_NAME_TAKEN": "اسم الفئة مستخدم من قبل."
+    "CATEGORY_NAME_TAKEN": "اسم الفئة مستخدم من قبل.",
+    "PRODUCT_NOT_FOUND": "المنتج غير موجود.",
+    "PRODUCT_NAME_TAKEN": "اسم المنتج مستخدم من قبل.",
+    "PRODUCT_SKU_TAKEN": "رمز SKU مستخدم من قبل.",
+    "PRODUCT_BARCODE_TAKEN": "الباركود مستخدم من قبل.",
+    "PRODUCT_HAS_HISTORY": "لا يمكن الحذف: للمنتج سجلات. أرشفه بدلاً من ذلك.",
+    "PRODUCT_IMAGE_INVALID": "صورة غير صالحة (JPEG, PNG, WEBP فقط).",
+    "PRODUCT_IMAGE_TOO_LARGE": "الصورة كبيرة جداً (الحد الأقصى 2 ميغابايت)."
   },
   "notFound": {
     "title": "الصفحة غير موجودة",
@@ -72,6 +81,41 @@
     "warehouse": "المستودع سيكون متاحاً في المرحلة 3.",
     "shop": "المحل سيكون متاحاً في المرحلة 5.",
     "settings": "الإعدادات ستكون متاحة في المرحلة 2."
+  },
+  "products": {
+    "title": "المنتجات",
+    "subtitle": "أنشئ وأدر الكتالوج.",
+    "new": "منتج جديد",
+    "searchPlaceholder": "الاسم، SKU، الباركود…",
+    "filter": {
+      "category": "تصفية حسب الفئة",
+      "allCategories": "كل الفئات"
+    },
+    "form": {
+      "newTitle": "منتج جديد",
+      "editTitle": "تعديل المنتج",
+      "name": "الاسم",
+      "category": "الفئة",
+      "chooseCategory": "— اختر فئة —",
+      "sku": "SKU",
+      "barcode": "الباركود",
+      "description": "الوصف",
+      "defaultPurchaseCost": "سعر الشراء الافتراضي",
+      "defaultSalePrice": "سعر البيع الافتراضي",
+      "lowStockThreshold": "حد الإنذار للمخزون",
+      "image": "صورة المنتج"
+    },
+    "archiveConfirm": {
+      "title": "أرشفة المنتج؟",
+      "body": "سيتم إخفاء « {{name}} » من القوائم النشطة."
+    },
+    "deleteConfirm": {
+      "title": "حذف نهائي؟",
+      "body": "سيتم حذف « {{name}} » إذا لم يوجد له سجل. وإلا فأرشفه."
+    },
+    "dangerZone": {
+      "title": "الإجراءات"
+    }
   },
   "categories": {
     "title": "الفئات",

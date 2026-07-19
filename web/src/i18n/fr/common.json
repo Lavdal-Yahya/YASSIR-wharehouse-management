@@ -7,6 +7,7 @@
     "warehouse": "Entrepôt",
     "shop": "Boutique",
     "categories": "Catégories",
+    "products": "Produits",
     "settings": "Réglages",
     "logout": "Se déconnecter"
   },
@@ -44,7 +45,8 @@
     "cancel": "Annuler",
     "confirm": "Confirmer",
     "delete": "Supprimer",
-    "optional": "facultatif"
+    "optional": "facultatif",
+    "chooseImage": "Choisir une image"
   },
   "loading": "Chargement…",
   "errors": {
@@ -57,7 +59,14 @@
     "AUTH_INVALID_CREDENTIALS": "Nom d'utilisateur ou mot de passe incorrect.",
     "AUTH_USER_DISABLED": "Ce compte est désactivé.",
     "CATEGORY_NOT_FOUND": "Catégorie introuvable.",
-    "CATEGORY_NAME_TAKEN": "Ce nom de catégorie est déjà utilisé."
+    "CATEGORY_NAME_TAKEN": "Ce nom de catégorie est déjà utilisé.",
+    "PRODUCT_NOT_FOUND": "Produit introuvable.",
+    "PRODUCT_NAME_TAKEN": "Ce nom de produit est déjà utilisé.",
+    "PRODUCT_SKU_TAKEN": "Ce SKU est déjà utilisé.",
+    "PRODUCT_BARCODE_TAKEN": "Ce code-barres est déjà utilisé.",
+    "PRODUCT_HAS_HISTORY": "Suppression impossible : ce produit a un historique. Archivez-le à la place.",
+    "PRODUCT_IMAGE_INVALID": "Image invalide (formats acceptés : JPEG, PNG, WEBP).",
+    "PRODUCT_IMAGE_TOO_LARGE": "Image trop volumineuse (maximum 2 Mo)."
   },
   "notFound": {
     "title": "Page introuvable",
@@ -72,6 +81,41 @@
     "warehouse": "L'entrepôt sera disponible en phase 3.",
     "shop": "La boutique sera disponible en phase 5.",
     "settings": "Les réglages seront disponibles en phase 2."
+  },
+  "products": {
+    "title": "Produits",
+    "subtitle": "Créez et gérez le catalogue.",
+    "new": "Nouveau produit",
+    "searchPlaceholder": "Nom, SKU, code-barres…",
+    "filter": {
+      "category": "Filtrer par catégorie",
+      "allCategories": "Toutes les catégories"
+    },
+    "form": {
+      "newTitle": "Nouveau produit",
+      "editTitle": "Modifier le produit",
+      "name": "Nom",
+      "category": "Catégorie",
+      "chooseCategory": "— Choisir une catégorie —",
+      "sku": "SKU",
+      "barcode": "Code-barres",
+      "description": "Description",
+      "defaultPurchaseCost": "Coût d'achat par défaut",
+      "defaultSalePrice": "Prix de vente par défaut",
+      "lowStockThreshold": "Seuil de stock bas",
+      "image": "Image du produit"
+    },
+    "archiveConfirm": {
+      "title": "Archiver le produit ?",
+      "body": "« {{name}} » sera masqué des listes actives."
+    },
+    "deleteConfirm": {
+      "title": "Supprimer définitivement ?",
+      "body": "« {{name}} » sera supprimé si aucun historique n'existe. Sinon, archivez-le."
+    },
+    "dangerZone": {
+      "title": "Actions"
+    }
   },
   "categories": {
     "title": "Catégories",
