@@ -14,6 +14,7 @@ import CategoriesPage from '@/features/categories/pages/CategoriesPage';
 import ProductsListPage from '@/features/products/pages/ProductsListPage';
 import ProductFormPage from '@/features/products/pages/ProductFormPage';
 import ShopsPage from '@/features/shops/pages/ShopsPage';
+import UsersPage from '@/features/users/pages/UsersPage';
 
 export function AppRoutes() {
   return (
@@ -29,6 +30,7 @@ export function AppRoutes() {
             <Route path="settings" element={<SettingsPage />} />
             <Route path="categories" element={<CategoriesPage />} />
             <Route path="shops" element={<ShopsPage />} />
+            <Route path="users" element={<UsersPage />} />
           </Route>
 
           <Route element={<RequireRole allowed={[Role.OWNER, Role.WAREHOUSE]} />}>

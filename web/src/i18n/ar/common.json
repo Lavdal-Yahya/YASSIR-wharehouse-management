@@ -9,6 +9,7 @@
     "categories": "الفئات",
     "products": "المنتجات",
     "shops": "المحلات",
+    "users": "المستخدمون",
     "settings": "الإعدادات",
     "logout": "تسجيل الخروج"
   },
@@ -47,7 +48,8 @@
     "confirm": "تأكيد",
     "delete": "حذف",
     "optional": "اختياري",
-    "chooseImage": "اختر صورة"
+    "chooseImage": "اختر صورة",
+    "close": "إغلاق"
   },
   "loading": "جارٍ التحميل…",
   "errors": {
@@ -69,7 +71,13 @@
     "PRODUCT_IMAGE_INVALID": "صورة غير صالحة (JPEG, PNG, WEBP فقط).",
     "PRODUCT_IMAGE_TOO_LARGE": "الصورة كبيرة جداً (الحد الأقصى 2 ميغابايت).",
     "SHOP_NOT_FOUND": "المحل غير موجود.",
-    "SHOP_HAS_ACTIVE_USERS": "لا يزال لهذا المحل موظفون نشطون. عطّلهم أو أعد تعيينهم قبل الأرشفة."
+    "SHOP_HAS_ACTIVE_USERS": "لا يزال لهذا المحل موظفون نشطون. عطّلهم أو أعد تعيينهم قبل الأرشفة.",
+    "USER_NOT_FOUND": "المستخدم غير موجود.",
+    "USER_USERNAME_TAKEN": "اسم المستخدم مستخدم من قبل.",
+    "USER_PASSWORD_TOO_SHORT": "كلمة المرور قصيرة جداً.",
+    "USER_SHOP_ASSIGNMENT_INVALID": "تعيين المحل غير صالح.",
+    "USER_SELF_DISABLE_FORBIDDEN": "لا يمكنك تعطيل حسابك الخاص.",
+    "LAST_OWNER_PROTECTED": "لا يمكن تعطيل أو خفض آخر مالك نشط."
   },
   "notFound": {
     "title": "الصفحة غير موجودة",
@@ -118,6 +126,45 @@
     },
     "dangerZone": {
       "title": "الإجراءات"
+    }
+  },
+  "users": {
+    "title": "المستخدمون",
+    "subtitle": "أنشئ الحسابات وحدّد الأدوار والمحلات.",
+    "form": {
+      "createTitle": "مستخدم جديد",
+      "editTitle": "تعديل المستخدم",
+      "name": "الاسم",
+      "username": "اسم المستخدم أو الهاتف",
+      "password": "كلمة المرور الأولية",
+      "passwordMin": "6 أحرف على الأقل (8 للمالك).",
+      "role": "الدور",
+      "assignedShop": "المحل المُسنَد",
+      "chooseShop": "— اختر محلاً —"
+    },
+    "filter": {
+      "includeInactive": "إظهار المعطّلين"
+    },
+    "badge": {
+      "disabled": "معطّل"
+    },
+    "actions": {
+      "disable": "تعطيل",
+      "enable": "تفعيل",
+      "resetPassword": "إعادة تعيين كلمة المرور"
+    },
+    "disableConfirm": {
+      "title": "تعطيل المستخدم؟",
+      "body": "لن يتمكن « {{name}} » من الدخول. سيتم إنهاء جلساته النشطة."
+    },
+    "resetConfirm": {
+      "title": "إعادة تعيين كلمة المرور؟",
+      "body": "سيتم توليد كلمة مرور جديدة لـ « {{name}} » وعرضها مرة واحدة فقط."
+    },
+    "resetResult": {
+      "title": "كلمة المرور الجديدة",
+      "body": "سلّم هذه الكلمة لـ « {{name}} ». لن تُعرض بعد الإغلاق.",
+      "warning": "انسخها الآن — هذه النافذة هي اللحظة الوحيدة لرؤيتها."
     }
   },
   "shops": {

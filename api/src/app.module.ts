@@ -6,6 +6,7 @@ import { AuthModule } from './auth/auth.module';
 import { CategoriesModule } from './categories/categories.module';
 import { ProductsModule } from './products/products.module';
 import { ShopsModule } from './shops/shops.module';
+import { UsersModule } from './users/users.module';
 import { DomainExceptionFilter } from './common/filters/domain-exception.filter';
 import { RolesGuard } from './common/guards/roles.guard';
 import { SessionGuard } from './common/guards/session.guard';
@@ -26,6 +27,7 @@ import { PrismaModule } from './prisma/prisma.module';
     CategoriesModule,
     ProductsModule,
     ShopsModule,
+    UsersModule,
   ],
   providers: [
     // Order matters: throttle first, then auth, then role check.

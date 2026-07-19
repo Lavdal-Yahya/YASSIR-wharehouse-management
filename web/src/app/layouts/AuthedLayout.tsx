@@ -15,6 +15,7 @@ const NAV: readonly NavEntry[] = [
   { to: '/shop', labelKey: 'nav.shop', allowed: [Role.OWNER, Role.SHOP] },
   { to: '/categories', labelKey: 'nav.categories', allowed: [Role.OWNER] },
   { to: '/shops', labelKey: 'nav.shops', allowed: [Role.OWNER] },
+  { to: '/users', labelKey: 'nav.users', allowed: [Role.OWNER] },
   { to: '/settings', labelKey: 'nav.settings', allowed: [Role.OWNER] },
 ];
 

@@ -9,6 +9,7 @@
     "categories": "Catégories",
     "products": "Produits",
     "shops": "Boutiques",
+    "users": "Utilisateurs",
     "settings": "Réglages",
     "logout": "Se déconnecter"
   },
@@ -47,7 +48,8 @@
     "confirm": "Confirmer",
     "delete": "Supprimer",
     "optional": "facultatif",
-    "chooseImage": "Choisir une image"
+    "chooseImage": "Choisir une image",
+    "close": "Fermer"
   },
   "loading": "Chargement…",
   "errors": {
@@ -69,7 +71,13 @@
     "PRODUCT_IMAGE_INVALID": "Image invalide (formats acceptés : JPEG, PNG, WEBP).",
     "PRODUCT_IMAGE_TOO_LARGE": "Image trop volumineuse (maximum 2 Mo).",
     "SHOP_NOT_FOUND": "Boutique introuvable.",
-    "SHOP_HAS_ACTIVE_USERS": "Cette boutique a encore des employés actifs. Désactivez-les ou réassignez-les avant l'archivage."
+    "SHOP_HAS_ACTIVE_USERS": "Cette boutique a encore des employés actifs. Désactivez-les ou réassignez-les avant l'archivage.",
+    "USER_NOT_FOUND": "Utilisateur introuvable.",
+    "USER_USERNAME_TAKEN": "Ce nom d'utilisateur est déjà utilisé.",
+    "USER_PASSWORD_TOO_SHORT": "Mot de passe trop court.",
+    "USER_SHOP_ASSIGNMENT_INVALID": "Affectation à la boutique invalide.",
+    "USER_SELF_DISABLE_FORBIDDEN": "Vous ne pouvez pas désactiver votre propre compte.",
+    "LAST_OWNER_PROTECTED": "Le dernier propriétaire actif ne peut pas être désactivé ou rétrogradé."
   },
   "notFound": {
     "title": "Page introuvable",
@@ -118,6 +126,45 @@
     },
     "dangerZone": {
       "title": "Actions"
+    }
+  },
+  "users": {
+    "title": "Utilisateurs",
+    "subtitle": "Créez les comptes, assignez rôles et boutiques.",
+    "form": {
+      "createTitle": "Nouvel utilisateur",
+      "editTitle": "Modifier l'utilisateur",
+      "name": "Nom",
+      "username": "Nom d'utilisateur ou téléphone",
+      "password": "Mot de passe initial",
+      "passwordMin": "Minimum 6 caractères (8 pour un propriétaire).",
+      "role": "Rôle",
+      "assignedShop": "Boutique assignée",
+      "chooseShop": "— Choisir une boutique —"
+    },
+    "filter": {
+      "includeInactive": "Inclure désactivés"
+    },
+    "badge": {
+      "disabled": "Désactivé"
+    },
+    "actions": {
+      "disable": "Désactiver",
+      "enable": "Réactiver",
+      "resetPassword": "Réinitialiser le mot de passe"
+    },
+    "disableConfirm": {
+      "title": "Désactiver l'utilisateur ?",
+      "body": "« {{name}} » ne pourra plus se connecter. Ses sessions actives seront terminées."
+    },
+    "resetConfirm": {
+      "title": "Réinitialiser le mot de passe ?",
+      "body": "Un nouveau mot de passe sera généré pour « {{name}} » et affiché une seule fois."
+    },
+    "resetResult": {
+      "title": "Nouveau mot de passe",
+      "body": "Transmettez ce mot de passe à « {{name}} ». Il ne sera plus affiché après la fermeture.",
+      "warning": "Copiez-le maintenant — cette fenêtre est le seul moment où il est visible."
     }
   },
   "shops": {
