@@ -38,8 +38,8 @@ Goal: running skeleton — login works, role-appropriate empty shell, fr/ar with
 - [x] P1-17 TanStack Query setup + API client (fetch wrapper with credentials, error normalization)
 
 ### PWA
-- [ ] P1-18 `vite-plugin-pwa`: manifest, icons, name, theme/background color, standalone mode
-- [ ] P1-19 Service worker: precache app shell only (no API caching); verify install on Android + iOS
+- [x] P1-18 `vite-plugin-pwa`: manifest, icons, name, theme/background color, standalone mode
+- [x] P1-19 Service worker: precache app shell only (no API caching); verify install on Android + iOS
 
 **Definition of Done:** log in/out as each role on phone + laptop; wrong role can't reach guarded route or API endpoint; language switch flips layout to RTL; app installs to home screen.
 
