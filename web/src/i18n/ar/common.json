@@ -8,6 +8,7 @@
     "shop": "المحل",
     "categories": "الفئات",
     "products": "المنتجات",
+    "customers": "العملاء",
     "shops": "المحلات",
     "users": "المستخدمون",
     "settings": "الإعدادات",
@@ -77,7 +78,8 @@
     "USER_PASSWORD_TOO_SHORT": "كلمة المرور قصيرة جداً.",
     "USER_SHOP_ASSIGNMENT_INVALID": "تعيين المحل غير صالح.",
     "USER_SELF_DISABLE_FORBIDDEN": "لا يمكنك تعطيل حسابك الخاص.",
-    "LAST_OWNER_PROTECTED": "لا يمكن تعطيل أو خفض آخر مالك نشط."
+    "LAST_OWNER_PROTECTED": "لا يمكن تعطيل أو خفض آخر مالك نشط.",
+    "CUSTOMER_NOT_FOUND": "العميل غير موجود."
   },
   "notFound": {
     "title": "الصفحة غير موجودة",
@@ -126,6 +128,22 @@
     },
     "dangerZone": {
       "title": "الإجراءات"
+    }
+  },
+  "customers": {
+    "title": "العملاء",
+    "subtitle": "دليل مشترك بين المحلات.",
+    "searchPlaceholder": "الاسم أو الهاتف…",
+    "form": {
+      "createTitle": "عميل جديد",
+      "editTitle": "تعديل العميل",
+      "name": "الاسم",
+      "phone": "الهاتف",
+      "notes": "ملاحظات"
+    },
+    "archiveConfirm": {
+      "title": "أرشفة العميل؟",
+      "body": "سيتم إخفاء « {{name}} » من القوائم النشطة."
     }
   },
   "users": {

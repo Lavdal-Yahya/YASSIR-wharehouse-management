@@ -15,6 +15,7 @@ import ProductsListPage from '@/features/products/pages/ProductsListPage';
 import ProductFormPage from '@/features/products/pages/ProductFormPage';
 import ShopsPage from '@/features/shops/pages/ShopsPage';
 import UsersPage from '@/features/users/pages/UsersPage';
+import CustomersPage from '@/features/customers/pages/CustomersPage';
 
 export function AppRoutes() {
   return (
@@ -24,6 +25,9 @@ export function AppRoutes() {
       <Route element={<RequireAuth />}>
         <Route element={<AuthedLayout />}>
           <Route index element={<RoleRedirect />} />
+
+          {/* Customers — accessible to all authenticated roles (spec §31). */}
+          <Route path="customers" element={<CustomersPage />} />
 
           <Route element={<RequireRole allowed={[Role.OWNER]} />}>
             <Route path="dashboard" element={<DashboardPage />} />

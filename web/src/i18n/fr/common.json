@@ -8,6 +8,7 @@
     "shop": "Boutique",
     "categories": "Catégories",
     "products": "Produits",
+    "customers": "Clients",
     "shops": "Boutiques",
     "users": "Utilisateurs",
     "settings": "Réglages",
@@ -77,7 +78,8 @@
     "USER_PASSWORD_TOO_SHORT": "Mot de passe trop court.",
     "USER_SHOP_ASSIGNMENT_INVALID": "Affectation à la boutique invalide.",
     "USER_SELF_DISABLE_FORBIDDEN": "Vous ne pouvez pas désactiver votre propre compte.",
-    "LAST_OWNER_PROTECTED": "Le dernier propriétaire actif ne peut pas être désactivé ou rétrogradé."
+    "LAST_OWNER_PROTECTED": "Le dernier propriétaire actif ne peut pas être désactivé ou rétrogradé.",
+    "CUSTOMER_NOT_FOUND": "Client introuvable."
   },
   "notFound": {
     "title": "Page introuvable",
@@ -126,6 +128,22 @@
     },
     "dangerZone": {
       "title": "Actions"
+    }
+  },
+  "customers": {
+    "title": "Clients",
+    "subtitle": "Répertoire partagé entre les boutiques.",
+    "searchPlaceholder": "Nom ou téléphone…",
+    "form": {
+      "createTitle": "Nouveau client",
+      "editTitle": "Modifier le client",
+      "name": "Nom",
+      "phone": "Téléphone",
+      "notes": "Notes"
+    },
+    "archiveConfirm": {
+      "title": "Archiver le client ?",
+      "body": "« {{name}} » sera masqué des listes actives."
     }
   },
   "users": {
