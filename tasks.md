@@ -15,12 +15,12 @@ Conventions:
 Goal: running skeleton — login works, role-appropriate empty shell, fr/ar with RTL, installable PWA.
 
 ### Setup & tooling
-- [ ] P1-01 Initialize monorepo structure: `/api` (NestJS), `/web` (Vite + React + TS), root README
-- [ ] P1-02 docker-compose with PostgreSQL 16 for local dev (volume, healthcheck)
-- [ ] P1-03 ESLint + Prettier config for both apps; shared TS strict settings
-- [ ] P1-04 API env config with `@nestjs/config` + schema validation (fail fast on missing vars)
-- [ ] P1-05 Set up Prisma in `/api`; first migration with `User`, `Shop`, `Location`, `AppSetting`
-- [ ] P1-06 Seed script: central warehouse Location + initial OWNER admin account
+- [x] P1-01 Initialize monorepo structure: `/api` (NestJS), `/web` (Vite + React + TS), root README
+- [x] P1-02 docker-compose with PostgreSQL 16 for local dev (volume, healthcheck)
+- [x] P1-03 ESLint + Prettier config for both apps; shared TS strict settings
+- [x] P1-04 API env config with `@nestjs/config` + schema validation (fail fast on missing vars)
+- [x] P1-05 Set up Prisma in `/api`; first migration with `User`, `Shop`, `Location`, `AppSetting` + `Session`
+- [x] P1-06 Seed script: central warehouse Location + initial OWNER admin account
 
 ### Authentication & authorization
 - [ ] P1-07 Auth module: login (phone/username + password/PIN), argon2/bcrypt hashing, logout

@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+.vite/
+coverage/
+
+# Env
+.env
+.env.*
+!.env.example
+
+# Uploads (product images, etc.)
+uploads/
+
+# Editor / OS
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/settings.json.example
+*.log
+
+# Prisma
+api/prisma/*.db
+api/prisma/*.db-journal

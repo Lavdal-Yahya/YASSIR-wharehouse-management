@@ -1,0 +1,80 @@
+// Warehouse & Multi-Shop Management System — Prisma schema.
+// Phase 1: foundation only (User, Session, Shop, Location, AppSetting).
+// Later phases add their own tables via new migrations.
+// See docs/architecture.md §6 for the ORM contract; conventions.md §3 for migration rules.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  OWNER
+  WAREHOUSE
+  SHOP
+}
+
+enum LocationType {
+  WAREHOUSE
+  SHOP
+}
+
+model User {
+  id             String    @id @default(cuid())
+  name           String
+  username       String    @unique // phone number or chosen username
+  passwordHash   String
+  role           Role
+  // Required iff role = SHOP. Enforced in the users service, not the schema.
+  assignedShopId String?
+  assignedShop   Shop?     @relation(fields: [assignedShopId], references: [id])
+  active         Boolean   @default(true)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  sessions       Session[]
+}
+
+model Session {
+  // 32-byte random token, generated server-side.
+  id        String   @id
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model Shop {
+  id         String    @id @default(cuid())
+  name       String
+  address    String?
+  phone      String?
+  active     Boolean   @default(true)
+  archivedAt DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  users      User[]
+  location   Location?
+}
+
+model Location {
+  id        String       @id @default(cuid())
+  name      String
+  type      LocationType
+  // Null for the central warehouse; unique per shop.
+  shopId    String?      @unique
+  shop      Shop?        @relation(fields: [shopId], references: [id])
+  active    Boolean      @default(true)
+  createdAt DateTime     @default(now())
+}
+
+model AppSetting {
+  key       String   @id
+  value     String
+  updatedAt DateTime @updatedAt
+}
