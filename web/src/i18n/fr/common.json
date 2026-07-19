@@ -8,6 +8,7 @@
     "shop": "Boutique",
     "categories": "Catégories",
     "products": "Produits",
+    "shops": "Boutiques",
     "settings": "Réglages",
     "logout": "Se déconnecter"
   },
@@ -66,7 +67,9 @@
     "PRODUCT_BARCODE_TAKEN": "Ce code-barres est déjà utilisé.",
     "PRODUCT_HAS_HISTORY": "Suppression impossible : ce produit a un historique. Archivez-le à la place.",
     "PRODUCT_IMAGE_INVALID": "Image invalide (formats acceptés : JPEG, PNG, WEBP).",
-    "PRODUCT_IMAGE_TOO_LARGE": "Image trop volumineuse (maximum 2 Mo)."
+    "PRODUCT_IMAGE_TOO_LARGE": "Image trop volumineuse (maximum 2 Mo).",
+    "SHOP_NOT_FOUND": "Boutique introuvable.",
+    "SHOP_HAS_ACTIVE_USERS": "Cette boutique a encore des employés actifs. Désactivez-les ou réassignez-les avant l'archivage."
   },
   "notFound": {
     "title": "Page introuvable",
@@ -115,6 +118,24 @@
     },
     "dangerZone": {
       "title": "Actions"
+    }
+  },
+  "shops": {
+    "title": "Boutiques",
+    "subtitle": "Créez et gérez les points de vente.",
+    "form": {
+      "createTitle": "Nouvelle boutique",
+      "editTitle": "Modifier la boutique",
+      "name": "Nom",
+      "address": "Adresse",
+      "phone": "Téléphone"
+    },
+    "archiveConfirm": {
+      "title": "Archiver la boutique ?",
+      "body": "« {{name}} » sera masquée des listes actives. Le stock éventuel devra être transféré séparément."
+    },
+    "archiveError": {
+      "body": "Cette boutique a encore des employés actifs. Désactivez-les ou réassignez-les avant d'archiver."
     }
   },
   "categories": {

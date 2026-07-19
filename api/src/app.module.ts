@@ -5,6 +5,7 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { AuthModule } from './auth/auth.module';
 import { CategoriesModule } from './categories/categories.module';
 import { ProductsModule } from './products/products.module';
+import { ShopsModule } from './shops/shops.module';
 import { DomainExceptionFilter } from './common/filters/domain-exception.filter';
 import { RolesGuard } from './common/guards/roles.guard';
 import { SessionGuard } from './common/guards/session.guard';
@@ -24,6 +25,7 @@ import { PrismaModule } from './prisma/prisma.module';
     AuthModule,
     CategoriesModule,
     ProductsModule,
+    ShopsModule,
   ],
   providers: [
     // Order matters: throttle first, then auth, then role check.
