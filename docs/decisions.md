@@ -34,13 +34,13 @@ httpOnly cookie removes token-in-localStorage XSS exposure. JWT's statelessness
 solves a scale problem we don't have. Cost: a Session table and a DB read
 per request — negligible at this load.
 
-## D-004 · 2026-07 · Pending client confirmation
+## D-004 · 2026-07 · Accepted
 **Money stored as integer MRU (and quantities as integers). No floats, ever.**
 MRU's khoums subunit is practically unused and every example in the spec is
 a whole number. Integers eliminate float-rounding bugs in debt/allocation
-math entirely. Action before Phase 2: confirm with the client that no
-fractional prices occur; then flip to Accepted. If fractional prices are
-ever needed, the migration path is integer khoums (×5), not floats.
+math entirely. Confirmed with the client 2026-07-19: no fractional prices
+occur in the business. If fractional prices are ever needed later, the
+migration path is integer khoums (×5), not floats.
 
 ## D-005 · 2026-07 · Accepted
 **Git: trunk-based; short-lived task branches; squash-merge PRs (even solo);
