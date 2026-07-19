@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { processImage } from '../common/uploads/image-processor';
 import { SETTING_KEYS, SettingKey } from './dto/settings.dto';
+import { SettingKeyNotWritableError } from './errors';
 
 // Whitelisted-only settings surface. The AppSetting table is otherwise free-
 // form, so the whitelist is where safety lives (phase-2.md §3).
@@ -30,7 +31,7 @@ export class SettingsService {
     for (const key of Object.keys(patch)) {
       if (!(SETTING_KEYS as readonly string[]).includes(key)) {
         // Non-whitelisted — surface as a clear failure, not a silent drop.
-        throw new Error(`Setting '${key}' is not writable`);
+        throw new SettingKeyNotWritableError(key);
       }
     }
     await this.prisma.$transaction(async (tx) => {
