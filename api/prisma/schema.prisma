@@ -1,5 +1,6 @@
 // Warehouse & Multi-Shop Management System — Prisma schema.
-// Phase 1: foundation only (User, Session, Shop, Location, AppSetting).
+// Phase 1: foundation (User, Session, Shop, Location, AppSetting).
+// Phase 2: core master data (Category, Product, Customer, ExpenseCategory).
 // Later phases add their own tables via new migrations.
 // See docs/architecture.md §6 for the ORM contract; conventions.md §3 for migration rules.
 
@@ -77,4 +78,60 @@ model AppSetting {
   key       String   @id
   value     String
   updatedAt DateTime @updatedAt
+}
+
+// ---------- Phase 2: core master data ----------
+
+model Category {
+  id        String    @id @default(cuid())
+  name      String    @unique
+  active    Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  products  Product[]
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  name        String
+  // sku/barcode are optional but unique when present. Postgres allows
+  // multiple NULLs in a UNIQUE column, which is what we want.
+  sku         String?  @unique
+  barcode     String?  @unique
+  categoryId  String
+  category    Category @relation(fields: [categoryId], references: [id])
+  description String?
+  imageUrl    String?
+  // Money is whole MRU (D-004). Both prices optional per spec §10.1.
+  defaultPurchaseCost Int?
+  defaultSalePrice    Int?
+  lowStockThreshold   Int?
+  active     Boolean   @default(true)
+  archivedAt DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  @@index([categoryId])
+  @@index([name])
+}
+
+model Customer {
+  id        String   @id @default(cuid())
+  name      String
+  // Phone is deliberately NOT unique — family members share phones (spec §18.4).
+  phone     String?
+  notes     String?
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([name])
+  @@index([phone])
+}
+
+model ExpenseCategory {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
 }
