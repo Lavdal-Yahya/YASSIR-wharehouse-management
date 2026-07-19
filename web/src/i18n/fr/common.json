@@ -6,6 +6,7 @@
     "dashboard": "Tableau de bord",
     "warehouse": "Entrepôt",
     "shop": "Boutique",
+    "categories": "Catégories",
     "settings": "Réglages",
     "logout": "Se déconnecter"
   },
@@ -27,6 +28,24 @@
     "WAREHOUSE": "Entrepôt",
     "SHOP": "Boutique"
   },
+  "common": {
+    "search": "Rechercher",
+    "previous": "Précédent",
+    "next": "Suivant",
+    "paginationLabel": "Page {{page}} / {{total}}",
+    "emptyList": "Aucun résultat.",
+    "includeArchived": "Inclure les archivés",
+    "archived": "Archivé",
+    "archive": "Archiver",
+    "restore": "Restaurer",
+    "edit": "Modifier",
+    "create": "Créer",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "confirm": "Confirmer",
+    "delete": "Supprimer",
+    "optional": "facultatif"
+  },
   "loading": "Chargement…",
   "errors": {
     "INTERNAL": "Une erreur est survenue. Réessayez.",
@@ -36,7 +55,9 @@
     "NOT_FOUND": "Introuvable.",
     "TOO_MANY_REQUESTS": "Trop de tentatives. Attendez une minute.",
     "AUTH_INVALID_CREDENTIALS": "Nom d'utilisateur ou mot de passe incorrect.",
-    "AUTH_USER_DISABLED": "Ce compte est désactivé."
+    "AUTH_USER_DISABLED": "Ce compte est désactivé.",
+    "CATEGORY_NOT_FOUND": "Catégorie introuvable.",
+    "CATEGORY_NAME_TAKEN": "Ce nom de catégorie est déjà utilisé."
   },
   "notFound": {
     "title": "Page introuvable",
@@ -51,5 +72,20 @@
     "warehouse": "L'entrepôt sera disponible en phase 3.",
     "shop": "La boutique sera disponible en phase 5.",
     "settings": "Les réglages seront disponibles en phase 2."
+  },
+  "categories": {
+    "title": "Catégories",
+    "subtitle": "Organisez les produits par famille.",
+    "form": {
+      "title": "Formulaire catégorie",
+      "createTitle": "Nouvelle catégorie",
+      "editTitle": "Modifier la catégorie",
+      "name": "Nom",
+      "namePlaceholder": "Ex. Électronique"
+    },
+    "archiveConfirm": {
+      "title": "Archiver la catégorie ?",
+      "body": "« {{name}} » sera masquée des listes actives. Vous pourrez la restaurer à tout moment."
+    }
   }
 }

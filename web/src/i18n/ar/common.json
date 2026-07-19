@@ -6,6 +6,7 @@
     "dashboard": "لوحة التحكم",
     "warehouse": "المستودع",
     "shop": "المحل",
+    "categories": "الفئات",
     "settings": "الإعدادات",
     "logout": "تسجيل الخروج"
   },
@@ -27,6 +28,24 @@
     "WAREHOUSE": "المستودع",
     "SHOP": "المحل"
   },
+  "common": {
+    "search": "بحث",
+    "previous": "السابق",
+    "next": "التالي",
+    "paginationLabel": "صفحة {{page}} / {{total}}",
+    "emptyList": "لا نتائج.",
+    "includeArchived": "إظهار المؤرشفة",
+    "archived": "مؤرشف",
+    "archive": "أرشفة",
+    "restore": "استعادة",
+    "edit": "تعديل",
+    "create": "إنشاء",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "confirm": "تأكيد",
+    "delete": "حذف",
+    "optional": "اختياري"
+  },
   "loading": "جارٍ التحميل…",
   "errors": {
     "INTERNAL": "حدث خطأ. حاول مجدداً.",
@@ -36,7 +55,9 @@
     "NOT_FOUND": "غير موجود.",
     "TOO_MANY_REQUESTS": "محاولات كثيرة. انتظر دقيقة.",
     "AUTH_INVALID_CREDENTIALS": "اسم المستخدم أو كلمة المرور غير صحيحة.",
-    "AUTH_USER_DISABLED": "هذا الحساب معطّل."
+    "AUTH_USER_DISABLED": "هذا الحساب معطّل.",
+    "CATEGORY_NOT_FOUND": "الفئة غير موجودة.",
+    "CATEGORY_NAME_TAKEN": "اسم الفئة مستخدم من قبل."
   },
   "notFound": {
     "title": "الصفحة غير موجودة",
@@ -51,5 +72,20 @@
     "warehouse": "المستودع سيكون متاحاً في المرحلة 3.",
     "shop": "المحل سيكون متاحاً في المرحلة 5.",
     "settings": "الإعدادات ستكون متاحة في المرحلة 2."
+  },
+  "categories": {
+    "title": "الفئات",
+    "subtitle": "نظّم المنتجات حسب الفئة.",
+    "form": {
+      "title": "نموذج الفئة",
+      "createTitle": "فئة جديدة",
+      "editTitle": "تعديل الفئة",
+      "name": "الاسم",
+      "namePlaceholder": "مثال: إلكترونيات"
+    },
+    "archiveConfirm": {
+      "title": "أرشفة الفئة؟",
+      "body": "سيتم إخفاء « {{name}} » من القوائم النشطة. يمكنك استعادتها في أي وقت."
+    }
   }
 }

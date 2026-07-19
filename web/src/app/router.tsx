@@ -10,6 +10,7 @@ import WarehousePage from '@/pages/WarehousePage';
 import ShopPage from '@/pages/ShopPage';
 import SettingsPage from '@/pages/SettingsPage';
 import NotFoundPage from '@/pages/NotFoundPage';
+import CategoriesPage from '@/features/categories/pages/CategoriesPage';
 
 export function AppRoutes() {
   return (
@@ -23,6 +24,7 @@ export function AppRoutes() {
           <Route element={<RequireRole allowed={[Role.OWNER]} />}>
             <Route path="dashboard" element={<DashboardPage />} />
             <Route path="settings" element={<SettingsPage />} />
+            <Route path="categories" element={<CategoriesPage />} />
           </Route>
 
           <Route element={<RequireRole allowed={[Role.OWNER, Role.WAREHOUSE]} />}>
