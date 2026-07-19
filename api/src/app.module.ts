@@ -1,8 +1,13 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { APP_FILTER, APP_GUARD } from '@nestjs/core';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { AuthModule } from './auth/auth.module';
+import { DomainExceptionFilter } from './common/filters/domain-exception.filter';
+import { RolesGuard } from './common/guards/roles.guard';
+import { SessionGuard } from './common/guards/session.guard';
 import { validateEnv } from './config/env';
+import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
   imports: [
@@ -10,8 +15,18 @@ import { validateEnv } from './config/env';
       isGlobal: true,
       validate: validateEnv,
     }),
+    // Global rate-limit ceiling. Individual routes (login) override with
+    // stricter @Throttle() settings.
+    ThrottlerModule.forRoot([{ ttl: 60_000, limit: 60 }]),
+    PrismaModule,
+    AuthModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    // Order matters: throttle first, then auth, then role check.
+    { provide: APP_GUARD, useClass: ThrottlerGuard },
+    { provide: APP_GUARD, useClass: SessionGuard },
+    { provide: APP_GUARD, useClass: RolesGuard },
+    { provide: APP_FILTER, useClass: DomainExceptionFilter },
+  ],
 })
 export class AppModule {}
