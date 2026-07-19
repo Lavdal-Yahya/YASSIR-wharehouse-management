@@ -49,17 +49,17 @@ Goal: running skeleton — login works, role-appropriate empty shell, fr/ar with
 
 Goal: all reference data manageable by the owner; archiving works.
 
-- [ ] P2-01 Prisma migration: `Category`, `Product`, `Customer`, `ExpenseCategory` (+ archive fields)
-- [ ] P2-02 Categories CRUD (API + UI, owner only)
-- [ ] P2-03 Products API: create/edit with only name + category required; all prices optional
-- [ ] P2-04 Products UI: list with search + category filter, create/edit form, image upload (safe: type/size validation, random filename)
-- [ ] P2-05 Product archive/restore; hard delete allowed only when zero history (server-checked)
-- [ ] P2-06 Shops CRUD (owner): create, edit, archive with "still has stock" warning hook (warning wired in Phase 4)
-- [ ] P2-07 Auto-create a `Location` row when a Shop is created (transactionally)
-- [ ] P2-08 Users management (owner): create user, assign role + shop, reset PIN, enable/disable
-- [ ] P2-09 Customers: list, search by name/phone, create/edit
-- [ ] P2-10 Expense categories CRUD (owner)
-- [ ] P2-11 App settings: read endpoint + minimal owner UI (business name, logo, currency, receipt footer)
+- [x] P2-01 Prisma migration: `Category`, `Product`, `Customer`, `ExpenseCategory` (+ archive fields)
+- [x] P2-02 Categories CRUD (API + UI, owner only)
+- [x] P2-03 Products API: create/edit with only name + category required; all prices optional
+- [x] P2-04 Products UI: list with search + category filter, create/edit form, image upload (safe: type/size validation, random filename)
+- [x] P2-05 Product archive/restore; hard delete allowed only when zero history (server-checked)
+- [x] P2-06 Shops CRUD (owner): create, edit, archive with "still has stock" warning hook (warning wired in Phase 4)
+- [x] P2-07 Auto-create a `Location` row when a Shop is created (transactionally)
+- [x] P2-08 Users management (owner): create user, assign role + shop, reset PIN, enable/disable
+- [x] P2-09 Customers: list, search by name/phone, create/edit
+- [x] P2-10 Expense categories CRUD (owner)
+- [x] P2-11 App settings: read endpoint + minimal owner UI (business name, logo, currency, receipt footer)
 
 **Definition of Done:** owner creates category → product (no price) → shop → shop employee assigned to it; archived product disappears from active lists; product with no history can be deleted, others only archived.
 

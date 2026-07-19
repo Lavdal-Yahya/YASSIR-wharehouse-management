@@ -6,6 +6,11 @@
     "dashboard": "لوحة التحكم",
     "warehouse": "المستودع",
     "shop": "المحل",
+    "categories": "الفئات",
+    "products": "المنتجات",
+    "customers": "العملاء",
+    "shops": "المحلات",
+    "users": "المستخدمون",
     "settings": "الإعدادات",
     "logout": "تسجيل الخروج"
   },
@@ -27,6 +32,27 @@
     "WAREHOUSE": "المستودع",
     "SHOP": "المحل"
   },
+  "common": {
+    "search": "بحث",
+    "previous": "السابق",
+    "next": "التالي",
+    "paginationLabel": "صفحة {{page}} / {{total}}",
+    "emptyList": "لا نتائج.",
+    "includeArchived": "إظهار المؤرشفة",
+    "archived": "مؤرشف",
+    "archive": "أرشفة",
+    "restore": "استعادة",
+    "edit": "تعديل",
+    "create": "إنشاء",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "confirm": "تأكيد",
+    "delete": "حذف",
+    "optional": "اختياري",
+    "chooseImage": "اختر صورة",
+    "close": "إغلاق",
+    "backToSettings": "العودة للإعدادات"
+  },
   "loading": "جارٍ التحميل…",
   "errors": {
     "INTERNAL": "حدث خطأ. حاول مجدداً.",
@@ -36,7 +62,27 @@
     "NOT_FOUND": "غير موجود.",
     "TOO_MANY_REQUESTS": "محاولات كثيرة. انتظر دقيقة.",
     "AUTH_INVALID_CREDENTIALS": "اسم المستخدم أو كلمة المرور غير صحيحة.",
-    "AUTH_USER_DISABLED": "هذا الحساب معطّل."
+    "AUTH_USER_DISABLED": "هذا الحساب معطّل.",
+    "CATEGORY_NOT_FOUND": "الفئة غير موجودة.",
+    "CATEGORY_NAME_TAKEN": "اسم الفئة مستخدم من قبل.",
+    "PRODUCT_NOT_FOUND": "المنتج غير موجود.",
+    "PRODUCT_NAME_TAKEN": "اسم المنتج مستخدم من قبل.",
+    "PRODUCT_SKU_TAKEN": "رمز SKU مستخدم من قبل.",
+    "PRODUCT_BARCODE_TAKEN": "الباركود مستخدم من قبل.",
+    "PRODUCT_HAS_HISTORY": "لا يمكن الحذف: للمنتج سجلات. أرشفه بدلاً من ذلك.",
+    "PRODUCT_IMAGE_INVALID": "صورة غير صالحة (JPEG, PNG, WEBP فقط).",
+    "PRODUCT_IMAGE_TOO_LARGE": "الصورة كبيرة جداً (الحد الأقصى 2 ميغابايت).",
+    "SHOP_NOT_FOUND": "المحل غير موجود.",
+    "SHOP_HAS_ACTIVE_USERS": "لا يزال لهذا المحل موظفون نشطون. عطّلهم أو أعد تعيينهم قبل الأرشفة.",
+    "USER_NOT_FOUND": "المستخدم غير موجود.",
+    "USER_USERNAME_TAKEN": "اسم المستخدم مستخدم من قبل.",
+    "USER_PASSWORD_TOO_SHORT": "كلمة المرور قصيرة جداً.",
+    "USER_SHOP_ASSIGNMENT_INVALID": "تعيين المحل غير صالح.",
+    "USER_SELF_DISABLE_FORBIDDEN": "لا يمكنك تعطيل حسابك الخاص.",
+    "LAST_OWNER_PROTECTED": "لا يمكن تعطيل أو خفض آخر مالك نشط.",
+    "CUSTOMER_NOT_FOUND": "العميل غير موجود.",
+    "EXPENSECATEGORY_NOT_FOUND": "فئة المصاريف غير موجودة.",
+    "EXPENSECATEGORY_NAME_TAKEN": "اسم الفئة مستخدم من قبل."
   },
   "notFound": {
     "title": "الصفحة غير موجودة",
@@ -49,7 +95,156 @@
   "placeholder": {
     "dashboard": "لوحة التحكم ستكون متاحة في المرحلة 7.",
     "warehouse": "المستودع سيكون متاحاً في المرحلة 3.",
-    "shop": "المحل سيكون متاحاً في المرحلة 5.",
-    "settings": "الإعدادات ستكون متاحة في المرحلة 2."
+    "shop": "المحل سيكون متاحاً في المرحلة 5."
+  },
+  "settings": {
+    "title": "الإعدادات",
+    "subtitle": "الاسم، العملة، تذييل الإيصال، والشعار.",
+    "form": {
+      "businessName": "اسم النشاط",
+      "currency": "العملة",
+      "currencyHint": "الأوقية (MRU) هي العملة الوحيدة المدعومة حالياً.",
+      "receiptFooter": "تذييل الإيصالات",
+      "logo": "الشعار"
+    },
+    "related": {
+      "title": "بيانات مرتبطة",
+      "expenseCategories": "فئات المصاريف",
+      "categories": "فئات المنتجات",
+      "shops": "المحلات",
+      "users": "المستخدمون"
+    }
+  },
+  "expenseCategories": {
+    "title": "فئات المصاريف",
+    "subtitle": "تُستخدم لتصنيف مصاريف المحلات.",
+    "form": {
+      "createTitle": "فئة جديدة",
+      "editTitle": "تعديل الفئة",
+      "name": "الاسم"
+    }
+  },
+  "products": {
+    "title": "المنتجات",
+    "subtitle": "أنشئ وأدر الكتالوج.",
+    "new": "منتج جديد",
+    "searchPlaceholder": "الاسم، SKU، الباركود…",
+    "filter": {
+      "category": "تصفية حسب الفئة",
+      "allCategories": "كل الفئات"
+    },
+    "form": {
+      "newTitle": "منتج جديد",
+      "editTitle": "تعديل المنتج",
+      "name": "الاسم",
+      "category": "الفئة",
+      "chooseCategory": "— اختر فئة —",
+      "sku": "SKU",
+      "barcode": "الباركود",
+      "description": "الوصف",
+      "defaultPurchaseCost": "سعر الشراء الافتراضي",
+      "defaultSalePrice": "سعر البيع الافتراضي",
+      "lowStockThreshold": "حد الإنذار للمخزون",
+      "image": "صورة المنتج"
+    },
+    "archiveConfirm": {
+      "title": "أرشفة المنتج؟",
+      "body": "سيتم إخفاء « {{name}} » من القوائم النشطة."
+    },
+    "deleteConfirm": {
+      "title": "حذف نهائي؟",
+      "body": "سيتم حذف « {{name}} » إذا لم يوجد له سجل. وإلا فأرشفه."
+    },
+    "dangerZone": {
+      "title": "الإجراءات"
+    }
+  },
+  "customers": {
+    "title": "العملاء",
+    "subtitle": "دليل مشترك بين المحلات.",
+    "searchPlaceholder": "الاسم أو الهاتف…",
+    "form": {
+      "createTitle": "عميل جديد",
+      "editTitle": "تعديل العميل",
+      "name": "الاسم",
+      "phone": "الهاتف",
+      "notes": "ملاحظات"
+    },
+    "archiveConfirm": {
+      "title": "أرشفة العميل؟",
+      "body": "سيتم إخفاء « {{name}} » من القوائم النشطة."
+    }
+  },
+  "users": {
+    "title": "المستخدمون",
+    "subtitle": "أنشئ الحسابات وحدّد الأدوار والمحلات.",
+    "form": {
+      "createTitle": "مستخدم جديد",
+      "editTitle": "تعديل المستخدم",
+      "name": "الاسم",
+      "username": "اسم المستخدم أو الهاتف",
+      "password": "كلمة المرور الأولية",
+      "passwordMin": "6 أحرف على الأقل (8 للمالك).",
+      "role": "الدور",
+      "assignedShop": "المحل المُسنَد",
+      "chooseShop": "— اختر محلاً —"
+    },
+    "filter": {
+      "includeInactive": "إظهار المعطّلين"
+    },
+    "badge": {
+      "disabled": "معطّل"
+    },
+    "actions": {
+      "disable": "تعطيل",
+      "enable": "تفعيل",
+      "resetPassword": "إعادة تعيين كلمة المرور"
+    },
+    "disableConfirm": {
+      "title": "تعطيل المستخدم؟",
+      "body": "لن يتمكن « {{name}} » من الدخول. سيتم إنهاء جلساته النشطة."
+    },
+    "resetConfirm": {
+      "title": "إعادة تعيين كلمة المرور؟",
+      "body": "سيتم توليد كلمة مرور جديدة لـ « {{name}} » وعرضها مرة واحدة فقط."
+    },
+    "resetResult": {
+      "title": "كلمة المرور الجديدة",
+      "body": "سلّم هذه الكلمة لـ « {{name}} ». لن تُعرض بعد الإغلاق.",
+      "warning": "انسخها الآن — هذه النافذة هي اللحظة الوحيدة لرؤيتها."
+    }
+  },
+  "shops": {
+    "title": "المحلات",
+    "subtitle": "أنشئ وأدر نقاط البيع.",
+    "form": {
+      "createTitle": "محل جديد",
+      "editTitle": "تعديل المحل",
+      "name": "الاسم",
+      "address": "العنوان",
+      "phone": "الهاتف"
+    },
+    "archiveConfirm": {
+      "title": "أرشفة المحل؟",
+      "body": "سيتم إخفاء « {{name}} » من القوائم النشطة. أي مخزون متبقٍ يجب تحويله بشكل منفصل."
+    },
+    "archiveError": {
+      "body": "لا يزال لهذا المحل موظفون نشطون. عطّلهم أو أعد تعيينهم قبل الأرشفة."
+    }
+  },
+  "categories": {
+    "title": "الفئات",
+    "subtitle": "نظّم المنتجات حسب الفئة.",
+    "form": {
+      "title": "نموذج الفئة",
+      "createTitle": "فئة جديدة",
+      "editTitle": "تعديل الفئة",
+      "name": "الاسم",
+      "namePlaceholder": "مثال: إلكترونيات"
+    },
+    "archiveConfirm": {
+      "title": "أرشفة الفئة؟",
+      "body": "سيتم إخفاء « {{name}} » من القوائم النشطة. يمكنك استعادتها في أي وقت."
+    }
   }
 }

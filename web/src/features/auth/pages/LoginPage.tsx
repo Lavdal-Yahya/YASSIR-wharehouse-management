@@ -7,6 +7,7 @@ import { Button } from '@/components/Button';
 import { Input } from '@/components/Input';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { ApiError } from '@/shared/api-client';
+import { useSettings } from '@/features/settings/api';
 import { useLogin, useMe } from '../api';
 
 const schema = z.object({
@@ -26,6 +27,9 @@ export default function LoginPage() {
   const { t } = useTranslation();
   const me = useMe();
   const login = useLogin();
+  const settings = useSettings();
+  const businessName = settings.data?.businessName?.trim() || t('app.name');
+  const logoUrl = settings.data?.logoUrl || null;
   const {
     register,
     handleSubmit,
@@ -52,9 +56,18 @@ export default function LoginPage() {
     <main className="flex min-h-dvh items-center justify-center bg-slate-50 px-4 py-10">
       <div className="w-full max-w-sm space-y-6 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
         <div className="flex items-start justify-between gap-4">
-          <div>
-            <h1 className="text-xl font-semibold text-slate-900">{t('login.title')}</h1>
-            <p className="text-sm text-slate-500">{t('login.subtitle')}</p>
+          <div className="flex items-center gap-3">
+            {logoUrl ? (
+              <img
+                src={logoUrl}
+                alt=""
+                className="h-10 w-10 rounded-md object-cover"
+              />
+            ) : null}
+            <div>
+              <h1 className="text-xl font-semibold text-slate-900">{businessName}</h1>
+              <p className="text-sm text-slate-500">{t('login.subtitle')}</p>
+            </div>
           </div>
           <LanguageSwitcher />
         </div>

@@ -3,6 +3,13 @@ import { ConfigModule } from '@nestjs/config';
 import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { AuthModule } from './auth/auth.module';
+import { CategoriesModule } from './categories/categories.module';
+import { ProductsModule } from './products/products.module';
+import { ShopsModule } from './shops/shops.module';
+import { CustomersModule } from './customers/customers.module';
+import { ExpenseCategoriesModule } from './expense-categories/expense-categories.module';
+import { SettingsModule } from './settings/settings.module';
+import { UsersModule } from './users/users.module';
 import { DomainExceptionFilter } from './common/filters/domain-exception.filter';
 import { RolesGuard } from './common/guards/roles.guard';
 import { SessionGuard } from './common/guards/session.guard';
@@ -20,6 +27,13 @@ import { PrismaModule } from './prisma/prisma.module';
     ThrottlerModule.forRoot([{ ttl: 60_000, limit: 60 }]),
     PrismaModule,
     AuthModule,
+    CategoriesModule,
+    ProductsModule,
+    ShopsModule,
+    UsersModule,
+    CustomersModule,
+    ExpenseCategoriesModule,
+    SettingsModule,
   ],
   providers: [
     // Order matters: throttle first, then auth, then role check.

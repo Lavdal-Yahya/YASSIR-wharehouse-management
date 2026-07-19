@@ -6,6 +6,11 @@
     "dashboard": "Tableau de bord",
     "warehouse": "Entrepôt",
     "shop": "Boutique",
+    "categories": "Catégories",
+    "products": "Produits",
+    "customers": "Clients",
+    "shops": "Boutiques",
+    "users": "Utilisateurs",
     "settings": "Réglages",
     "logout": "Se déconnecter"
   },
@@ -27,6 +32,27 @@
     "WAREHOUSE": "Entrepôt",
     "SHOP": "Boutique"
   },
+  "common": {
+    "search": "Rechercher",
+    "previous": "Précédent",
+    "next": "Suivant",
+    "paginationLabel": "Page {{page}} / {{total}}",
+    "emptyList": "Aucun résultat.",
+    "includeArchived": "Inclure les archivés",
+    "archived": "Archivé",
+    "archive": "Archiver",
+    "restore": "Restaurer",
+    "edit": "Modifier",
+    "create": "Créer",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "confirm": "Confirmer",
+    "delete": "Supprimer",
+    "optional": "facultatif",
+    "chooseImage": "Choisir une image",
+    "close": "Fermer",
+    "backToSettings": "Retour aux réglages"
+  },
   "loading": "Chargement…",
   "errors": {
     "INTERNAL": "Une erreur est survenue. Réessayez.",
@@ -36,7 +62,27 @@
     "NOT_FOUND": "Introuvable.",
     "TOO_MANY_REQUESTS": "Trop de tentatives. Attendez une minute.",
     "AUTH_INVALID_CREDENTIALS": "Nom d'utilisateur ou mot de passe incorrect.",
-    "AUTH_USER_DISABLED": "Ce compte est désactivé."
+    "AUTH_USER_DISABLED": "Ce compte est désactivé.",
+    "CATEGORY_NOT_FOUND": "Catégorie introuvable.",
+    "CATEGORY_NAME_TAKEN": "Ce nom de catégorie est déjà utilisé.",
+    "PRODUCT_NOT_FOUND": "Produit introuvable.",
+    "PRODUCT_NAME_TAKEN": "Ce nom de produit est déjà utilisé.",
+    "PRODUCT_SKU_TAKEN": "Ce SKU est déjà utilisé.",
+    "PRODUCT_BARCODE_TAKEN": "Ce code-barres est déjà utilisé.",
+    "PRODUCT_HAS_HISTORY": "Suppression impossible : ce produit a un historique. Archivez-le à la place.",
+    "PRODUCT_IMAGE_INVALID": "Image invalide (formats acceptés : JPEG, PNG, WEBP).",
+    "PRODUCT_IMAGE_TOO_LARGE": "Image trop volumineuse (maximum 2 Mo).",
+    "SHOP_NOT_FOUND": "Boutique introuvable.",
+    "SHOP_HAS_ACTIVE_USERS": "Cette boutique a encore des employés actifs. Désactivez-les ou réassignez-les avant l'archivage.",
+    "USER_NOT_FOUND": "Utilisateur introuvable.",
+    "USER_USERNAME_TAKEN": "Ce nom d'utilisateur est déjà utilisé.",
+    "USER_PASSWORD_TOO_SHORT": "Mot de passe trop court.",
+    "USER_SHOP_ASSIGNMENT_INVALID": "Affectation à la boutique invalide.",
+    "USER_SELF_DISABLE_FORBIDDEN": "Vous ne pouvez pas désactiver votre propre compte.",
+    "LAST_OWNER_PROTECTED": "Le dernier propriétaire actif ne peut pas être désactivé ou rétrogradé.",
+    "CUSTOMER_NOT_FOUND": "Client introuvable.",
+    "EXPENSECATEGORY_NOT_FOUND": "Catégorie de dépenses introuvable.",
+    "EXPENSECATEGORY_NAME_TAKEN": "Ce nom de catégorie est déjà utilisé."
   },
   "notFound": {
     "title": "Page introuvable",
@@ -49,7 +95,156 @@
   "placeholder": {
     "dashboard": "Le tableau de bord sera disponible en phase 7.",
     "warehouse": "L'entrepôt sera disponible en phase 3.",
-    "shop": "La boutique sera disponible en phase 5.",
-    "settings": "Les réglages seront disponibles en phase 2."
+    "shop": "La boutique sera disponible en phase 5."
+  },
+  "settings": {
+    "title": "Réglages",
+    "subtitle": "Nom, monnaie, pied de reçu et logo.",
+    "form": {
+      "businessName": "Nom de l'entreprise",
+      "currency": "Monnaie",
+      "currencyHint": "L'ouguiya (MRU) est la seule monnaie prise en charge pour le moment.",
+      "receiptFooter": "Pied de page des reçus",
+      "logo": "Logo"
+    },
+    "related": {
+      "title": "Données associées",
+      "expenseCategories": "Catégories de dépenses",
+      "categories": "Catégories de produits",
+      "shops": "Boutiques",
+      "users": "Utilisateurs"
+    }
+  },
+  "expenseCategories": {
+    "title": "Catégories de dépenses",
+    "subtitle": "Utilisées pour classer les dépenses des boutiques.",
+    "form": {
+      "createTitle": "Nouvelle catégorie",
+      "editTitle": "Modifier la catégorie",
+      "name": "Nom"
+    }
+  },
+  "products": {
+    "title": "Produits",
+    "subtitle": "Créez et gérez le catalogue.",
+    "new": "Nouveau produit",
+    "searchPlaceholder": "Nom, SKU, code-barres…",
+    "filter": {
+      "category": "Filtrer par catégorie",
+      "allCategories": "Toutes les catégories"
+    },
+    "form": {
+      "newTitle": "Nouveau produit",
+      "editTitle": "Modifier le produit",
+      "name": "Nom",
+      "category": "Catégorie",
+      "chooseCategory": "— Choisir une catégorie —",
+      "sku": "SKU",
+      "barcode": "Code-barres",
+      "description": "Description",
+      "defaultPurchaseCost": "Coût d'achat par défaut",
+      "defaultSalePrice": "Prix de vente par défaut",
+      "lowStockThreshold": "Seuil de stock bas",
+      "image": "Image du produit"
+    },
+    "archiveConfirm": {
+      "title": "Archiver le produit ?",
+      "body": "« {{name}} » sera masqué des listes actives."
+    },
+    "deleteConfirm": {
+      "title": "Supprimer définitivement ?",
+      "body": "« {{name}} » sera supprimé si aucun historique n'existe. Sinon, archivez-le."
+    },
+    "dangerZone": {
+      "title": "Actions"
+    }
+  },
+  "customers": {
+    "title": "Clients",
+    "subtitle": "Répertoire partagé entre les boutiques.",
+    "searchPlaceholder": "Nom ou téléphone…",
+    "form": {
+      "createTitle": "Nouveau client",
+      "editTitle": "Modifier le client",
+      "name": "Nom",
+      "phone": "Téléphone",
+      "notes": "Notes"
+    },
+    "archiveConfirm": {
+      "title": "Archiver le client ?",
+      "body": "« {{name}} » sera masqué des listes actives."
+    }
+  },
+  "users": {
+    "title": "Utilisateurs",
+    "subtitle": "Créez les comptes, assignez rôles et boutiques.",
+    "form": {
+      "createTitle": "Nouvel utilisateur",
+      "editTitle": "Modifier l'utilisateur",
+      "name": "Nom",
+      "username": "Nom d'utilisateur ou téléphone",
+      "password": "Mot de passe initial",
+      "passwordMin": "Minimum 6 caractères (8 pour un propriétaire).",
+      "role": "Rôle",
+      "assignedShop": "Boutique assignée",
+      "chooseShop": "— Choisir une boutique —"
+    },
+    "filter": {
+      "includeInactive": "Inclure désactivés"
+    },
+    "badge": {
+      "disabled": "Désactivé"
+    },
+    "actions": {
+      "disable": "Désactiver",
+      "enable": "Réactiver",
+      "resetPassword": "Réinitialiser le mot de passe"
+    },
+    "disableConfirm": {
+      "title": "Désactiver l'utilisateur ?",
+      "body": "« {{name}} » ne pourra plus se connecter. Ses sessions actives seront terminées."
+    },
+    "resetConfirm": {
+      "title": "Réinitialiser le mot de passe ?",
+      "body": "Un nouveau mot de passe sera généré pour « {{name}} » et affiché une seule fois."
+    },
+    "resetResult": {
+      "title": "Nouveau mot de passe",
+      "body": "Transmettez ce mot de passe à « {{name}} ». Il ne sera plus affiché après la fermeture.",
+      "warning": "Copiez-le maintenant — cette fenêtre est le seul moment où il est visible."
+    }
+  },
+  "shops": {
+    "title": "Boutiques",
+    "subtitle": "Créez et gérez les points de vente.",
+    "form": {
+      "createTitle": "Nouvelle boutique",
+      "editTitle": "Modifier la boutique",
+      "name": "Nom",
+      "address": "Adresse",
+      "phone": "Téléphone"
+    },
+    "archiveConfirm": {
+      "title": "Archiver la boutique ?",
+      "body": "« {{name}} » sera masquée des listes actives. Le stock éventuel devra être transféré séparément."
+    },
+    "archiveError": {
+      "body": "Cette boutique a encore des employés actifs. Désactivez-les ou réassignez-les avant d'archiver."
+    }
+  },
+  "categories": {
+    "title": "Catégories",
+    "subtitle": "Organisez les produits par famille.",
+    "form": {
+      "title": "Formulaire catégorie",
+      "createTitle": "Nouvelle catégorie",
+      "editTitle": "Modifier la catégorie",
+      "name": "Nom",
+      "namePlaceholder": "Ex. Électronique"
+    },
+    "archiveConfirm": {
+      "title": "Archiver la catégorie ?",
+      "body": "« {{name}} » sera masquée des listes actives. Vous pourrez la restaurer à tout moment."
+    }
   }
 }

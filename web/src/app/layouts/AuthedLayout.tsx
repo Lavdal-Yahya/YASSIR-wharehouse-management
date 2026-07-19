@@ -5,13 +5,19 @@ import { Button } from '@/components/Button';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { NavItem } from '@/components/NavItem';
 import { useLogout, useMe } from '@/features/auth/api';
+import { useSettings } from '@/features/settings/api';
 
 type NavEntry = { to: string; labelKey: string; allowed: readonly Role[] };
 
 const NAV: readonly NavEntry[] = [
   { to: '/dashboard', labelKey: 'nav.dashboard', allowed: [Role.OWNER] },
   { to: '/warehouse', labelKey: 'nav.warehouse', allowed: [Role.OWNER, Role.WAREHOUSE] },
+  { to: '/products', labelKey: 'nav.products', allowed: [Role.OWNER, Role.WAREHOUSE] },
+  { to: '/customers', labelKey: 'nav.customers', allowed: [Role.OWNER, Role.WAREHOUSE, Role.SHOP] },
   { to: '/shop', labelKey: 'nav.shop', allowed: [Role.OWNER, Role.SHOP] },
+  { to: '/categories', labelKey: 'nav.categories', allowed: [Role.OWNER] },
+  { to: '/shops', labelKey: 'nav.shops', allowed: [Role.OWNER] },
+  { to: '/users', labelKey: 'nav.users', allowed: [Role.OWNER] },
   { to: '/settings', labelKey: 'nav.settings', allowed: [Role.OWNER] },
 ];
 
@@ -19,7 +25,9 @@ export function AuthedLayout() {
   const { t } = useTranslation();
   const me = useMe();
   const logout = useLogout();
+  const settings = useSettings();
   const user = me.data?.user;
+  const businessName = settings.data?.businessName?.trim() || t('app.name');
   if (!user) return null;
 
   const items = NAV.filter((n) => n.allowed.includes(user.role));
@@ -29,7 +37,7 @@ export function AuthedLayout() {
       <header className="sticky top-0 z-10 border-b border-slate-200 bg-white">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3">
           <div className="flex flex-col text-start">
-            <span className="text-sm font-semibold text-slate-900">{t('app.name')}</span>
+            <span className="text-sm font-semibold text-slate-900">{businessName}</span>
             <span className="text-xs text-slate-500">
               {user.name} · {t(`role.${user.role}`)}
             </span>

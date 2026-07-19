@@ -13,8 +13,10 @@ coverage/
 .env.*
 !.env.example
 
-# Uploads (product images, etc.)
-uploads/
+# Uploads (product images, etc.) — anchored so it doesn't accidentally match
+# source folders named "uploads" (e.g. api/src/common/uploads/).
+/uploads/
+/api/uploads/
 
 # Editor / OS
 .DS_Store
