@@ -23,12 +23,12 @@ Goal: running skeleton — login works, role-appropriate empty shell, fr/ar with
 - [x] P1-06 Seed script: central warehouse Location + initial OWNER admin account
 
 ### Authentication & authorization
-- [ ] P1-07 Auth module: login (phone/username + password/PIN), argon2/bcrypt hashing, logout
-- [ ] P1-08 httpOnly cookie sessions; session invalidation on logout and on user disable
-- [ ] P1-09 Roles guard + `@Roles()` decorator (OWNER, WAREHOUSE, SHOP)
-- [ ] P1-10 Shop-scope guard: SHOP role can only touch its `assignedShopId` (server-side, tested)
-- [ ] P1-11 Login rate limiting with `@nestjs/throttler`
-- [ ] P1-12 Global exception filter: clean user-facing errors, no stack traces; error logging
+- [x] P1-07 Auth module: login (phone/username + password/PIN), argon2/bcrypt hashing, logout
+- [x] P1-08 httpOnly cookie sessions; session invalidation on logout and on user disable
+- [x] P1-09 Roles guard + `@Roles()` decorator (OWNER, WAREHOUSE, SHOP)
+- [x] P1-10 Shop-scope guard: SHOP role can only touch its `assignedShopId` (server-side, tested) — *built, wired in Phase 2*
+- [x] P1-11 Login rate limiting with `@nestjs/throttler`
+- [x] P1-12 Global exception filter: clean user-facing errors, no stack traces; error logging
 
 ### Frontend shell
 - [ ] P1-13 Vite + Tailwind + React Router setup; use logical properties (`ms-`/`me-`) only
