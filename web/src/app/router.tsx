@@ -8,7 +8,7 @@ import { AuthedLayout } from './layouts/AuthedLayout';
 import DashboardPage from '@/pages/DashboardPage';
 import WarehousePage from '@/pages/WarehousePage';
 import ShopPage from '@/pages/ShopPage';
-import SettingsPage from '@/pages/SettingsPage';
+import SettingsPage from '@/features/settings/pages/SettingsPage';
 import NotFoundPage from '@/pages/NotFoundPage';
 import CategoriesPage from '@/features/categories/pages/CategoriesPage';
 import ProductsListPage from '@/features/products/pages/ProductsListPage';
@@ -16,6 +16,7 @@ import ProductFormPage from '@/features/products/pages/ProductFormPage';
 import ShopsPage from '@/features/shops/pages/ShopsPage';
 import UsersPage from '@/features/users/pages/UsersPage';
 import CustomersPage from '@/features/customers/pages/CustomersPage';
+import ExpenseCategoriesPage from '@/features/expense-categories/pages/ExpenseCategoriesPage';
 
 export function AppRoutes() {
   return (
@@ -35,6 +36,7 @@ export function AppRoutes() {
             <Route path="categories" element={<CategoriesPage />} />
             <Route path="shops" element={<ShopsPage />} />
             <Route path="users" element={<UsersPage />} />
+            <Route path="expense-categories" element={<ExpenseCategoriesPage />} />
           </Route>
 
           <Route element={<RequireRole allowed={[Role.OWNER, Role.WAREHOUSE]} />}>

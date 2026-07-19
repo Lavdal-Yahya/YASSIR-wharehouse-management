@@ -50,7 +50,8 @@
     "delete": "Supprimer",
     "optional": "facultatif",
     "chooseImage": "Choisir une image",
-    "close": "Fermer"
+    "close": "Fermer",
+    "backToSettings": "Retour aux réglages"
   },
   "loading": "Chargement…",
   "errors": {
@@ -79,7 +80,9 @@
     "USER_SHOP_ASSIGNMENT_INVALID": "Affectation à la boutique invalide.",
     "USER_SELF_DISABLE_FORBIDDEN": "Vous ne pouvez pas désactiver votre propre compte.",
     "LAST_OWNER_PROTECTED": "Le dernier propriétaire actif ne peut pas être désactivé ou rétrogradé.",
-    "CUSTOMER_NOT_FOUND": "Client introuvable."
+    "CUSTOMER_NOT_FOUND": "Client introuvable.",
+    "EXPENSECATEGORY_NOT_FOUND": "Catégorie de dépenses introuvable.",
+    "EXPENSECATEGORY_NAME_TAKEN": "Ce nom de catégorie est déjà utilisé."
   },
   "notFound": {
     "title": "Page introuvable",
@@ -92,8 +95,34 @@
   "placeholder": {
     "dashboard": "Le tableau de bord sera disponible en phase 7.",
     "warehouse": "L'entrepôt sera disponible en phase 3.",
-    "shop": "La boutique sera disponible en phase 5.",
-    "settings": "Les réglages seront disponibles en phase 2."
+    "shop": "La boutique sera disponible en phase 5."
+  },
+  "settings": {
+    "title": "Réglages",
+    "subtitle": "Nom, monnaie, pied de reçu et logo.",
+    "form": {
+      "businessName": "Nom de l'entreprise",
+      "currency": "Monnaie",
+      "currencyHint": "L'ouguiya (MRU) est la seule monnaie prise en charge pour le moment.",
+      "receiptFooter": "Pied de page des reçus",
+      "logo": "Logo"
+    },
+    "related": {
+      "title": "Données associées",
+      "expenseCategories": "Catégories de dépenses",
+      "categories": "Catégories de produits",
+      "shops": "Boutiques",
+      "users": "Utilisateurs"
+    }
+  },
+  "expenseCategories": {
+    "title": "Catégories de dépenses",
+    "subtitle": "Utilisées pour classer les dépenses des boutiques.",
+    "form": {
+      "createTitle": "Nouvelle catégorie",
+      "editTitle": "Modifier la catégorie",
+      "name": "Nom"
+    }
   },
   "products": {
     "title": "Produits",

@@ -7,6 +7,8 @@ import { CategoriesModule } from './categories/categories.module';
 import { ProductsModule } from './products/products.module';
 import { ShopsModule } from './shops/shops.module';
 import { CustomersModule } from './customers/customers.module';
+import { ExpenseCategoriesModule } from './expense-categories/expense-categories.module';
+import { SettingsModule } from './settings/settings.module';
 import { UsersModule } from './users/users.module';
 import { DomainExceptionFilter } from './common/filters/domain-exception.filter';
 import { RolesGuard } from './common/guards/roles.guard';
@@ -30,6 +32,8 @@ import { PrismaModule } from './prisma/prisma.module';
     ShopsModule,
     UsersModule,
     CustomersModule,
+    ExpenseCategoriesModule,
+    SettingsModule,
   ],
   providers: [
     // Order matters: throttle first, then auth, then role check.

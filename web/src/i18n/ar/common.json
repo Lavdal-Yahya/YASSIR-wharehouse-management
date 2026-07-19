@@ -50,7 +50,8 @@
     "delete": "حذف",
     "optional": "اختياري",
     "chooseImage": "اختر صورة",
-    "close": "إغلاق"
+    "close": "إغلاق",
+    "backToSettings": "العودة للإعدادات"
   },
   "loading": "جارٍ التحميل…",
   "errors": {
@@ -79,7 +80,9 @@
     "USER_SHOP_ASSIGNMENT_INVALID": "تعيين المحل غير صالح.",
     "USER_SELF_DISABLE_FORBIDDEN": "لا يمكنك تعطيل حسابك الخاص.",
     "LAST_OWNER_PROTECTED": "لا يمكن تعطيل أو خفض آخر مالك نشط.",
-    "CUSTOMER_NOT_FOUND": "العميل غير موجود."
+    "CUSTOMER_NOT_FOUND": "العميل غير موجود.",
+    "EXPENSECATEGORY_NOT_FOUND": "فئة المصاريف غير موجودة.",
+    "EXPENSECATEGORY_NAME_TAKEN": "اسم الفئة مستخدم من قبل."
   },
   "notFound": {
     "title": "الصفحة غير موجودة",
@@ -92,8 +95,34 @@
   "placeholder": {
     "dashboard": "لوحة التحكم ستكون متاحة في المرحلة 7.",
     "warehouse": "المستودع سيكون متاحاً في المرحلة 3.",
-    "shop": "المحل سيكون متاحاً في المرحلة 5.",
-    "settings": "الإعدادات ستكون متاحة في المرحلة 2."
+    "shop": "المحل سيكون متاحاً في المرحلة 5."
+  },
+  "settings": {
+    "title": "الإعدادات",
+    "subtitle": "الاسم، العملة، تذييل الإيصال، والشعار.",
+    "form": {
+      "businessName": "اسم النشاط",
+      "currency": "العملة",
+      "currencyHint": "الأوقية (MRU) هي العملة الوحيدة المدعومة حالياً.",
+      "receiptFooter": "تذييل الإيصالات",
+      "logo": "الشعار"
+    },
+    "related": {
+      "title": "بيانات مرتبطة",
+      "expenseCategories": "فئات المصاريف",
+      "categories": "فئات المنتجات",
+      "shops": "المحلات",
+      "users": "المستخدمون"
+    }
+  },
+  "expenseCategories": {
+    "title": "فئات المصاريف",
+    "subtitle": "تُستخدم لتصنيف مصاريف المحلات.",
+    "form": {
+      "createTitle": "فئة جديدة",
+      "editTitle": "تعديل الفئة",
+      "name": "الاسم"
+    }
   },
   "products": {
     "title": "المنتجات",
