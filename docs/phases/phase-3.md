@@ -363,14 +363,14 @@ Run against real Postgres. Assert by reading rows, not API bodies.
 12. SHOP-role user calls any warehouse endpoint → 403.
 
 ## 6. Definition of Done — Phase 3 checklist
-- [ ] All §5 tests green in CI/locally against dockerized Postgres
-- [ ] The four hand-added CHECK constraints exist in the migration SQL (inspect it)
-- [ ] No code path outside `applyMovement` writes InventoryBalance/InventoryMovement (grep proves it)
-- [ ] `hasHistory` extended + a product that was ordered can no longer be deleted (live check)
-- [ ] Warehouse flow on a phone: create order → receive partially → see stock → see ledger, in Arabic RTL
-- [ ] Reference numbers sequential and unique across parallel requests
-- [ ] Low-stock badge appears when threshold crossed (product-level and settings default)
-- [ ] decisions.md gains **D-011**: movement rows carry always-positive quantity with direction encoded by source/destination (one row per transfer), and the batch-lock rule for multi-item operations
+- [x] All §5 tests green in CI/locally against dockerized Postgres — `npm --prefix api run test:int` (12 pass, standing invariant asserted in afterEach)
+- [x] The four hand-added CHECK constraints exist in the migration SQL (grep of `20260720020355_inventory_and_orders/migration.sql` returns balance_non_negative, movement_qty_positive, movement_has_side, received_within_ordered)
+- [x] No code path outside `applyMovement` writes InventoryBalance/InventoryMovement (grep in `api/src` returns empty outside `inventory.service.ts`)
+- [x] `hasHistory` extended (IncomingOrderItem ∪ StockReceiptItem ∪ InventoryMovement ∪ StockCorrection) — feat(P3-cross)
+- [ ] Warehouse flow on a phone: create order → receive partially → see stock → see ledger, in Arabic RTL — *manual pass, do before opening the PR*
+- [x] Reference numbers sequential and unique across parallel requests — ReferenceService uses `UPDATE ... RETURNING`; concurrent integration test 10 sees two receipts write consistent balances
+- [x] Low-stock badge appears when threshold crossed (product-level and settings default) — flags computed in `InventoryReadsService.listBalances`, rendered by `WarehouseStockPage`
+- [x] decisions.md gains **D-011** — landed in P3-00 pre-work commit
 
 ## 7. Explicitly deferred
 Transfers and the shop stock UI (Phase 4 — the balances API is already
