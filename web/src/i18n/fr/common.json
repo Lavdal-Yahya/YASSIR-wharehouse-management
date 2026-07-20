@@ -5,6 +5,7 @@
   "nav": {
     "dashboard": "Tableau de bord",
     "warehouse": "Entrepôt",
+    "orders": "Commandes",
     "shop": "Boutique",
     "categories": "Catégories",
     "products": "Produits",
@@ -51,7 +52,8 @@
     "optional": "facultatif",
     "chooseImage": "Choisir une image",
     "close": "Fermer",
-    "backToSettings": "Retour aux réglages"
+    "backToSettings": "Retour aux réglages",
+    "choose": "— Choisir —"
   },
   "loading": "Chargement…",
   "errors": {
@@ -82,7 +84,19 @@
     "LAST_OWNER_PROTECTED": "Le dernier propriétaire actif ne peut pas être désactivé ou rétrogradé.",
     "CUSTOMER_NOT_FOUND": "Client introuvable.",
     "EXPENSECATEGORY_NOT_FOUND": "Catégorie de dépenses introuvable.",
-    "EXPENSECATEGORY_NAME_TAKEN": "Ce nom de catégorie est déjà utilisé."
+    "EXPENSECATEGORY_NAME_TAKEN": "Ce nom de catégorie est déjà utilisé.",
+    "LOCATION_NOT_FOUND": "Emplacement introuvable.",
+    "ORDER_NOT_FOUND": "Commande introuvable.",
+    "ORDER_NOT_EDITABLE": "Cette commande ne peut plus être modifiée dans son état actuel.",
+    "ORDER_NO_ITEMS": "Une commande doit contenir au moins une ligne.",
+    "ORDERITEM_NOT_FOUND": "Ligne de commande introuvable.",
+    "RECEIVE_EXCEEDS_REMAINING": "La quantité reçue dépasse le restant. Utilisez une réception directe pour les unités supplémentaires.",
+    "RECEIVE_EMPTY": "Indiquez au moins une ligne avec une quantité supérieure à zéro.",
+    "INSUFFICIENT_STOCK": "Stock insuffisant pour cette opération.",
+    "INVALID_MOVEMENT": "Mouvement de stock invalide.",
+    "OPENING_STOCK_ALREADY_EXISTS": "Ces produits ont déjà un mouvement à cet emplacement. Utilisez un ajustement.",
+    "STOCKRECEIPT_NOT_FOUND": "Réception introuvable.",
+    "STOCKCORRECTION_NOT_FOUND": "Ajustement introuvable."
   },
   "notFound": {
     "title": "Page introuvable",
@@ -94,8 +108,51 @@
   },
   "placeholder": {
     "dashboard": "Le tableau de bord sera disponible en phase 7.",
-    "warehouse": "L'entrepôt sera disponible en phase 3.",
     "shop": "La boutique sera disponible en phase 5."
+  },
+  "movements": {
+    "title": "Historique des mouvements",
+    "subtitle": "Chaque changement de stock, en lecture seule.",
+    "filter": {
+      "location": "Filtrer par emplacement",
+      "allLocations": "Tous les emplacements",
+      "type": "Filtrer par type",
+      "allTypes": "Tous les types",
+      "pinnedProduct": "Filtré sur un produit."
+    },
+    "type": {
+      "OPENING_STOCK": "Stock d'ouverture",
+      "ORDER_RECEIPT": "Réception (commande)",
+      "DIRECT_RECEIPT": "Réception directe",
+      "TRANSFER": "Transfert",
+      "SALE": "Vente",
+      "SALE_CANCELLATION": "Annulation de vente",
+      "CUSTOMER_RETURN": "Retour client",
+      "STOCK_CORRECTION": "Ajustement de stock"
+    }
+  },
+  "warehouse": {
+    "title": "Entrepôt",
+    "subtitle": "Stock actuel de l'entrepôt central.",
+    "searchPlaceholder": "Nom, SKU, code-barres…",
+    "filter": {
+      "category": "Filtrer par catégorie",
+      "allCategories": "Toutes les catégories",
+      "stock": "Filtrer par état du stock",
+      "stockAll": "Tout le stock",
+      "stockLow": "Stock bas",
+      "stockOut": "En rupture"
+    },
+    "badge": {
+      "lowStock": "Stock bas",
+      "outOfStock": "En rupture"
+    },
+    "actions": {
+      "orders": "Commandes",
+      "movements": "Mouvements",
+      "directReceipt": "Réception directe",
+      "corrections": "Ajustements"
+    }
   },
   "settings": {
     "title": "Réglages",
@@ -245,6 +302,146 @@
     "archiveConfirm": {
       "title": "Archiver la catégorie ?",
       "body": "« {{name}} » sera masquée des listes actives. Vous pourrez la restaurer à tout moment."
+    }
+  },
+  "orders": {
+    "title": "Commandes fournisseur",
+    "subtitle": "Ce qui est commandé mais pas encore reçu.",
+    "new": "Nouvelle commande",
+    "searchPlaceholder": "Référence, fournisseur…",
+    "noSupplier": "Fournisseur non renseigné",
+    "receivedOf": "{{received}} / {{ordered}} reçus",
+    "remaining": "{{count}} en attente",
+    "backToList": "Retour aux commandes",
+    "cancelReason": "Motif d'annulation",
+    "filter": {
+      "status": "Filtrer par statut",
+      "allStatuses": "Tous les statuts"
+    },
+    "status": {
+      "ORDERED": "Commandé",
+      "SHIPPED": "Expédié",
+      "PARTIALLY_RECEIVED": "Partiellement reçu",
+      "RECEIVED": "Reçu",
+      "CANCELLED": "Annulé"
+    },
+    "form": {
+      "newTitle": "Nouvelle commande fournisseur",
+      "newSubtitle": "Enregistrez ce qui a été commandé. Le stock n'entrera qu'à la réception.",
+      "supplier": "Fournisseur",
+      "orderDate": "Date de commande",
+      "expectedArrivalDate": "Arrivée prévue",
+      "notes": "Notes",
+      "items": "Lignes",
+      "addRow": "+ Ajouter une ligne",
+      "line": "Ligne {{n}}",
+      "existingProduct": "Produit existant",
+      "newProduct": "Nouveau produit",
+      "product": "Produit",
+      "chooseProduct": "— Choisir un produit —",
+      "newProductName": "Nom du nouveau produit",
+      "category": "Catégorie",
+      "chooseCategory": "— Choisir une catégorie —",
+      "quantity": "Quantité",
+      "unitCost": "Coût unitaire",
+      "submit": "Enregistrer la commande",
+      "errors": {
+        "itemProduct": "Ligne {{line}} : choisissez un produit.",
+        "itemQuantity": "Ligne {{line}} : quantité invalide.",
+        "itemNewProduct": "Ligne {{line}} : nom et catégorie requis pour le nouveau produit."
+      }
+    },
+    "detail": {
+      "items": "Lignes",
+      "ordered": "Commandé",
+      "received": "Reçu",
+      "remaining": "Restant",
+      "receipts": "Réceptions liées"
+    },
+    "actions": {
+      "receive": "Réceptionner",
+      "cancel": "Annuler la commande"
+    },
+    "cancelConfirm": {
+      "title": "Annuler la commande ?",
+      "body": "La commande {{ref}} sera marquée comme annulée. Le stock déjà reçu reste inchangé."
+    },
+    "receive": {
+      "title": "Réception",
+      "subtitle": "Ajouter au stock d'entrepôt depuis {{ref}}.",
+      "receiptDate": "Date de réception",
+      "items": "Lignes à réceptionner",
+      "amountFor": "Quantité pour {{product}}",
+      "confirm": "Confirmer la réception",
+      "notEditable": "Cette commande est {{status}} et ne peut plus être réceptionnée.",
+      "errors": {
+        "empty": "Au moins une ligne avec une quantité supérieure à zéro est requise.",
+        "exceeds": "{{product}} : le maximum recevable est {{max}}."
+      }
+    }
+  },
+  "receipts": {
+    "title": "Réceptions",
+    "subtitle": "Historique des entrées de stock.",
+    "searchPlaceholder": "Référence, fournisseur, commande…",
+    "backToList": "Retour aux réceptions",
+    "viewOrder": "Voir la commande",
+    "filter": {
+      "source": "Filtrer par source",
+      "allSources": "Toutes",
+      "direct": "Réceptions directes",
+      "order": "Depuis une commande"
+    },
+    "direct": {
+      "title": "Réception directe",
+      "subtitle": "Ajouter du stock sans commande préalable.",
+      "receiptDate": "Date de réception",
+      "items": "Lignes",
+      "product": "Produit ligne {{line}}",
+      "submit": "Enregistrer la réception",
+      "errors": {
+        "product": "Ligne {{line}} : choisissez un produit.",
+        "quantity": "Ligne {{line}} : quantité invalide."
+      }
+    },
+    "detail": {
+      "direct": "Réception directe",
+      "fromOrder": "Rattachée à {{ref}}"
+    }
+  },
+  "corrections": {
+    "title": "Ajustements de stock",
+    "subtitle": "Casse, perte, écart de comptage — laissez toujours un motif clair.",
+    "form": {
+      "title": "Nouvel ajustement",
+      "location": "Emplacement",
+      "chooseLocation": "— Choisir un emplacement —",
+      "product": "Produit",
+      "amount": "Quantité",
+      "amountHint": "+ trouvé / − retiré",
+      "reason": "Motif (obligatoire)",
+      "submit": "Enregistrer l'ajustement",
+      "hint": "Utilisez un nombre positif pour ajouter du stock trouvé, négatif pour retirer du stock endommagé ou perdu."
+    },
+    "errors": {
+      "location": "Choisissez un emplacement.",
+      "product": "Choisissez un produit.",
+      "amount": "La quantité ne peut pas être zéro.",
+      "reason": "Le motif est obligatoire."
+    }
+  },
+  "openingStock": {
+    "title": "Stock d'ouverture",
+    "subtitle": "À utiliser une seule fois par (emplacement, produit) lors de la mise en route.",
+    "location": "Emplacement",
+    "items": "Lignes",
+    "product": "Produit ligne {{line}}",
+    "submit": "Enregistrer le stock d'ouverture",
+    "hint": "Rejeté si le produit a déjà un mouvement à cet emplacement — passez alors par un ajustement.",
+    "success": "{{count}} produits enregistrés ({{total}} unités au total).",
+    "errors": {
+      "location": "Choisissez un emplacement.",
+      "empty": "Ajoutez au moins une ligne avec produit et quantité."
     }
   }
 }

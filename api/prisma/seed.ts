@@ -65,10 +65,27 @@ async function seedOwnerUser() {
   console.log(`  owner user: created (${created.username})`);
 }
 
+// ReferenceCounter rows are also bootstrapped by the Phase 3 migration; we
+// re-assert here so a manually-truncated table still round-trips through seed.
+const REFERENCE_KINDS = ['ORD', 'REC', 'TRF', 'SAL', 'PAY', 'EXP', 'ADJ'] as const;
+
+async function seedReferenceCounters() {
+  for (const kind of REFERENCE_KINDS) {
+    const existing = await prisma.referenceCounter.findUnique({ where: { kind } });
+    if (existing) {
+      console.log(`  counter ${kind}: kept (value=${existing.value})`);
+      continue;
+    }
+    await prisma.referenceCounter.create({ data: { kind, value: 0 } });
+    console.log(`  counter ${kind}: created`);
+  }
+}
+
 async function main() {
   console.log('Seeding...');
   await seedWarehouseLocation();
   await seedAppSettings();
+  await seedReferenceCounters();
   await seedOwnerUser();
   console.log('Seed complete.');
 }

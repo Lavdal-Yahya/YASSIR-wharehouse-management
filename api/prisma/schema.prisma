@@ -1,6 +1,8 @@
 // Warehouse & Multi-Shop Management System — Prisma schema.
 // Phase 1: foundation (User, Session, Shop, Location, AppSetting).
 // Phase 2: core master data (Category, Product, Customer, ExpenseCategory).
+// Phase 3: warehouse & incoming orders (ReferenceCounter, IncomingOrder(+Items),
+//          StockReceipt(+Items), InventoryBalance, InventoryMovement, StockCorrection).
 // Later phases add their own tables via new migrations.
 // See docs/architecture.md §6 for the ORM contract; conventions.md §3 for migration rules.
 
@@ -72,6 +74,11 @@ model Location {
   shop      Shop?        @relation(fields: [shopId], references: [id])
   active    Boolean      @default(true)
   createdAt DateTime     @default(now())
+  // Phase 3 back-relations
+  balances         InventoryBalance[]
+  movementsOut     InventoryMovement[]  @relation("movementSource")
+  movementsIn      InventoryMovement[]  @relation("movementDestination")
+  corrections      StockCorrection[]
 }
 
 model AppSetting {
@@ -110,6 +117,12 @@ model Product {
   archivedAt DateTime?
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
+  // Phase 3 back-relations (used by hasHistory + the inventory reads)
+  incomingOrderItems IncomingOrderItem[]
+  stockReceiptItems  StockReceiptItem[]
+  inventoryBalances  InventoryBalance[]
+  inventoryMovements InventoryMovement[]
+  stockCorrections   StockCorrection[]
 
   @@index([categoryId])
   @@index([name])
@@ -134,4 +147,164 @@ model ExpenseCategory {
   name      String   @unique
   active    Boolean  @default(true)
   createdAt DateTime @default(now())
+}
+
+// ---------- Phase 3: warehouse & incoming orders ----------
+
+enum OrderStatus {
+  ORDERED
+  SHIPPED
+  PARTIALLY_RECEIVED
+  RECEIVED
+  CANCELLED
+}
+
+// MovementType covers Phases 3–7 up front (schema-review §7): adding an enum
+// value later needs its own migration, so we settle it now and use only the
+// values the code emits per phase.
+enum MovementType {
+  OPENING_STOCK
+  ORDER_RECEIPT
+  DIRECT_RECEIPT
+  TRANSFER          // Phase 4
+  SALE              // Phase 5
+  SALE_CANCELLATION // Phase 6
+  CUSTOMER_RETURN   // Phase 6 (if built)
+  STOCK_CORRECTION
+}
+
+// Per-kind counter row; incremented under FOR UPDATE by ReferenceService.next
+// (architecture §3.8). Rolled-back transactions may leave gaps — accepted.
+model ReferenceCounter {
+  kind  String @id // "ORD" | "REC" | "TRF" | "SAL" | "PAY" | "EXP" | "ADJ"
+  value Int    @default(0)
+}
+
+model IncomingOrder {
+  id                  String              @id @default(cuid())
+  referenceNumber     String              @unique
+  supplierName        String?
+  orderDate           DateTime
+  expectedArrivalDate DateTime?
+  status              OrderStatus         @default(ORDERED)
+  notes               String?
+  createdBy           String
+  cancelledBy         String?
+  cancelledAt         DateTime?
+  cancellationReason  String?
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+  items               IncomingOrderItem[]
+  receipts            StockReceipt[]
+
+  @@index([status, orderDate])
+  @@index([orderDate])
+}
+
+model IncomingOrderItem {
+  id               String        @id @default(cuid())
+  incomingOrderId  String
+  order            IncomingOrder @relation(fields: [incomingOrderId], references: [id])
+  productId        String
+  product          Product       @relation(fields: [productId], references: [id])
+  quantityOrdered  Int
+  quantityReceived Int           @default(0)
+  unitCost         Int? // whole MRU
+  notes            String?
+
+  @@index([incomingOrderId])
+  @@index([productId])
+}
+
+model StockReceipt {
+  id              String             @id @default(cuid())
+  referenceNumber String             @unique
+  // Null = direct receipt (spec §12); otherwise linked to the incoming order it fulfils.
+  incomingOrderId String?
+  order           IncomingOrder?     @relation(fields: [incomingOrderId], references: [id])
+  receiptDate     DateTime
+  supplierName    String?
+  notes           String?
+  createdBy       String
+  createdAt       DateTime           @default(now())
+  items           StockReceiptItem[]
+
+  @@index([incomingOrderId])
+  @@index([receiptDate])
+}
+
+model StockReceiptItem {
+  id             String       @id @default(cuid())
+  stockReceiptId String
+  receipt        StockReceipt @relation(fields: [stockReceiptId], references: [id])
+  productId      String
+  product        Product      @relation(fields: [productId], references: [id])
+  quantity       Int
+  unitCost       Int?
+
+  @@index([productId])
+}
+
+// Performance cache of the movement ledger. Written ONLY by
+// InventoryService.applyMovement (D-008); invariant test asserts
+// Σ movements = quantity per (location, product).
+model InventoryBalance {
+  id         String   @id @default(cuid())
+  locationId String
+  location   Location @relation(fields: [locationId], references: [id])
+  productId  String
+  product    Product  @relation(fields: [productId], references: [id])
+  quantity   Int      @default(0)
+  updatedAt  DateTime @updatedAt
+
+  @@unique([locationId, productId])
+  @@index([productId])
+}
+
+// The historical source of truth (architecture §3.5). quantity is ALWAYS > 0;
+// direction is encoded by which side is set (D-011):
+//   stock in:  destinationLocationId set (receipt, opening, +correction)
+//   stock out: sourceLocationId set (sale, -correction)
+//   move:      both set (transfer — one row, two balance changes)
+model InventoryMovement {
+  id                    String       @id @default(cuid())
+  productId             String
+  product               Product      @relation(fields: [productId], references: [id])
+  movementType          MovementType
+  quantity              Int
+  sourceLocationId      String?
+  sourceLocation        Location?    @relation("movementSource", fields: [sourceLocationId], references: [id])
+  destinationLocationId String?
+  destinationLocation   Location?    @relation("movementDestination", fields: [destinationLocationId], references: [id])
+  // Freeform pointer to the emitting entity ("StockReceipt", "StockTransfer",
+  // "Sale", "StockCorrection", ...). Kept as (type, id) strings on purpose:
+  // one column that spans every emitter, no FK explosion, easy to filter.
+  relatedEntityType     String?
+  relatedEntityId       String?
+  notes                 String?
+  createdBy             String
+  createdAt             DateTime     @default(now())
+
+  @@index([productId, createdAt])
+  @@index([sourceLocationId])
+  @@index([destinationLocationId])
+  @@index([relatedEntityType, relatedEntityId])
+}
+
+model StockCorrection {
+  id                 String   @id @default(cuid())
+  referenceNumber    String   @unique
+  locationId         String
+  location           Location @relation(fields: [locationId], references: [id])
+  productId          String
+  product            Product  @relation(fields: [productId], references: [id])
+  // Signed as the human recorded it (+found / -removed). The paired movement
+  // stores abs(quantity) with the side set from the sign (D-011).
+  adjustmentQuantity Int
+  reason             String
+  notes              String?
+  createdBy          String
+  createdAt          DateTime @default(now())
+
+  @@index([locationId, productId])
 }

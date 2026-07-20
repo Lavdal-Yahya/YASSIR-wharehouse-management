@@ -87,3 +87,25 @@ code (glossary in conventions §7); RTL via Tailwind logical properties only.**
 Retrofitting RTL and renaming i18n keys later is far more expensive than
 starting correct. Glossary translations to be validated with the client and
 frozen before Phase 2.
+
+## D-011 · 2026-07 · Accepted
+**Inventory movements: quantity always positive; direction encoded by
+source/destination locations; transfers are ONE row with both sides;
+multi-item operations must use the batch applyMovements (single sorted
+lock pass) to prevent crossed-lock deadlocks.**
+Uniform ledger arithmetic: balance(L,P) = Σ in − Σ out, one query,
+testable. Full spec: phase-3.md §1–2.
+
+## D-012 · 2026-07 · Accepted
+**Money taken at sale time is Sale.amountPaidAtSale; CustomerPayment rows
+are later debt payments only.**
+Resolves the spec's internal inconsistency (initial payment rows vs
+customer-optional paid sales). Invariant: amountPaid = amountPaidAtSale +
+Σ active allocations. Full rationale: schema-review.md §5.
+
+## D-013 · 2026-07 · Accepted
+**PaymentAllocation carries no status; an allocation is active iff its
+payment AND its sale are ACTIVE.**
+Reversals flip parent status and recompute sale balances from scratch;
+allocation rows are never deleted or flagged, so allocation history is
+never destroyed. Full rationale: schema-review.md §5.

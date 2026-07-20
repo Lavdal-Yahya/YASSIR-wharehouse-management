@@ -255,3 +255,6 @@ Phase 3 introduces the irreversible core (`InventoryBalance`,
 we review the complete remaining schema on paper — all tables through
 Phase 7 — as `docs/phases/schema-review.md`. That review is the exit
 criterion of Phase 2.
+
+**Cleared 2026-07-20** — see `docs/phases/schema-review.md`; D-011/D-012/D-013
+appended to decisions.md; §8 sign-off checklist ticked. Phase 3 unblocked.

@@ -91,4 +91,4 @@ when built.
 
 ## Status
 
-Current phase: **Phase 1 — Project Foundation** (`docs/phases/phase-1.md`).
+Current phase: **Phase 3 — Warehouse & Incoming Orders** (`docs/phases/phase-3.md`).

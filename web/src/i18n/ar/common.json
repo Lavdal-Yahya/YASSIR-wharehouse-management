@@ -5,6 +5,7 @@
   "nav": {
     "dashboard": "لوحة التحكم",
     "warehouse": "المستودع",
+    "orders": "الطلبات",
     "shop": "المحل",
     "categories": "الفئات",
     "products": "المنتجات",
@@ -49,6 +50,7 @@
     "confirm": "تأكيد",
     "delete": "حذف",
     "optional": "اختياري",
+    "choose": "— اختر —",
     "chooseImage": "اختر صورة",
     "close": "إغلاق",
     "backToSettings": "العودة للإعدادات"
@@ -82,7 +84,19 @@
     "LAST_OWNER_PROTECTED": "لا يمكن تعطيل أو خفض آخر مالك نشط.",
     "CUSTOMER_NOT_FOUND": "العميل غير موجود.",
     "EXPENSECATEGORY_NOT_FOUND": "فئة المصاريف غير موجودة.",
-    "EXPENSECATEGORY_NAME_TAKEN": "اسم الفئة مستخدم من قبل."
+    "EXPENSECATEGORY_NAME_TAKEN": "اسم الفئة مستخدم من قبل.",
+    "LOCATION_NOT_FOUND": "الموقع غير موجود.",
+    "ORDER_NOT_FOUND": "الطلب غير موجود.",
+    "ORDER_NOT_EDITABLE": "لا يمكن تعديل هذا الطلب في حالته الحالية.",
+    "ORDER_NO_ITEMS": "يجب أن يحتوي الطلب على سطر واحد على الأقل.",
+    "ORDERITEM_NOT_FOUND": "سطر الطلب غير موجود.",
+    "RECEIVE_EXCEEDS_REMAINING": "الكمية المستلمة تتجاوز المتبقي. استعمل استلاماً مباشراً للوحدات الزائدة.",
+    "RECEIVE_EMPTY": "أدخل سطراً واحداً على الأقل بكمية أكبر من الصفر.",
+    "INSUFFICIENT_STOCK": "المخزون غير كافٍ لهذه العملية.",
+    "INVALID_MOVEMENT": "حركة مخزون غير صالحة.",
+    "OPENING_STOCK_ALREADY_EXISTS": "هذه المنتجات لديها حركة بالفعل في هذا الموقع. استعمل التصحيح بدلاً من ذلك.",
+    "STOCKRECEIPT_NOT_FOUND": "الاستلام غير موجود.",
+    "STOCKCORRECTION_NOT_FOUND": "التصحيح غير موجود."
   },
   "notFound": {
     "title": "الصفحة غير موجودة",
@@ -94,8 +108,51 @@
   },
   "placeholder": {
     "dashboard": "لوحة التحكم ستكون متاحة في المرحلة 7.",
-    "warehouse": "المستودع سيكون متاحاً في المرحلة 3.",
     "shop": "المحل سيكون متاحاً في المرحلة 5."
+  },
+  "movements": {
+    "title": "سجل الحركات",
+    "subtitle": "كل تغيير للمخزون، للقراءة فقط.",
+    "filter": {
+      "location": "تصفية حسب الموقع",
+      "allLocations": "كل المواقع",
+      "type": "تصفية حسب النوع",
+      "allTypes": "كل الأنواع",
+      "pinnedProduct": "تصفية حسب منتج."
+    },
+    "type": {
+      "OPENING_STOCK": "مخزون افتتاحي",
+      "ORDER_RECEIPT": "استلام (طلب)",
+      "DIRECT_RECEIPT": "استلام مباشر",
+      "TRANSFER": "تحويل",
+      "SALE": "بيع",
+      "SALE_CANCELLATION": "إلغاء بيع",
+      "CUSTOMER_RETURN": "إرجاع زبون",
+      "STOCK_CORRECTION": "تصحيح مخزون"
+    }
+  },
+  "warehouse": {
+    "title": "المستودع",
+    "subtitle": "المخزون الحالي للمستودع المركزي.",
+    "searchPlaceholder": "الاسم، SKU، الباركود…",
+    "filter": {
+      "category": "تصفية حسب الفئة",
+      "allCategories": "كل الفئات",
+      "stock": "تصفية حسب حالة المخزون",
+      "stockAll": "كل المخزون",
+      "stockLow": "مخزون منخفض",
+      "stockOut": "نافد"
+    },
+    "badge": {
+      "lowStock": "مخزون منخفض",
+      "outOfStock": "نافد"
+    },
+    "actions": {
+      "orders": "الطلبات",
+      "movements": "الحركات",
+      "directReceipt": "استلام مباشر",
+      "corrections": "تصحيحات"
+    }
   },
   "settings": {
     "title": "الإعدادات",
@@ -245,6 +302,146 @@
     "archiveConfirm": {
       "title": "أرشفة الفئة؟",
       "body": "سيتم إخفاء « {{name}} » من القوائم النشطة. يمكنك استعادتها في أي وقت."
+    }
+  },
+  "orders": {
+    "title": "طلبات المورّد",
+    "subtitle": "ما تم طلبه ولم يُستلم بعد.",
+    "new": "طلب جديد",
+    "searchPlaceholder": "المرجع، المورّد…",
+    "noSupplier": "لم يُذكر المورّد",
+    "receivedOf": "{{received}} / {{ordered}} مستلم",
+    "remaining": "{{count}} متبقي",
+    "backToList": "الرجوع إلى الطلبات",
+    "cancelReason": "سبب الإلغاء",
+    "filter": {
+      "status": "تصفية حسب الحالة",
+      "allStatuses": "كل الحالات"
+    },
+    "status": {
+      "ORDERED": "مطلوب",
+      "SHIPPED": "مشحون",
+      "PARTIALLY_RECEIVED": "مستلم جزئياً",
+      "RECEIVED": "مستلم",
+      "CANCELLED": "ملغى"
+    },
+    "form": {
+      "newTitle": "طلب مورّد جديد",
+      "newSubtitle": "سجّل ما تم طلبه. لن يدخل المخزون إلا عند الاستلام.",
+      "supplier": "المورّد",
+      "orderDate": "تاريخ الطلب",
+      "expectedArrivalDate": "الوصول المتوقّع",
+      "notes": "ملاحظات",
+      "items": "السطور",
+      "addRow": "+ إضافة سطر",
+      "line": "سطر {{n}}",
+      "existingProduct": "منتج موجود",
+      "newProduct": "منتج جديد",
+      "product": "المنتج",
+      "chooseProduct": "— اختر منتجاً —",
+      "newProductName": "اسم المنتج الجديد",
+      "category": "الفئة",
+      "chooseCategory": "— اختر فئة —",
+      "quantity": "الكمية",
+      "unitCost": "سعر الوحدة",
+      "submit": "حفظ الطلب",
+      "errors": {
+        "itemProduct": "السطر {{line}}: اختر منتجاً.",
+        "itemQuantity": "السطر {{line}}: كمية غير صالحة.",
+        "itemNewProduct": "السطر {{line}}: الاسم والفئة مطلوبان للمنتج الجديد."
+      }
+    },
+    "detail": {
+      "items": "السطور",
+      "ordered": "مطلوب",
+      "received": "مستلم",
+      "remaining": "متبقي",
+      "receipts": "الاستلامات المرتبطة"
+    },
+    "actions": {
+      "receive": "استلام",
+      "cancel": "إلغاء الطلب"
+    },
+    "cancelConfirm": {
+      "title": "إلغاء الطلب؟",
+      "body": "سيتم تعليم الطلب {{ref}} كملغى. المخزون المستلم مسبقاً لا يتغيّر."
+    },
+    "receive": {
+      "title": "استلام",
+      "subtitle": "إضافة إلى مخزون المستودع من {{ref}}.",
+      "receiptDate": "تاريخ الاستلام",
+      "items": "السطور المراد استلامها",
+      "amountFor": "الكمية لـ {{product}}",
+      "confirm": "تأكيد الاستلام",
+      "notEditable": "هذا الطلب في حالة {{status}} ولا يمكن استلامه.",
+      "errors": {
+        "empty": "أدخل سطراً واحداً على الأقل بكمية أكبر من الصفر.",
+        "exceeds": "{{product}}: الحد الأقصى المسموح استلامه هو {{max}}."
+      }
+    }
+  },
+  "receipts": {
+    "title": "الاستلامات",
+    "subtitle": "سجل مدخلات المخزون.",
+    "searchPlaceholder": "المرجع، المورّد، الطلب…",
+    "backToList": "الرجوع إلى الاستلامات",
+    "viewOrder": "عرض الطلب",
+    "filter": {
+      "source": "تصفية حسب المصدر",
+      "allSources": "الكل",
+      "direct": "استلامات مباشرة",
+      "order": "من طلب"
+    },
+    "direct": {
+      "title": "استلام مباشر",
+      "subtitle": "إضافة مخزون دون طلب مسبق.",
+      "receiptDate": "تاريخ الاستلام",
+      "items": "السطور",
+      "product": "منتج السطر {{line}}",
+      "submit": "حفظ الاستلام",
+      "errors": {
+        "product": "السطر {{line}}: اختر منتجاً.",
+        "quantity": "السطر {{line}}: كمية غير صالحة."
+      }
+    },
+    "detail": {
+      "direct": "استلام مباشر",
+      "fromOrder": "مرتبط بـ {{ref}}"
+    }
+  },
+  "corrections": {
+    "title": "تصحيحات المخزون",
+    "subtitle": "الكسر، الفقدان، فرق العدّ — اترك دائماً سبباً واضحاً.",
+    "form": {
+      "title": "تصحيح جديد",
+      "location": "الموقع",
+      "chooseLocation": "— اختر موقعاً —",
+      "product": "المنتج",
+      "amount": "الكمية",
+      "amountHint": "+ موجود / − مُزال",
+      "reason": "السبب (إلزامي)",
+      "submit": "حفظ التصحيح",
+      "hint": "استعمل رقماً موجباً لإضافة مخزون تم اكتشافه، وسالباً لإزالة المخزون التالف أو المفقود."
+    },
+    "errors": {
+      "location": "اختر موقعاً.",
+      "product": "اختر منتجاً.",
+      "amount": "لا يمكن أن تكون الكمية صفراً.",
+      "reason": "السبب إلزامي."
+    }
+  },
+  "openingStock": {
+    "title": "المخزون الافتتاحي",
+    "subtitle": "يُستعمل مرة واحدة لكل (موقع، منتج) عند بدء التشغيل.",
+    "location": "الموقع",
+    "items": "السطور",
+    "product": "منتج السطر {{line}}",
+    "submit": "حفظ المخزون الافتتاحي",
+    "hint": "يُرفض إذا كان للمنتج حركة سابقة في هذا الموقع — استعمل تصحيحاً بدلاً من ذلك.",
+    "success": "تم تسجيل {{count}} منتجات ({{total}} وحدات إجمالاً).",
+    "errors": {
+      "location": "اختر موقعاً.",
+      "empty": "أضف سطراً واحداً على الأقل بمنتج وكمية."
     }
   }
 }

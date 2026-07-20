@@ -69,19 +69,19 @@ Goal: all reference data manageable by the owner; archiving works.
 
 Goal: ordered ≠ stock; only received quantities enter the warehouse; movement ledger begins.
 
-- [ ] P3-01 Prisma migration: `IncomingOrder(+Items)`, `StockReceipt(+Items)`, `InventoryBalance` (unique location+product, `CHECK quantity >= 0`), `InventoryMovement`, `StockCorrection`
-- [ ] P3-02 Reference-number generator service (ORD-/REC-/TRF-/SAL-/PAY-/EXP-/ADJ-, unique, transaction-safe)
-- [ ] P3-03 Inventory core service: `adjustBalance(location, product, delta)` — always inside a caller's transaction, always writes a movement, row-locks the balance, throws on negative result. **All later stock changes go through this one path.**
-- [ ] P3-04 Incoming orders: create with multiple items; inline new-product creation; statuses (Ordered/Shipped/Partially Received/Received/Cancelled)
-- [ ] P3-05 Receive products flow: per-item received qty, prevents over-receiving, creates StockReceipt + movements + balance updates in one transaction; auto status update
-- [ ] P3-06 Cancel order (no stock effect, reason recorded, stays in history)
-- [ ] P3-07 Direct warehouse receipt (product, qty, optional supplier/cost) → receipt + movement
-- [ ] P3-08 Initial stock entry (admin only, any location) → "Opening stock" movements
-- [ ] P3-09 Stock corrections (±qty, reason required, authorized roles) → ADJ movement
-- [ ] P3-10 Warehouse stock page: search, category filter, low-stock/out-of-stock badges
-- [ ] P3-11 Product movement history view (per product, per location)
-- [ ] P3-12 Incoming orders list UI with status filters + ordered/received/remaining columns
-- [ ] P3-13 Integration tests: receive full, receive partial then remainder, over-receive rejected, negative stock impossible, every balance change has a matching movement
+- [x] P3-01 Prisma migration: `IncomingOrder(+Items)`, `StockReceipt(+Items)`, `InventoryBalance` (unique location+product, `CHECK quantity >= 0`), `InventoryMovement`, `StockCorrection`
+- [x] P3-02 Reference-number generator service (ORD-/REC-/TRF-/SAL-/PAY-/EXP-/ADJ-, unique, transaction-safe)
+- [x] P3-03 Inventory core service: `adjustBalance(location, product, delta)` — always inside a caller's transaction, always writes a movement, row-locks the balance, throws on negative result. **All later stock changes go through this one path.**
+- [x] P3-04 Incoming orders: create with multiple items; inline new-product creation; statuses (Ordered/Shipped/Partially Received/Received/Cancelled)
+- [x] P3-05 Receive products flow: per-item received qty, prevents over-receiving, creates StockReceipt + movements + balance updates in one transaction; auto status update
+- [x] P3-06 Cancel order (no stock effect, reason recorded, stays in history)
+- [x] P3-07 Direct warehouse receipt (product, qty, optional supplier/cost) → receipt + movement
+- [x] P3-08 Initial stock entry (admin only, any location) → "Opening stock" movements
+- [x] P3-09 Stock corrections (±qty, reason required, authorized roles) → ADJ movement
+- [x] P3-10 Warehouse stock page: search, category filter, low-stock/out-of-stock badges
+- [x] P3-11 Product movement history view (per product, per location)
+- [x] P3-12 Incoming orders list UI with status filters + ordered/received/remaining columns
+- [x] P3-13 Integration tests: receive full, receive partial then remainder, over-receive rejected, negative stock impossible, every balance change has a matching movement
 
 **Definition of Done:** order 50 → receive 45 → warehouse shows 45, order shows 5 remaining, Partially Received; ledger explains every unit in the warehouse.
 
