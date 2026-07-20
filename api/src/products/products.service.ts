@@ -38,20 +38,34 @@ export class ProductsService {
   constructor(private readonly prisma: PrismaService) {}
 
   // Central "does this product have anything referencing it" check.
-  // Extended per Phase 3 (schema-review §7): checks every history table that
-  // exists so far. Later phases add StockTransferItem, SaleItem, etc. in the
-  // same PR that introduces the table. One round-trip: five parallel counts.
+  // Extended per each phase that adds a history table (schema-review §7):
+  // P3 → order/receipt items, movements, corrections; P4 → transfer items;
+  // P5 → sale items. Each phase adds its own count in the same PR that
+  // introduces the table. One round-trip: six parallel counts.
   async hasHistory(productId: string): Promise<boolean> {
-    const [orderItems, receiptItems, movements, corrections, transferItems] =
-      await Promise.all([
-        this.prisma.incomingOrderItem.count({ where: { productId } }),
-        this.prisma.stockReceiptItem.count({ where: { productId } }),
-        this.prisma.inventoryMovement.count({ where: { productId } }),
-        this.prisma.stockCorrection.count({ where: { productId } }),
-        this.prisma.stockTransferItem.count({ where: { productId } }),
-      ]);
+    const [
+      orderItems,
+      receiptItems,
+      movements,
+      corrections,
+      transferItems,
+      saleItems,
+    ] = await Promise.all([
+      this.prisma.incomingOrderItem.count({ where: { productId } }),
+      this.prisma.stockReceiptItem.count({ where: { productId } }),
+      this.prisma.inventoryMovement.count({ where: { productId } }),
+      this.prisma.stockCorrection.count({ where: { productId } }),
+      this.prisma.stockTransferItem.count({ where: { productId } }),
+      this.prisma.saleItem.count({ where: { productId } }),
+    ]);
     return (
-      orderItems + receiptItems + movements + corrections + transferItems > 0
+      orderItems +
+        receiptItems +
+        movements +
+        corrections +
+        transferItems +
+        saleItems >
+      0
     );
   }
 

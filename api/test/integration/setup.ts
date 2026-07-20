@@ -53,11 +53,14 @@ export function createHarness(): {
   };
 }
 
-// Wipe everything Phase 3+4 touches. Order matters: children first, then
+// Wipe everything Phases 3–5 touch. Order matters: children first, then
 // parents. Location/AppSetting/User stay (bootstrapped by prod seed).
-// The counter values are reset so REC/ORD/ADJ/TRF refs start at 1 each test.
+// The counter values are reset so REC/ORD/ADJ/TRF/SAL refs start at 1
+// each test.
 export async function resetDatabase(prisma: PrismaService | PrismaClient): Promise<void> {
   await prisma.$transaction([
+    prisma.saleItem.deleteMany(),
+    prisma.sale.deleteMany(),
     prisma.stockCorrection.deleteMany(),
     prisma.stockTransferItem.deleteMany(),
     prisma.stockTransfer.deleteMany(),
@@ -69,6 +72,7 @@ export async function resetDatabase(prisma: PrismaService | PrismaClient): Promi
     prisma.incomingOrder.deleteMany(),
     prisma.product.deleteMany(),
     prisma.category.deleteMany(),
+    prisma.customer.deleteMany(),
     prisma.session.deleteMany(),
     // Locations for transient shops made by tests must go too, so their
     // paired Shop rows can be removed cleanly.
