@@ -8,6 +8,7 @@ import { AuthedLayout } from './layouts/AuthedLayout';
 import DashboardPage from '@/pages/DashboardPage';
 import ShopPage from '@/pages/ShopPage';
 import WarehouseStockPage from '@/features/inventory/pages/WarehouseStockPage';
+import MovementsPage from '@/features/inventory/pages/MovementsPage';
 import SettingsPage from '@/features/settings/pages/SettingsPage';
 import NotFoundPage from '@/pages/NotFoundPage';
 import CategoriesPage from '@/features/categories/pages/CategoriesPage';
@@ -41,6 +42,7 @@ export function AppRoutes() {
 
           <Route element={<RequireRole allowed={[Role.OWNER, Role.WAREHOUSE]} />}>
             <Route path="warehouse" element={<WarehouseStockPage />} />
+            <Route path="warehouse/movements" element={<MovementsPage />} />
             <Route path="products" element={<ProductsListPage />} />
             <Route path="products/new" element={<ProductFormPage />} />
             <Route path="products/:id" element={<ProductFormPage />} />

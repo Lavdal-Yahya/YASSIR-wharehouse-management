@@ -96,6 +96,27 @@
     "dashboard": "لوحة التحكم ستكون متاحة في المرحلة 7.",
     "shop": "المحل سيكون متاحاً في المرحلة 5."
   },
+  "movements": {
+    "title": "سجل الحركات",
+    "subtitle": "كل تغيير للمخزون، للقراءة فقط.",
+    "filter": {
+      "location": "تصفية حسب الموقع",
+      "allLocations": "كل المواقع",
+      "type": "تصفية حسب النوع",
+      "allTypes": "كل الأنواع",
+      "pinnedProduct": "تصفية حسب منتج."
+    },
+    "type": {
+      "OPENING_STOCK": "مخزون افتتاحي",
+      "ORDER_RECEIPT": "استلام (طلب)",
+      "DIRECT_RECEIPT": "استلام مباشر",
+      "TRANSFER": "تحويل",
+      "SALE": "بيع",
+      "SALE_CANCELLATION": "إلغاء بيع",
+      "CUSTOMER_RETURN": "إرجاع زبون",
+      "STOCK_CORRECTION": "تصحيح مخزون"
+    }
+  },
   "warehouse": {
     "title": "المستودع",
     "subtitle": "المخزون الحالي للمستودع المركزي.",

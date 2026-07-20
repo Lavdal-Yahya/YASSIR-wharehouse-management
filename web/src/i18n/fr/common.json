@@ -96,6 +96,27 @@
     "dashboard": "Le tableau de bord sera disponible en phase 7.",
     "shop": "La boutique sera disponible en phase 5."
   },
+  "movements": {
+    "title": "Historique des mouvements",
+    "subtitle": "Chaque changement de stock, en lecture seule.",
+    "filter": {
+      "location": "Filtrer par emplacement",
+      "allLocations": "Tous les emplacements",
+      "type": "Filtrer par type",
+      "allTypes": "Tous les types",
+      "pinnedProduct": "Filtré sur un produit."
+    },
+    "type": {
+      "OPENING_STOCK": "Stock d'ouverture",
+      "ORDER_RECEIPT": "Réception (commande)",
+      "DIRECT_RECEIPT": "Réception directe",
+      "TRANSFER": "Transfert",
+      "SALE": "Vente",
+      "SALE_CANCELLATION": "Annulation de vente",
+      "CUSTOMER_RETURN": "Retour client",
+      "STOCK_CORRECTION": "Ajustement de stock"
+    }
+  },
   "warehouse": {
     "title": "Entrepôt",
     "subtitle": "Stock actuel de l'entrepôt central.",
