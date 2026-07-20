@@ -438,6 +438,13 @@
       "reason": "Le motif est obligatoire."
     }
   },
+  "shopStock": {
+    "title": "Stock de la boutique",
+    "subtitle": "Ce que la boutique a en rayon actuellement.",
+    "pickShop": "— Choisir une boutique —",
+    "sell": "Vendre",
+    "sellSoon": "La vente sera activée en phase 5."
+  },
   "transfers": {
     "title": "Transferts",
     "subtitle": "Déplacements de stock entre emplacements.",

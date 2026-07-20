@@ -12,6 +12,6 @@ export function RoleRedirect() {
     case Role.WAREHOUSE:
       return <Navigate to="/warehouse" replace />;
     case Role.SHOP:
-      return <Navigate to="/shop" replace />;
+      return <Navigate to="/shop/stock" replace />;
   }
 }
