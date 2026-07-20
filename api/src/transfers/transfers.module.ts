@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
+import { TransferReversalService } from './transfer-reversal.service';
 import { TransfersController } from './transfers.controller';
 import { TransfersService } from './transfers.service';
 
-// Reversal service joins in P4-04.
 @Module({
   controllers: [TransfersController],
-  providers: [TransfersService],
-  exports: [TransfersService],
+  providers: [TransfersService, TransferReversalService],
+  exports: [TransfersService, TransferReversalService],
 })
 export class TransfersModule {}

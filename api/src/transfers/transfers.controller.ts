@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Query } from '@nestjs/common';
 import { Role } from '@prisma/client';
 import { Roles } from '../common/decorators/roles.decorator';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
@@ -6,7 +6,9 @@ import type { SessionUser } from '../common/types/session-user';
 import {
   CreateTransferDto,
   ListTransfersQueryDto,
+  ReverseTransferDto,
 } from './dto/transfer.dto';
+import { TransferReversalService } from './transfer-reversal.service';
 import { TransfersService } from './transfers.service';
 
 // Transfers routes. Shop employees never appear on any of these — creating
@@ -15,7 +17,10 @@ import { TransfersService } from './transfers.service';
 
 @Controller('transfers')
 export class TransfersController {
-  constructor(private readonly svc: TransfersService) {}
+  constructor(
+    private readonly svc: TransfersService,
+    private readonly reversal: TransferReversalService,
+  ) {}
 
   @Roles(Role.OWNER, Role.WAREHOUSE)
   @Get()
@@ -33,5 +38,18 @@ export class TransfersController {
   @Post()
   create(@Body() dto: CreateTransferDto, @CurrentUser() user: SessionUser) {
     return this.svc.create(dto, user);
+  }
+
+  // OWNER only — an audit-level operation (spec §16.5). WAREHOUSE creates
+  // transfers; only OWNER unwinds them.
+  @Roles(Role.OWNER)
+  @Post(':id/reverse')
+  @HttpCode(HttpStatus.OK)
+  reverse(
+    @Param('id') id: string,
+    @Body() dto: ReverseTransferDto,
+    @CurrentUser() user: SessionUser,
+  ) {
+    return this.reversal.reverse(id, dto, user);
   }
 }
