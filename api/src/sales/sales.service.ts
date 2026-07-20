@@ -259,6 +259,63 @@ export class SalesService {
     };
   }
 
+  // Standing invariant #2 (phase-5 §6 / architecture §3.5). For every
+  // sale: amountPaid = amountPaidAtSale (+ Σ active allocations in
+  // Phase 6), amountDue = totalAmount − amountPaid, and paymentStatus
+  // matches the derivation function. Called from the integration
+  // suite's afterEach; empty result = healthy.
+  async verifySaleCoherenceInvariant(): Promise<
+    Array<{
+      saleId: string;
+      referenceNumber: string;
+      reason: string;
+    }>
+  > {
+    const sales = await this.prisma.sale.findMany({
+      select: {
+        id: true,
+        referenceNumber: true,
+        totalAmount: true,
+        amountPaidAtSale: true,
+        amountPaid: true,
+        amountDue: true,
+        paymentStatus: true,
+      },
+    });
+    const violations: Array<{
+      saleId: string;
+      referenceNumber: string;
+      reason: string;
+    }> = [];
+    for (const s of sales) {
+      // Phase 5: no allocations exist. Phase 6 will replace this branch
+      // with amountPaidAtSale + Σ active allocations.
+      if (s.amountPaid !== s.amountPaidAtSale) {
+        violations.push({
+          saleId: s.id,
+          referenceNumber: s.referenceNumber,
+          reason: `amountPaid ${s.amountPaid} !== amountPaidAtSale ${s.amountPaidAtSale}`,
+        });
+      }
+      if (s.amountDue !== s.totalAmount - s.amountPaid) {
+        violations.push({
+          saleId: s.id,
+          referenceNumber: s.referenceNumber,
+          reason: `amountDue ${s.amountDue} !== totalAmount − amountPaid`,
+        });
+      }
+      const expected = derivePaymentStatus(s.totalAmount, s.amountPaid);
+      if (s.paymentStatus !== expected) {
+        violations.push({
+          saleId: s.id,
+          referenceNumber: s.referenceNumber,
+          reason: `paymentStatus ${s.paymentStatus} !== derived ${expected}`,
+        });
+      }
+    }
+    return violations;
+  }
+
   async list(
     q: ListSalesQueryDto,
     user: SessionUser,
