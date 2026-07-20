@@ -6,8 +6,8 @@ import { RequireRole } from '@/features/auth/RequireRole';
 import { RoleRedirect } from '@/features/auth/RoleRedirect';
 import { AuthedLayout } from './layouts/AuthedLayout';
 import DashboardPage from '@/pages/DashboardPage';
-import WarehousePage from '@/pages/WarehousePage';
 import ShopPage from '@/pages/ShopPage';
+import WarehouseStockPage from '@/features/inventory/pages/WarehouseStockPage';
 import SettingsPage from '@/features/settings/pages/SettingsPage';
 import NotFoundPage from '@/pages/NotFoundPage';
 import CategoriesPage from '@/features/categories/pages/CategoriesPage';
@@ -40,7 +40,7 @@ export function AppRoutes() {
           </Route>
 
           <Route element={<RequireRole allowed={[Role.OWNER, Role.WAREHOUSE]} />}>
-            <Route path="warehouse" element={<WarehousePage />} />
+            <Route path="warehouse" element={<WarehouseStockPage />} />
             <Route path="products" element={<ProductsListPage />} />
             <Route path="products/new" element={<ProductFormPage />} />
             <Route path="products/:id" element={<ProductFormPage />} />

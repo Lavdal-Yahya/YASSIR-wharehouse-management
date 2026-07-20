@@ -94,8 +94,30 @@
   },
   "placeholder": {
     "dashboard": "Le tableau de bord sera disponible en phase 7.",
-    "warehouse": "L'entrepôt sera disponible en phase 3.",
     "shop": "La boutique sera disponible en phase 5."
+  },
+  "warehouse": {
+    "title": "Entrepôt",
+    "subtitle": "Stock actuel de l'entrepôt central.",
+    "searchPlaceholder": "Nom, SKU, code-barres…",
+    "filter": {
+      "category": "Filtrer par catégorie",
+      "allCategories": "Toutes les catégories",
+      "stock": "Filtrer par état du stock",
+      "stockAll": "Tout le stock",
+      "stockLow": "Stock bas",
+      "stockOut": "En rupture"
+    },
+    "badge": {
+      "lowStock": "Stock bas",
+      "outOfStock": "En rupture"
+    },
+    "actions": {
+      "orders": "Commandes",
+      "movements": "Mouvements",
+      "directReceipt": "Réception directe",
+      "corrections": "Ajustements"
+    }
   },
   "settings": {
     "title": "Réglages",

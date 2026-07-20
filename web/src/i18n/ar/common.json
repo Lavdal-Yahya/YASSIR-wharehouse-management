@@ -94,8 +94,30 @@
   },
   "placeholder": {
     "dashboard": "لوحة التحكم ستكون متاحة في المرحلة 7.",
-    "warehouse": "المستودع سيكون متاحاً في المرحلة 3.",
     "shop": "المحل سيكون متاحاً في المرحلة 5."
+  },
+  "warehouse": {
+    "title": "المستودع",
+    "subtitle": "المخزون الحالي للمستودع المركزي.",
+    "searchPlaceholder": "الاسم، SKU، الباركود…",
+    "filter": {
+      "category": "تصفية حسب الفئة",
+      "allCategories": "كل الفئات",
+      "stock": "تصفية حسب حالة المخزون",
+      "stockAll": "كل المخزون",
+      "stockLow": "مخزون منخفض",
+      "stockOut": "نافد"
+    },
+    "badge": {
+      "lowStock": "مخزون منخفض",
+      "outOfStock": "نافد"
+    },
+    "actions": {
+      "orders": "الطلبات",
+      "movements": "الحركات",
+      "directReceipt": "استلام مباشر",
+      "corrections": "تصحيحات"
+    }
   },
   "settings": {
     "title": "الإعدادات",
