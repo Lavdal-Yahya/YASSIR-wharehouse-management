@@ -291,7 +291,8 @@
     },
     "archiveConfirm": {
       "title": "Archiver la boutique ?",
-      "body": "« {{name}} » sera masquée des listes actives. Le stock éventuel devra être transféré séparément."
+      "body": "« {{name}} » sera masquée des listes actives. Le stock éventuel devra être transféré séparément.",
+      "stockWarning": "Cette boutique détient encore {{products}} produit(s) ({{units}} unités). Transférez-les avant d'archiver, sinon le stock deviendra inaccessible."
     },
     "archiveError": {
       "body": "Cette boutique a encore des employés actifs. Désactivez-les ou réassignez-les avant d'archiver."

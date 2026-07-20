@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { api, ApiError } from '@/shared/api-client';
 import { toQueryString, type Paginated } from '@/shared/pagination';
-import type { Shop, ShopWriteBody } from './types';
+import type { Shop, ShopStockSummary, ShopWriteBody } from './types';
 
 export const SHOPS_KEY = ['shops'] as const;
 
@@ -48,6 +48,20 @@ export function useArchiveShop() {
   return useMutation<Shop, ApiError, string>({
     mutationFn: (id) => api<Shop>(`/shops/${id}/archive`, { method: 'POST' }),
     onSuccess: () => qc.invalidateQueries({ queryKey: SHOPS_KEY }),
+  });
+}
+
+// Fetched right when the archive dialog opens — surfaces the "this shop
+// still holds N products (M units)" warning (spec §15.4). Not cached
+// aggressively because balances can change between the user opening the
+// dialog and confirming.
+export function useShopStockSummary(id: string | undefined) {
+  return useQuery<ShopStockSummary, ApiError>({
+    queryKey: [...SHOPS_KEY, 'stock-summary', id] as const,
+    queryFn: ({ signal }) =>
+      api<ShopStockSummary>(`/shops/${id}/stock-summary`, { signal }),
+    enabled: !!id,
+    staleTime: 0,
   });
 }
 
