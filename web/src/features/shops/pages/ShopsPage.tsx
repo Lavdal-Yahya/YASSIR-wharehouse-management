@@ -17,6 +17,7 @@ import {
   useArchiveShop,
   useCreateShop,
   useRestoreShop,
+  useShopStockSummary,
   useShopsList,
   useUpdateShop,
 } from '../api';
@@ -44,6 +45,7 @@ export default function ShopsPage() {
   const update = useUpdateShop(editing?.id ?? '');
   const archive = useArchiveShop();
   const restore = useRestoreShop();
+  const stockSummary = useShopStockSummary(archiveTarget?.id);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
@@ -194,7 +196,17 @@ export default function ShopsPage() {
         title={t('shops.archiveConfirm.title')}
         body={
           archiveErrorUsers ?? (
-            <>{t('shops.archiveConfirm.body', { name: archiveTarget?.name })}</>
+            <>
+              <p>{t('shops.archiveConfirm.body', { name: archiveTarget?.name })}</p>
+              {stockSummary.data && stockSummary.data.productCount > 0 ? (
+                <p className="mt-2 rounded-md bg-amber-50 p-2 text-amber-800">
+                  {t('shops.archiveConfirm.stockWarning', {
+                    products: stockSummary.data.productCount,
+                    units: stockSummary.data.totalUnits,
+                  })}
+                </p>
+              ) : null}
+            </>
           )
         }
         confirmLabel={t('common.archive')}

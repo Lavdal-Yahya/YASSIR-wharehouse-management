@@ -8,6 +8,7 @@ import { AuthedLayout } from './layouts/AuthedLayout';
 import DashboardPage from '@/pages/DashboardPage';
 import ShopPage from '@/pages/ShopPage';
 import WarehouseStockPage from '@/features/inventory/pages/WarehouseStockPage';
+import ShopStockPage from '@/features/inventory/pages/ShopStockPage';
 import MovementsPage from '@/features/inventory/pages/MovementsPage';
 import CorrectionsPage from '@/features/inventory/pages/CorrectionsPage';
 import OpeningStockPage from '@/features/inventory/pages/OpeningStockPage';
@@ -18,6 +19,9 @@ import OrderReceivePage from '@/features/orders/pages/OrderReceivePage';
 import DirectReceiptPage from '@/features/stock-receipts/pages/DirectReceiptPage';
 import ReceiptsListPage from '@/features/stock-receipts/pages/ReceiptsListPage';
 import ReceiptDetailPage from '@/features/stock-receipts/pages/ReceiptDetailPage';
+import TransferNewPage from '@/features/transfers/pages/TransferNewPage';
+import TransfersListPage from '@/features/transfers/pages/TransfersListPage';
+import TransferDetailPage from '@/features/transfers/pages/TransferDetailPage';
 import SettingsPage from '@/features/settings/pages/SettingsPage';
 import NotFoundPage from '@/pages/NotFoundPage';
 import CategoriesPage from '@/features/categories/pages/CategoriesPage';
@@ -64,10 +68,14 @@ export function AppRoutes() {
             <Route path="products" element={<ProductsListPage />} />
             <Route path="products/new" element={<ProductFormPage />} />
             <Route path="products/:id" element={<ProductFormPage />} />
+            <Route path="transfers" element={<TransfersListPage />} />
+            <Route path="transfers/new" element={<TransferNewPage />} />
+            <Route path="transfers/:id" element={<TransferDetailPage />} />
           </Route>
 
           <Route element={<RequireRole allowed={[Role.OWNER, Role.SHOP]} />}>
             <Route path="shop" element={<ShopPage />} />
+            <Route path="shop/stock" element={<ShopStockPage />} />
           </Route>
 
           <Route path="*" element={<NotFoundPage />} />

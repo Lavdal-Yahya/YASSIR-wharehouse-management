@@ -7,6 +7,8 @@ import { CorrectionsService } from '../../src/inventory/corrections.service';
 import { IncomingOrdersService } from '../../src/incoming-orders/incoming-orders.service';
 import { ReceiveService } from '../../src/incoming-orders/receive.service';
 import { StockReceiptsService } from '../../src/stock-receipts/stock-receipts.service';
+import { TransfersService } from '../../src/transfers/transfers.service';
+import { TransferReversalService } from '../../src/transfers/transfer-reversal.service';
 
 // Integration harness: instantiate the real services against the dev Postgres.
 // We do NOT go through Nest's TestingModule because we don't need HTTP for
@@ -22,6 +24,8 @@ export function createHarness(): {
   orders: IncomingOrdersService;
   receive: ReceiveService;
   receipts: StockReceiptsService;
+  transfers: TransfersService;
+  transferReversal: TransferReversalService;
   disconnect: () => Promise<void>;
 } {
   const prisma = new PrismaService();
@@ -32,6 +36,8 @@ export function createHarness(): {
   const orders = new IncomingOrdersService(prisma, refs);
   const receive = new ReceiveService(prisma, inventory, refs, orders);
   const receipts = new StockReceiptsService(prisma, inventory, refs);
+  const transfers = new TransfersService(prisma, inventory, refs);
+  const transferReversal = new TransferReversalService(prisma, inventory, transfers);
   return {
     prisma,
     inventory,
@@ -41,17 +47,20 @@ export function createHarness(): {
     orders,
     receive,
     receipts,
+    transfers,
+    transferReversal,
     disconnect: () => prisma.$disconnect(),
   };
 }
 
-// Wipe everything Phase 3 touches. Order matters: children first, then
+// Wipe everything Phase 3+4 touches. Order matters: children first, then
 // parents. Location/AppSetting/User stay (bootstrapped by prod seed).
-// The counter values are reset so REC/ORD/ADJ refs start at 1 each test.
-// Phase 4+ tables will be added here as those phases land.
+// The counter values are reset so REC/ORD/ADJ/TRF refs start at 1 each test.
 export async function resetDatabase(prisma: PrismaService | PrismaClient): Promise<void> {
   await prisma.$transaction([
     prisma.stockCorrection.deleteMany(),
+    prisma.stockTransferItem.deleteMany(),
+    prisma.stockTransfer.deleteMany(),
     prisma.inventoryMovement.deleteMany(),
     prisma.inventoryBalance.deleteMany(),
     prisma.stockReceiptItem.deleteMany(),
@@ -61,6 +70,10 @@ export async function resetDatabase(prisma: PrismaService | PrismaClient): Promi
     prisma.product.deleteMany(),
     prisma.category.deleteMany(),
     prisma.session.deleteMany(),
+    // Locations for transient shops made by tests must go too, so their
+    // paired Shop rows can be removed cleanly.
+    prisma.location.deleteMany({ where: { type: 'SHOP' } }),
+    prisma.shop.deleteMany(),
   ]);
   await prisma.$executeRaw`UPDATE "ReferenceCounter" SET "value" = 0`;
 }
@@ -95,4 +108,18 @@ export async function makeProduct(
 ): Promise<string> {
   const p = await prisma.product.create({ data: { name, categoryId } });
   return p.id;
+}
+
+// Test-only shop factory. Pairs a Shop with its Location the same way
+// ShopsService.create does (schema-review §2 / phase-2 §3) so the
+// resulting locationId is usable in Phase 4 transfer tests.
+export async function makeShopLocation(
+  prisma: PrismaService,
+  name = `shop-${Math.random().toString(36).slice(2, 8)}`,
+): Promise<{ shopId: string; locationId: string }> {
+  const shop = await prisma.shop.create({ data: { name } });
+  const location = await prisma.location.create({
+    data: { name, type: 'SHOP', shopId: shop.id, active: true },
+  });
+  return { shopId: shop.id, locationId: location.id };
 }

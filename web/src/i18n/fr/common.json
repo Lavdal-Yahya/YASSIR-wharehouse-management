@@ -13,6 +13,7 @@
     "shops": "Boutiques",
     "users": "Utilisateurs",
     "settings": "Réglages",
+    "transfers": "Transferts",
     "logout": "Se déconnecter"
   },
   "login": {
@@ -96,7 +97,14 @@
     "INVALID_MOVEMENT": "Mouvement de stock invalide.",
     "OPENING_STOCK_ALREADY_EXISTS": "Ces produits ont déjà un mouvement à cet emplacement. Utilisez un ajustement.",
     "STOCKRECEIPT_NOT_FOUND": "Réception introuvable.",
-    "STOCKCORRECTION_NOT_FOUND": "Ajustement introuvable."
+    "STOCKCORRECTION_NOT_FOUND": "Ajustement introuvable.",
+    "STOCKTRANSFER_NOT_FOUND": "Transfert introuvable.",
+    "TRANSFER_SAME_LOCATION": "La source et la destination doivent être différentes.",
+    "TRANSFER_NO_ITEMS": "Un transfert doit contenir au moins une ligne.",
+    "DUPLICATE_TRANSFER_ITEM": "Ce produit apparaît plusieurs fois dans le transfert.",
+    "LOCATION_ARCHIVED": "Impossible : cet emplacement est archivé.",
+    "TRANSFER_NOT_REVERSIBLE": "Ce transfert ne peut plus être annulé.",
+    "DESTINATION_INSUFFICIENT_STOCK": "La destination n'a plus assez de stock pour annuler ce transfert."
   },
   "notFound": {
     "title": "Page introuvable",
@@ -283,7 +291,8 @@
     },
     "archiveConfirm": {
       "title": "Archiver la boutique ?",
-      "body": "« {{name}} » sera masquée des listes actives. Le stock éventuel devra être transféré séparément."
+      "body": "« {{name}} » sera masquée des listes actives. Le stock éventuel devra être transféré séparément.",
+      "stockWarning": "Cette boutique détient encore {{products}} produit(s) ({{units}} unités). Transférez-les avant d'archiver, sinon le stock deviendra inaccessible."
     },
     "archiveError": {
       "body": "Cette boutique a encore des employés actifs. Désactivez-les ou réassignez-les avant d'archiver."
@@ -428,6 +437,89 @@
       "product": "Choisissez un produit.",
       "amount": "La quantité ne peut pas être zéro.",
       "reason": "Le motif est obligatoire."
+    }
+  },
+  "shopStock": {
+    "title": "Stock de la boutique",
+    "subtitle": "Ce que la boutique a en rayon actuellement.",
+    "pickShop": "— Choisir une boutique —",
+    "sell": "Vendre",
+    "sellSoon": "La vente sera activée en phase 5."
+  },
+  "transfers": {
+    "title": "Transferts",
+    "subtitle": "Déplacements de stock entre emplacements.",
+    "new": "Nouveau transfert",
+    "searchPlaceholder": "Référence…",
+    "backToList": "Retour aux transferts",
+    "status": {
+      "COMPLETED": "Effectué",
+      "REVERSED": "Annulé"
+    },
+    "filter": {
+      "source": "Source",
+      "destination": "Destination",
+      "allLocations": "Tous les emplacements",
+      "status": "Statut",
+      "allStatuses": "Tous les statuts"
+    },
+    "columns": {
+      "reference": "Référence",
+      "source": "Source",
+      "destination": "Destination",
+      "items": "Articles",
+      "quantity": "Quantité",
+      "status": "Statut",
+      "date": "Date"
+    },
+    "form": {
+      "newTitle": "Nouveau transfert",
+      "newSubtitle": "Déplacer du stock d'un emplacement à un autre.",
+      "source": "Source",
+      "destination": "Destination",
+      "chooseSource": "— Choisir la source —",
+      "chooseDestination": "— Choisir la destination —",
+      "date": "Date du transfert",
+      "notes": "Notes",
+      "items": "Articles à transférer",
+      "addRow": "+ Ajouter une ligne",
+      "line": "Ligne {{n}}",
+      "product": "Produit",
+      "available": "dispo. {{qty}}",
+      "quantity": "Quantité",
+      "max": "max {{max}}",
+      "pickSourceFirst": "Choisissez d'abord une source.",
+      "sourceEmpty": "Cette source n'a aucun stock disponible.",
+      "summaryTitle": "Résumé",
+      "summaryLine": "{{qty}} × {{product}} : {{source}} → {{destination}}",
+      "submit": "Enregistrer le transfert",
+      "errors": {
+        "source": "Choisissez une source.",
+        "destination": "Choisissez une destination.",
+        "itemProduct": "Ligne {{line}} : choisissez un produit.",
+        "itemQuantity": "Ligne {{line}} : quantité invalide.",
+        "itemExceeds": "{{product}} : le maximum transférable est {{max}}."
+      }
+    },
+    "detail": {
+      "items": "Articles",
+      "source": "Source",
+      "destination": "Destination",
+      "date": "Date",
+      "createdBy": "Créé par",
+      "notes": "Notes",
+      "reversedBy": "Annulé par",
+      "reversedAt": "Annulé le",
+      "reversalReason": "Motif d'annulation"
+    },
+    "reverse": {
+      "button": "Annuler le transfert",
+      "title": "Annuler ce transfert ?",
+      "body": "Le stock sera restitué de la destination vers la source. Le stock disponible en destination sera vérifié.",
+      "reason": "Motif (obligatoire)",
+      "reasonPlaceholder": "Expliquez pourquoi ce transfert est annulé.",
+      "confirm": "Confirmer l'annulation",
+      "reasonRequired": "Le motif est obligatoire."
     }
   },
   "openingStock": {

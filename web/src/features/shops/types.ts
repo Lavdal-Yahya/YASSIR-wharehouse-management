@@ -10,6 +10,11 @@ export type Shop = {
   locationId: string | null;
 };
 
+export type ShopStockSummary = {
+  productCount: number;
+  totalUnits: number;
+};
+
 export type ShopWriteBody = {
   name: string;
   address?: string | null;

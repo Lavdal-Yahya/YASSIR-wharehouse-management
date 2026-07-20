@@ -109,3 +109,11 @@ payment AND its sale are ACTIVE.**
 Reversals flip parent status and recompute sale balances from scratch;
 allocation rows are never deleted or flagged, so allocation history is
 never destroyed. Full rationale: schema-review.md §5.
+
+## D-014 · 2026-07 · Accepted
+**Shop-to-shop transfers enabled; all transfers (any direction) are
+created by WAREHOUSE/OWNER roles only.**
+The generic (source, destination) transfer service makes shop-to-shop
+free (spec §16 allows it when the process is identical). Shop employees
+never create transfers — matches spec §6.2/§6.3; their visibility is
+their own stock page and movement history.

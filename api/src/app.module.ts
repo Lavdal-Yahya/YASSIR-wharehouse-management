@@ -14,6 +14,7 @@ import { InventoryModule } from './inventory/inventory.module';
 import { IncomingOrdersModule } from './incoming-orders/incoming-orders.module';
 import { StockReceiptsModule } from './stock-receipts/stock-receipts.module';
 import { LocationsModule } from './locations/locations.module';
+import { TransfersModule } from './transfers/transfers.module';
 import { DomainExceptionFilter } from './common/filters/domain-exception.filter';
 import { RolesGuard } from './common/guards/roles.guard';
 import { SessionGuard } from './common/guards/session.guard';
@@ -42,6 +43,7 @@ import { PrismaModule } from './prisma/prisma.module';
     IncomingOrdersModule,
     StockReceiptsModule,
     LocationsModule,
+    TransfersModule,
   ],
   providers: [
     // Order matters: throttle first, then auth, then role check.
