@@ -42,13 +42,17 @@ export class ProductsService {
   // exists so far. Later phases add StockTransferItem, SaleItem, etc. in the
   // same PR that introduces the table. One round-trip: five parallel counts.
   async hasHistory(productId: string): Promise<boolean> {
-    const [orderItems, receiptItems, movements, corrections] = await Promise.all([
-      this.prisma.incomingOrderItem.count({ where: { productId } }),
-      this.prisma.stockReceiptItem.count({ where: { productId } }),
-      this.prisma.inventoryMovement.count({ where: { productId } }),
-      this.prisma.stockCorrection.count({ where: { productId } }),
-    ]);
-    return orderItems + receiptItems + movements + corrections > 0;
+    const [orderItems, receiptItems, movements, corrections, transferItems] =
+      await Promise.all([
+        this.prisma.incomingOrderItem.count({ where: { productId } }),
+        this.prisma.stockReceiptItem.count({ where: { productId } }),
+        this.prisma.inventoryMovement.count({ where: { productId } }),
+        this.prisma.stockCorrection.count({ where: { productId } }),
+        this.prisma.stockTransferItem.count({ where: { productId } }),
+      ]);
+    return (
+      orderItems + receiptItems + movements + corrections + transferItems > 0
+    );
   }
 
   async list(q: ListProductsQueryDto): Promise<Paginated<ProductOut>> {

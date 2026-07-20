@@ -79,6 +79,9 @@ model Location {
   movementsOut     InventoryMovement[]  @relation("movementSource")
   movementsIn      InventoryMovement[]  @relation("movementDestination")
   corrections      StockCorrection[]
+  // Phase 4 back-relations
+  transfersOut     StockTransfer[]      @relation("transferSource")
+  transfersIn      StockTransfer[]      @relation("transferDestination")
 }
 
 model AppSetting {
@@ -123,6 +126,8 @@ model Product {
   inventoryBalances  InventoryBalance[]
   inventoryMovements InventoryMovement[]
   stockCorrections   StockCorrection[]
+  // Phase 4 back-relations
+  stockTransferItems StockTransferItem[]
 
   @@index([categoryId])
   @@index([name])
@@ -307,4 +312,48 @@ model StockCorrection {
   createdAt          DateTime @default(now())
 
   @@index([locationId, productId])
+}
+
+// ---------- Phase 4: stock transfers ----------
+
+enum TransferStatus {
+  COMPLETED
+  REVERSED
+}
+
+// One transfer moves N items in one atomic operation between two DIFFERENT
+// locations. There is no DRAFT status: transfers only exist once completed
+// (schema-review §1). Reversal writes mirrored movements and flips the status
+// to REVERSED — the original row is never rewritten.
+model StockTransfer {
+  id                    String              @id @default(cuid())
+  referenceNumber       String              @unique
+  sourceLocationId      String
+  sourceLocation        Location            @relation("transferSource", fields: [sourceLocationId], references: [id])
+  destinationLocationId String
+  destinationLocation   Location            @relation("transferDestination", fields: [destinationLocationId], references: [id])
+  status                TransferStatus      @default(COMPLETED)
+  transferDate          DateTime
+  notes                 String?
+  createdBy             String
+  reversedBy            String?
+  reversedAt            DateTime?
+  reversalReason        String?
+  createdAt             DateTime            @default(now())
+  items                 StockTransferItem[]
+
+  @@index([sourceLocationId, transferDate])
+  @@index([destinationLocationId, transferDate])
+}
+
+model StockTransferItem {
+  id              String        @id @default(cuid())
+  stockTransferId String
+  transfer        StockTransfer @relation(fields: [stockTransferId], references: [id])
+  productId       String
+  product         Product       @relation(fields: [productId], references: [id])
+  quantity        Int
+
+  @@index([productId])
+  @@index([stockTransferId])
 }
