@@ -13,6 +13,7 @@
     "shops": "المحلات",
     "users": "المستخدمون",
     "settings": "الإعدادات",
+    "transfers": "التحويلات",
     "logout": "تسجيل الخروج"
   },
   "login": {
@@ -96,7 +97,14 @@
     "INVALID_MOVEMENT": "حركة مخزون غير صالحة.",
     "OPENING_STOCK_ALREADY_EXISTS": "هذه المنتجات لديها حركة بالفعل في هذا الموقع. استعمل التصحيح بدلاً من ذلك.",
     "STOCKRECEIPT_NOT_FOUND": "الاستلام غير موجود.",
-    "STOCKCORRECTION_NOT_FOUND": "التصحيح غير موجود."
+    "STOCKCORRECTION_NOT_FOUND": "التصحيح غير موجود.",
+    "STOCKTRANSFER_NOT_FOUND": "التحويل غير موجود.",
+    "TRANSFER_SAME_LOCATION": "المصدر والوجهة يجب أن يكونا مختلفَين.",
+    "TRANSFER_NO_ITEMS": "يجب أن يحتوي التحويل على سطر واحد على الأقل.",
+    "DUPLICATE_TRANSFER_ITEM": "هذا المنتج مكرّر في التحويل.",
+    "LOCATION_ARCHIVED": "غير ممكن: هذا الموقع مؤرشف.",
+    "TRANSFER_NOT_REVERSIBLE": "لا يمكن إلغاء هذا التحويل.",
+    "DESTINATION_INSUFFICIENT_STOCK": "لم يعد للوجهة مخزون كافٍ لإلغاء هذا التحويل."
   },
   "notFound": {
     "title": "الصفحة غير موجودة",
@@ -428,6 +436,82 @@
       "product": "اختر منتجاً.",
       "amount": "لا يمكن أن تكون الكمية صفراً.",
       "reason": "السبب إلزامي."
+    }
+  },
+  "transfers": {
+    "title": "التحويلات",
+    "subtitle": "نقل المخزون بين المواقع.",
+    "new": "تحويل جديد",
+    "searchPlaceholder": "المرجع…",
+    "backToList": "الرجوع إلى التحويلات",
+    "status": {
+      "COMPLETED": "منجز",
+      "REVERSED": "ملغى"
+    },
+    "filter": {
+      "source": "المصدر",
+      "destination": "الوجهة",
+      "allLocations": "كل المواقع",
+      "status": "الحالة",
+      "allStatuses": "كل الحالات"
+    },
+    "columns": {
+      "reference": "المرجع",
+      "source": "المصدر",
+      "destination": "الوجهة",
+      "items": "العناصر",
+      "quantity": "الكمية",
+      "status": "الحالة",
+      "date": "التاريخ"
+    },
+    "form": {
+      "newTitle": "تحويل جديد",
+      "newSubtitle": "نقل المخزون من موقع إلى آخر.",
+      "source": "المصدر",
+      "destination": "الوجهة",
+      "chooseSource": "— اختر المصدر —",
+      "chooseDestination": "— اختر الوجهة —",
+      "date": "تاريخ التحويل",
+      "notes": "ملاحظات",
+      "items": "العناصر المراد تحويلها",
+      "addRow": "+ إضافة سطر",
+      "line": "سطر {{n}}",
+      "product": "المنتج",
+      "available": "متوفر {{qty}}",
+      "quantity": "الكمية",
+      "max": "الحد الأقصى {{max}}",
+      "pickSourceFirst": "اختر المصدر أولاً.",
+      "sourceEmpty": "لا يوجد مخزون متاح في هذا المصدر.",
+      "summaryTitle": "الملخّص",
+      "summaryLine": "{{qty}} × {{product}}: {{source}} ← {{destination}}",
+      "submit": "حفظ التحويل",
+      "errors": {
+        "source": "اختر مصدراً.",
+        "destination": "اختر وجهة.",
+        "itemProduct": "السطر {{line}}: اختر منتجاً.",
+        "itemQuantity": "السطر {{line}}: كمية غير صالحة.",
+        "itemExceeds": "{{product}}: الحد الأقصى للتحويل هو {{max}}."
+      }
+    },
+    "detail": {
+      "items": "العناصر",
+      "source": "المصدر",
+      "destination": "الوجهة",
+      "date": "التاريخ",
+      "createdBy": "أنشأه",
+      "notes": "ملاحظات",
+      "reversedBy": "ألغاه",
+      "reversedAt": "تاريخ الإلغاء",
+      "reversalReason": "سبب الإلغاء"
+    },
+    "reverse": {
+      "button": "إلغاء التحويل",
+      "title": "إلغاء هذا التحويل؟",
+      "body": "سيُعاد المخزون من الوجهة إلى المصدر. سيتم التحقّق من توفّر المخزون في الوجهة.",
+      "reason": "السبب (إلزامي)",
+      "reasonPlaceholder": "اشرح سبب إلغاء هذا التحويل.",
+      "confirm": "تأكيد الإلغاء",
+      "reasonRequired": "السبب إلزامي."
     }
   },
   "openingStock": {

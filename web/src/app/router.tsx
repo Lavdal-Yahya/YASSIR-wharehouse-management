@@ -18,6 +18,7 @@ import OrderReceivePage from '@/features/orders/pages/OrderReceivePage';
 import DirectReceiptPage from '@/features/stock-receipts/pages/DirectReceiptPage';
 import ReceiptsListPage from '@/features/stock-receipts/pages/ReceiptsListPage';
 import ReceiptDetailPage from '@/features/stock-receipts/pages/ReceiptDetailPage';
+import TransferNewPage from '@/features/transfers/pages/TransferNewPage';
 import SettingsPage from '@/features/settings/pages/SettingsPage';
 import NotFoundPage from '@/pages/NotFoundPage';
 import CategoriesPage from '@/features/categories/pages/CategoriesPage';
@@ -64,6 +65,7 @@ export function AppRoutes() {
             <Route path="products" element={<ProductsListPage />} />
             <Route path="products/new" element={<ProductFormPage />} />
             <Route path="products/:id" element={<ProductFormPage />} />
+            <Route path="transfers/new" element={<TransferNewPage />} />
           </Route>
 
           <Route element={<RequireRole allowed={[Role.OWNER, Role.SHOP]} />}>
