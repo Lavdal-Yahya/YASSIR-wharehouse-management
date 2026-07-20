@@ -10,6 +10,7 @@ import { CustomersModule } from './customers/customers.module';
 import { ExpenseCategoriesModule } from './expense-categories/expense-categories.module';
 import { SettingsModule } from './settings/settings.module';
 import { UsersModule } from './users/users.module';
+import { InventoryModule } from './inventory/inventory.module';
 import { DomainExceptionFilter } from './common/filters/domain-exception.filter';
 import { RolesGuard } from './common/guards/roles.guard';
 import { SessionGuard } from './common/guards/session.guard';
@@ -34,6 +35,7 @@ import { PrismaModule } from './prisma/prisma.module';
     CustomersModule,
     ExpenseCategoriesModule,
     SettingsModule,
+    InventoryModule,
   ],
   providers: [
     // Order matters: throttle first, then auth, then role check.
