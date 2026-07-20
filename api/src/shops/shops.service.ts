@@ -22,10 +22,13 @@ export type ShopOut = {
   locationId: string | null;
 };
 
-// Placeholder for Phase 3+. In Phase 2 there is no InventoryBalance table,
-// so the summary is always empty. Kept so the frontend can already render the
-// "still has stock" warning path even though the data is trivially empty.
-export type ShopStockSummary = { totalItems: number };
+// Live from Phase 3. Backs the archive-time "shop still holds stock" warning
+// (spec §15.4). productCount = distinct products with any positive balance;
+// totalUnits = sum of all positive balances at the shop's location.
+export type ShopStockSummary = {
+  productCount: number;
+  totalUnits: number;
+};
 
 @Injectable()
 export class ShopsService {
@@ -150,10 +153,26 @@ export class ShopsService {
     return mapRow(row);
   }
 
-  // Stub for phase 4+; empty in Phase 2. Wired now so the archive UI can query.
-  getStockSummary(_shopId: string): Promise<ShopStockSummary> {
-    void _shopId;
-    return Promise.resolve({ totalItems: 0 });
+  // Real implementation from Phase 3. Aggregates positive balances at the
+  // shop's Location. Zero-quantity rows are legitimate (product was here,
+  // now empty) and don't count against archiving.
+  async getStockSummary(shopId: string): Promise<ShopStockSummary> {
+    await this.ensureExists(shopId);
+    const location = await this.prisma.location.findUnique({
+      where: { shopId },
+      select: { id: true },
+    });
+    // A shop with no location row (shouldn't happen — P2-07 pairs them) has
+    // no stock by definition.
+    if (!location) return { productCount: 0, totalUnits: 0 };
+    const rows = await this.prisma.inventoryBalance.findMany({
+      where: { locationId: location.id, quantity: { gt: 0 } },
+      select: { quantity: true },
+    });
+    return {
+      productCount: rows.length,
+      totalUnits: rows.reduce((sum, r) => sum + r.quantity, 0),
+    };
   }
 
   private async ensureExists(id: string): Promise<void> {

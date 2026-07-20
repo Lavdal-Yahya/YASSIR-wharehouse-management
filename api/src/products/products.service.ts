@@ -38,13 +38,17 @@ export class ProductsService {
   constructor(private readonly prisma: PrismaService) {}
 
   // Central "does this product have anything referencing it" check.
-  // Phase 2 has no history tables yet, so it's always false. Each later phase
-  // that adds a history table (movements, order items, sale items, …) extends
-  // this method in the same PR — phase-2.md §2. Keeping the shape stable now
-  // means those extensions won't touch the delete flow.
-  async hasHistory(_productId: string): Promise<boolean> {
-    void _productId;
-    return false;
+  // Extended per Phase 3 (schema-review §7): checks every history table that
+  // exists so far. Later phases add StockTransferItem, SaleItem, etc. in the
+  // same PR that introduces the table. One round-trip: five parallel counts.
+  async hasHistory(productId: string): Promise<boolean> {
+    const [orderItems, receiptItems, movements, corrections] = await Promise.all([
+      this.prisma.incomingOrderItem.count({ where: { productId } }),
+      this.prisma.stockReceiptItem.count({ where: { productId } }),
+      this.prisma.inventoryMovement.count({ where: { productId } }),
+      this.prisma.stockCorrection.count({ where: { productId } }),
+    ]);
+    return orderItems + receiptItems + movements + corrections > 0;
   }
 
   async list(q: ListProductsQueryDto): Promise<Paginated<ProductOut>> {
