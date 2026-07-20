@@ -1,11 +1,12 @@
 import { Module } from '@nestjs/common';
 import { IncomingOrdersController } from './incoming-orders.controller';
 import { IncomingOrdersService } from './incoming-orders.service';
+import { ReceiveService } from './receive.service';
 
-// Receive and cancel services join this module in P3-05 and P3-06 respectively.
+// Cancel service joins in P3-06.
 @Module({
   controllers: [IncomingOrdersController],
-  providers: [IncomingOrdersService],
-  exports: [IncomingOrdersService],
+  providers: [IncomingOrdersService, ReceiveService],
+  exports: [IncomingOrdersService, ReceiveService],
 })
 export class IncomingOrdersModule {}

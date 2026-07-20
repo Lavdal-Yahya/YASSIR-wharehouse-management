@@ -154,6 +154,38 @@ export class CancelIncomingOrderDto {
   reason!: string;
 }
 
+export class ReceiveIncomingOrderItemDto {
+  @IsString()
+  @MinLength(1)
+  orderItemId!: string;
+
+  // Zero is allowed per-item (client may send every remaining item with a
+  // fill-in); the service ensures at least one item across the payload has
+  // quantity > 0.
+  @Type(() => Number)
+  @IsInt()
+  @Min(0)
+  quantity!: number;
+}
+
+export class ReceiveIncomingOrderDto {
+  @IsOptional()
+  @IsDateString()
+  receiptDate?: string;
+
+  @IsOptional()
+  @Transform(emptyToNull)
+  @IsString()
+  @MaxLength(2000)
+  notes?: string | null;
+
+  @IsArray()
+  @ArrayMinSize(1)
+  @ValidateNested({ each: true })
+  @Type(() => ReceiveIncomingOrderItemDto)
+  items!: ReceiveIncomingOrderItemDto[];
+}
+
 export class ListIncomingOrdersQueryDto extends PaginationQueryDto {
   // status accepts a single value or a comma-separated list (?status=ORDERED,SHIPPED).
   @IsOptional()
