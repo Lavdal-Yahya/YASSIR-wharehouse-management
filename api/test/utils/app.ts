@@ -1,6 +1,7 @@
 import { INestApplication, ValidationPipe } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
+import { Test } from '@nestjs/testing';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import { ThrottlerStorage, ThrottlerStorageService } from '@nestjs/throttler';
 import cookieParser from 'cookie-parser';
 import { AppModule } from '../../src/app.module';
 
@@ -14,7 +15,10 @@ import { AppModule } from '../../src/app.module';
 // exercise them and they'd only slow the setup.
 
 export async function createTestApp(): Promise<INestApplication> {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+  const moduleRef = await Test.createTestingModule({
+    imports: [AppModule],
+  }).compile();
+  const app = moduleRef.createNestApplication<NestExpressApplication>({
     logger: false,
   });
   app.use(cookieParser());
@@ -29,4 +33,12 @@ export async function createTestApp(): Promise<INestApplication> {
   );
   await app.init();
   return app;
+}
+
+// Clears the in-memory throttler storage. Call in beforeEach for any
+// HTTP suite that logs in multiple times per test — login is @Throttle'd
+// to 5/min per IP and every test uses the same test-runner IP.
+export function resetThrottler(app: INestApplication): void {
+  const storage = app.get<ThrottlerStorageService>(ThrottlerStorage);
+  storage.storage.clear();
 }

@@ -1,7 +1,7 @@
 import type { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { PrismaService } from '../../src/prisma/prisma.service';
-import { createTestApp } from '../utils/app';
+import { createTestApp, resetThrottler } from '../utils/app';
 import { loginAs } from '../utils/login-as';
 import { resetDatabase } from './setup';
 
@@ -20,6 +20,7 @@ describe('auth E2E harness', () => {
   });
 
   beforeEach(async () => {
+    resetThrottler(app);
     // Full reset — the same helper the phase-3/4 suites use. It clears
     // inventory rows first so transient shop locations can be dropped
     // cleanly, then resets the seeded shop/user rows we create here.
