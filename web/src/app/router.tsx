@@ -9,6 +9,15 @@ import DashboardPage from '@/pages/DashboardPage';
 import ShopPage from '@/pages/ShopPage';
 import WarehouseStockPage from '@/features/inventory/pages/WarehouseStockPage';
 import MovementsPage from '@/features/inventory/pages/MovementsPage';
+import CorrectionsPage from '@/features/inventory/pages/CorrectionsPage';
+import OpeningStockPage from '@/features/inventory/pages/OpeningStockPage';
+import OrdersListPage from '@/features/orders/pages/OrdersListPage';
+import OrderNewPage from '@/features/orders/pages/OrderNewPage';
+import OrderDetailPage from '@/features/orders/pages/OrderDetailPage';
+import OrderReceivePage from '@/features/orders/pages/OrderReceivePage';
+import DirectReceiptPage from '@/features/stock-receipts/pages/DirectReceiptPage';
+import ReceiptsListPage from '@/features/stock-receipts/pages/ReceiptsListPage';
+import ReceiptDetailPage from '@/features/stock-receipts/pages/ReceiptDetailPage';
 import SettingsPage from '@/features/settings/pages/SettingsPage';
 import NotFoundPage from '@/pages/NotFoundPage';
 import CategoriesPage from '@/features/categories/pages/CategoriesPage';
@@ -34,6 +43,7 @@ export function AppRoutes() {
           <Route element={<RequireRole allowed={[Role.OWNER]} />}>
             <Route path="dashboard" element={<DashboardPage />} />
             <Route path="settings" element={<SettingsPage />} />
+            <Route path="settings/opening-stock" element={<OpeningStockPage />} />
             <Route path="categories" element={<CategoriesPage />} />
             <Route path="shops" element={<ShopsPage />} />
             <Route path="users" element={<UsersPage />} />
@@ -43,6 +53,14 @@ export function AppRoutes() {
           <Route element={<RequireRole allowed={[Role.OWNER, Role.WAREHOUSE]} />}>
             <Route path="warehouse" element={<WarehouseStockPage />} />
             <Route path="warehouse/movements" element={<MovementsPage />} />
+            <Route path="warehouse/corrections" element={<CorrectionsPage />} />
+            <Route path="warehouse/receipts" element={<ReceiptsListPage />} />
+            <Route path="warehouse/receipts/direct" element={<DirectReceiptPage />} />
+            <Route path="warehouse/receipts/:id" element={<ReceiptDetailPage />} />
+            <Route path="orders" element={<OrdersListPage />} />
+            <Route path="orders/new" element={<OrderNewPage />} />
+            <Route path="orders/:id" element={<OrderDetailPage />} />
+            <Route path="orders/:id/receive" element={<OrderReceivePage />} />
             <Route path="products" element={<ProductsListPage />} />
             <Route path="products/new" element={<ProductFormPage />} />
             <Route path="products/:id" element={<ProductFormPage />} />
