@@ -6,6 +6,7 @@ import { Paginated, skipTake, toPaginated } from '../common/pagination';
 import { ReferenceService } from '../inventory/reference.service';
 import { SessionUser } from '../common/types/session-user';
 import {
+  CancelIncomingOrderDto,
   CreateIncomingOrderDto,
   CreateIncomingOrderItemDto,
   ListIncomingOrdersQueryDto,
@@ -186,6 +187,45 @@ export class IncomingOrdersService {
             : new Date(dto.expectedArrivalDate),
         notes: dto.notes ?? undefined,
       },
+    });
+    return this.findOne(id);
+  }
+
+  // Cancellation (P3-06). No stock effect — cancelled orders never posted
+  // stock (ORDERED) or already posted it via receipts (PARTIALLY_RECEIVED,
+  // whose stock stays). Reason mandatory (validated by DTO). Excluded from
+  // active lists via status = CANCELLED; visible in history.
+  //
+  // Interpretation for partial: keep already-received stock and its receipts;
+  // close the remainder. Ordered vs received stays visible forever.
+  async cancel(
+    id: string,
+    dto: CancelIncomingOrderDto,
+    user: SessionUser,
+  ): Promise<IncomingOrderDetail> {
+    await this.prisma.$transaction(async (tx) => {
+      const rows = await tx.$queryRaw<
+        Array<{ id: string; status: OrderStatus }>
+      >`
+        SELECT "id", "status"
+          FROM "IncomingOrder"
+         WHERE "id" = ${id}
+         FOR UPDATE
+      `;
+      if (rows.length === 0) throw new ResourceNotFoundError('Order', id);
+      const order = rows[0]!;
+      if (order.status === OrderStatus.RECEIVED || order.status === OrderStatus.CANCELLED) {
+        throw new OrderNotEditableError(order.status);
+      }
+      await tx.incomingOrder.update({
+        where: { id },
+        data: {
+          status: OrderStatus.CANCELLED,
+          cancelledBy: user.id,
+          cancelledAt: new Date(),
+          cancellationReason: dto.reason,
+        },
+      });
     });
     return this.findOne(id);
   }

@@ -4,6 +4,7 @@ import { Roles } from '../common/decorators/roles.decorator';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import type { SessionUser } from '../common/types/session-user';
 import {
+  CancelIncomingOrderDto,
   CreateIncomingOrderDto,
   ListIncomingOrdersQueryDto,
   ReceiveIncomingOrderDto,
@@ -56,5 +57,16 @@ export class IncomingOrdersController {
     @CurrentUser() user: SessionUser,
   ) {
     return this.receiveSvc.receive(id, dto, user);
+  }
+
+  @Roles(Role.OWNER, Role.WAREHOUSE)
+  @Post(':id/cancel')
+  @HttpCode(HttpStatus.OK)
+  cancel(
+    @Param('id') id: string,
+    @Body() dto: CancelIncomingOrderDto,
+    @CurrentUser() user: SessionUser,
+  ) {
+    return this.svc.cancel(id, dto, user);
   }
 }
