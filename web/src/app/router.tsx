@@ -31,6 +31,7 @@ import ShopsPage from '@/features/shops/pages/ShopsPage';
 import UsersPage from '@/features/users/pages/UsersPage';
 import CustomersPage from '@/features/customers/pages/CustomersPage';
 import ExpenseCategoriesPage from '@/features/expense-categories/pages/ExpenseCategoriesPage';
+import ExpensesListPage from '@/features/expenses/pages/ExpensesListPage';
 
 export function AppRoutes() {
   return (
@@ -76,6 +77,7 @@ export function AppRoutes() {
           <Route element={<RequireRole allowed={[Role.OWNER, Role.SHOP]} />}>
             <Route path="shop" element={<ShopPage />} />
             <Route path="shop/stock" element={<ShopStockPage />} />
+            <Route path="expenses" element={<ExpensesListPage />} />
           </Route>
 
           <Route path="*" element={<NotFoundPage />} />
