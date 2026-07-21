@@ -65,6 +65,8 @@ model Shop {
   location   Location?
   // Phase 5 back-relations
   sales      Sale[]
+  // Phase 6 back-relations (money-received-by-shop, per phase-6 §3 step 8)
+  payments   CustomerPayment[]
 }
 
 model Location {
@@ -148,6 +150,8 @@ model Customer {
   updatedAt DateTime @updatedAt
   // Phase 5 back-relations
   sales     Sale[]
+  // Phase 6 back-relations
+  payments  CustomerPayment[]
 
   @@index([name])
   @@index([phone])
@@ -409,6 +413,9 @@ model Sale {
   createdAt             DateTime      @default(now())
   updatedAt             DateTime      @updatedAt
   items                 SaleItem[]
+  // Phase 6 back-relations. Allocations "count" iff BOTH this sale and the
+  // parent payment are ACTIVE (D-013) — filter in queries, never here.
+  allocations           PaymentAllocation[]
 
   @@index([shopId, saleDate])
   @@index([customerId, paymentStatus])
@@ -431,5 +438,64 @@ model SaleItem {
   lineTotal           Int
 
   @@index([productId])
+  @@index([saleId])
+}
+
+// ---------- Phase 6: customer payments & allocations ----------
+
+enum CustomerPaymentStatus {
+  ACTIVE
+  CANCELLED
+}
+
+// A CustomerPayment represents money received AFTER a sale (D-012) — cash
+// taken at sale time lives on Sale.amountPaidAtSale. Reversal flips status
+// to CANCELLED and recomputes each touched sale's amountPaid from scratch
+// (amountPaidAtSale + Σ active allocations). debtBeforePayment /
+// debtAfterPayment are snapshots so receipts read the numbers as printed,
+// even after later reversals (spec §23.4).
+model CustomerPayment {
+  id                 String                @id @default(cuid())
+  referenceNumber    String                @unique
+  customerId         String
+  customer           Customer              @relation(fields: [customerId], references: [id])
+  // Shop that received the cash. Cash-collected reports (Phase 7) sum
+  // ACTIVE payments by shopId + paymentDate; no separate cash table.
+  shopId             String
+  shop               Shop                  @relation(fields: [shopId], references: [id])
+  amount             Int
+  paymentDate        DateTime
+  debtBeforePayment  Int
+  debtAfterPayment   Int
+  notes              String?
+  status             CustomerPaymentStatus @default(ACTIVE)
+  createdBy          String
+  cancelledBy        String?
+  cancelledAt        DateTime?
+  cancellationReason String?
+  createdAt          DateTime              @default(now())
+  allocations        PaymentAllocation[]
+
+  @@index([customerId, paymentDate])
+  @@index([shopId, paymentDate])
+}
+
+// An allocation carries no status of its own — liveness is derived from
+// its two parents (D-013): active iff payment.status = ACTIVE AND
+// sale.status = ACTIVE. Never deleted or flagged; reversals recompute
+// touched sales' balances instead of patching allocation rows.
+// @@unique([customerPaymentId, saleId]) makes the "one payment allocates to
+// a sale at most once" property structural — the oldest-first walk produces
+// exactly that shape, and any code that would violate it can't insert.
+model PaymentAllocation {
+  id                String          @id @default(cuid())
+  customerPaymentId String
+  payment           CustomerPayment @relation(fields: [customerPaymentId], references: [id])
+  saleId            String
+  sale              Sale            @relation(fields: [saleId], references: [id])
+  amountAllocated   Int
+  createdAt         DateTime        @default(now())
+
+  @@unique([customerPaymentId, saleId])
   @@index([saleId])
 }
