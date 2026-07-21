@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ReportsController } from './reports.controller';
 import { ShopReportService } from './shop-report.service';
+import { WarehouseReportService } from './warehouse-report.service';
 
 // ReportsModule aggregates read-only projections over the money and
 // stock model (phase-7 §4). Every report goes through the shared
@@ -13,7 +14,7 @@ import { ShopReportService } from './shop-report.service';
 
 @Module({
   controllers: [ReportsController],
-  providers: [ShopReportService],
-  exports: [ShopReportService],
+  providers: [ShopReportService, WarehouseReportService],
+  exports: [ShopReportService, WarehouseReportService],
 })
 export class ReportsModule {}
