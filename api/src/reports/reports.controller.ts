@@ -5,6 +5,7 @@ import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { ShopScopeGuard } from '../common/guards/shop-scope.guard';
 import type { SessionUser } from '../common/types/session-user';
 import { ReportFilterDto } from './dto/report-filter.dto';
+import { SalesReportService } from './sales-report.service';
 import { ShopReportService } from './shop-report.service';
 import { WarehouseReportService } from './warehouse-report.service';
 
@@ -24,6 +25,7 @@ export class ReportsController {
   constructor(
     private readonly shopReport: ShopReportService,
     private readonly warehouseReport: WarehouseReportService,
+    private readonly salesReport: SalesReportService,
   ) {}
 
   // Shop report — the marquee. WAREHOUSE never sees shop money
@@ -40,5 +42,13 @@ export class ReportsController {
   @Get('warehouse')
   warehouse(@Query() filter: ReportFilterDto, @CurrentUser() user: SessionUser) {
     return this.warehouseReport.build(filter, user);
+  }
+
+  // Sales breakdowns — by status, shop, product (top-N), UTC day.
+  // Shop-scoped for SHOP users; OWNER may aggregate across shops.
+  @Roles(Role.OWNER, Role.SHOP)
+  @Get('sales')
+  sales(@Query() filter: ReportFilterDto, @CurrentUser() user: SessionUser) {
+    return this.salesReport.build(filter, user);
   }
 }

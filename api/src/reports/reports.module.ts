@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ReportsController } from './reports.controller';
+import { SalesReportService } from './sales-report.service';
 import { ShopReportService } from './shop-report.service';
 import { WarehouseReportService } from './warehouse-report.service';
 
@@ -14,7 +15,7 @@ import { WarehouseReportService } from './warehouse-report.service';
 
 @Module({
   controllers: [ReportsController],
-  providers: [ShopReportService, WarehouseReportService],
-  exports: [ShopReportService, WarehouseReportService],
+  providers: [ShopReportService, WarehouseReportService, SalesReportService],
+  exports: [ShopReportService, WarehouseReportService, SalesReportService],
 })
 export class ReportsModule {}
