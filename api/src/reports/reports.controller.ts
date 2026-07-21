@@ -31,7 +31,7 @@ export class ReportsController {
     private readonly salesReport: SalesReportService,
     private readonly debtReport: DebtReportService,
     private readonly incomingOrdersReport: IncomingOrdersReportService,
-    private readonly estimatedProfit: EstimatedProfitService,
+    private readonly profitService: EstimatedProfitService,
   ) {}
 
   // Shop report — the marquee. WAREHOUSE never sees shop money
@@ -84,6 +84,6 @@ export class ReportsController {
     @Query() filter: ReportFilterDto,
     @CurrentUser() user: SessionUser,
   ) {
-    return this.estimatedProfit.build(filter, user);
+    return this.profitService.build(filter, user);
   }
 }
