@@ -13,6 +13,7 @@ import { SalesService } from '../../src/sales/sales.service';
 import { SaleCancellationService } from '../../src/sales/sale-cancellation.service';
 import { CustomersService } from '../../src/customers/customers.service';
 import { PaymentsService } from '../../src/payments/payments.service';
+import { ExpensesService } from '../../src/expenses/expenses.service';
 
 // Integration harness: instantiate the real services against the dev Postgres.
 // We do NOT go through Nest's TestingModule because we don't need HTTP for
@@ -34,6 +35,7 @@ export function createHarness(): {
   saleCancellation: SaleCancellationService;
   customers: CustomersService;
   payments: PaymentsService;
+  expenses: ExpensesService;
   disconnect: () => Promise<void>;
 } {
   const prisma = new PrismaService();
@@ -50,6 +52,7 @@ export function createHarness(): {
   const saleCancellation = new SaleCancellationService(prisma, inventory, sales);
   const customers = new CustomersService(prisma);
   const payments = new PaymentsService(prisma, refs);
+  const expenses = new ExpensesService(prisma, refs);
   return {
     prisma,
     inventory,
@@ -65,6 +68,7 @@ export function createHarness(): {
     saleCancellation,
     customers,
     payments,
+    expenses,
     disconnect: () => prisma.$disconnect(),
   };
 }
