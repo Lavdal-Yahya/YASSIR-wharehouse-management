@@ -14,6 +14,8 @@
     "users": "Utilisateurs",
     "settings": "Réglages",
     "transfers": "Transferts",
+    "expenses": "Dépenses",
+    "reports": "Rapports",
     "logout": "Se déconnecter"
   },
   "login": {
@@ -86,6 +88,9 @@
     "CUSTOMER_NOT_FOUND": "Client introuvable.",
     "EXPENSECATEGORY_NOT_FOUND": "Catégorie de dépenses introuvable.",
     "EXPENSECATEGORY_NAME_TAKEN": "Ce nom de catégorie est déjà utilisé.",
+    "EXPENSE_NOT_FOUND": "Dépense introuvable.",
+    "EXPENSE_NOT_CANCELLABLE": "Cette dépense ne peut pas être annulée dans son état actuel.",
+    "EXPENSE_NOT_EDITABLE": "Impossible de modifier une dépense annulée. Créez-en une nouvelle.",
     "LOCATION_NOT_FOUND": "Emplacement introuvable.",
     "ORDER_NOT_FOUND": "Commande introuvable.",
     "ORDER_NOT_EDITABLE": "Cette commande ne peut plus être modifiée dans son état actuel.",
@@ -520,6 +525,100 @@
       "reasonPlaceholder": "Expliquez pourquoi ce transfert est annulé.",
       "confirm": "Confirmer l'annulation",
       "reasonRequired": "Le motif est obligatoire."
+    }
+  },
+  "expenses": {
+    "title": "Dépenses",
+    "subtitle": "Sorties d'argent enregistrées par boutique.",
+    "new": "Nouvelle dépense",
+    "searchPlaceholder": "Référence ou description…",
+    "columns": {
+      "reference": "Référence",
+      "date": "Date",
+      "shop": "Boutique",
+      "category": "Catégorie",
+      "amount": "Montant",
+      "description": "Description",
+      "status": "Statut"
+    },
+    "filter": {
+      "shop": "Boutique",
+      "allShops": "Toutes les boutiques",
+      "category": "Catégorie",
+      "allCategories": "Toutes les catégories",
+      "status": "Statut",
+      "allStatuses": "Tous les statuts",
+      "from": "Depuis",
+      "to": "Jusqu'à"
+    },
+    "status": {
+      "ACTIVE": "Active",
+      "CANCELLED": "Annulée"
+    },
+    "form": {
+      "createTitle": "Nouvelle dépense",
+      "editTitle": "Modifier la dépense",
+      "shop": "Boutique",
+      "chooseShop": "— Choisir une boutique —",
+      "category": "Catégorie",
+      "chooseCategory": "— Aucune catégorie —",
+      "amount": "Montant",
+      "date": "Date",
+      "description": "Description",
+      "notes": "Notes"
+    },
+    "cancelConfirm": {
+      "button": "Annuler la dépense",
+      "title": "Annuler cette dépense ?",
+      "body": "La dépense sera conservée dans l'historique mais retirée des totaux actifs.",
+      "reason": "Motif (obligatoire)",
+      "reasonPlaceholder": "Expliquez pourquoi cette dépense est annulée.",
+      "confirm": "Confirmer l'annulation",
+      "reasonRequired": "Le motif est obligatoire."
+    }
+  },
+  "reports": {
+    "shop": {
+      "title": "Rapport boutique",
+      "subtitle": "Ventes, encaissements et dettes sur la période.",
+      "salesValue": "Valeur des ventes",
+      "cashAtSale": "Encaissé à la vente",
+      "laterPayments": "Versements ultérieurs",
+      "totalCollected": "Total encaissé",
+      "newDebt": "Nouvelle dette",
+      "outstanding": "Dette en cours",
+      "expenses": "Dépenses",
+      "netCollected": "Encaissé net",
+      "netCollectedHint": "Encaissé − dépenses"
+    },
+    "filter": {
+      "shop": "Boutique",
+      "allShops": "Toutes les boutiques",
+      "from": "Depuis",
+      "to": "Jusqu'à"
+    }
+  },
+  "dashboard": {
+    "owner": {
+      "title": "Tableau de bord",
+      "subtitle": "Aperçu quotidien de l'activité.",
+      "today": "Aujourd'hui",
+      "totalOutstanding": "Dette totale en cours",
+      "lowStockCount": "Produits en rupture ou stock bas",
+      "pendingOrdersCount": "Commandes en attente ou partielles",
+      "perShop": "Par boutique"
+    },
+    "shop": {
+      "title": "Ma boutique",
+      "subtitle": "Chiffres du jour et actions rapides.",
+      "todaySalesValue": "Ventes du jour",
+      "todayCash": "Encaissé aujourd'hui",
+      "todayDebt": "Dette créée aujourd'hui",
+      "myOutstanding": "Dette en cours",
+      "quickActions": "Actions rapides",
+      "openStock": "Voir mon stock",
+      "openCustomers": "Voir les clients",
+      "openExpenses": "Enregistrer une dépense"
     }
   },
   "openingStock": {

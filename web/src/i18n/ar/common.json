@@ -14,7 +14,9 @@
     "users": "المستخدمون",
     "settings": "الإعدادات",
     "transfers": "التحويلات",
-    "logout": "تسجيل الخروج"
+    "logout": "تسجيل الخروج",
+    "expenses": "المصروفات",
+    "reports": "التقارير"
   },
   "login": {
     "title": "تسجيل الدخول",
@@ -86,6 +88,9 @@
     "CUSTOMER_NOT_FOUND": "العميل غير موجود.",
     "EXPENSECATEGORY_NOT_FOUND": "فئة المصاريف غير موجودة.",
     "EXPENSECATEGORY_NAME_TAKEN": "اسم الفئة مستخدم من قبل.",
+    "EXPENSE_NOT_FOUND": "لم يتم العثور على المصروف.",
+    "EXPENSE_NOT_CANCELLABLE": "لا يمكن إلغاء هذا المصروف في حالته الحالية.",
+    "EXPENSE_NOT_EDITABLE": "لا يمكن تعديل مصروف ملغى. أنشئ مصروفاً جديداً بدلاً من ذلك.",
     "LOCATION_NOT_FOUND": "الموقع غير موجود.",
     "ORDER_NOT_FOUND": "الطلب غير موجود.",
     "ORDER_NOT_EDITABLE": "لا يمكن تعديل هذا الطلب في حالته الحالية.",
@@ -520,6 +525,100 @@
       "reasonPlaceholder": "اشرح سبب إلغاء هذا التحويل.",
       "confirm": "تأكيد الإلغاء",
       "reasonRequired": "السبب إلزامي."
+    }
+  },
+  "expenses": {
+    "title": "المصروفات",
+    "subtitle": "المصاريف المسجلة لكل محل.",
+    "new": "مصروف جديد",
+    "searchPlaceholder": "المرجع أو الوصف…",
+    "columns": {
+      "reference": "المرجع",
+      "date": "التاريخ",
+      "shop": "المحل",
+      "category": "الفئة",
+      "amount": "المبلغ",
+      "description": "الوصف",
+      "status": "الحالة"
+    },
+    "filter": {
+      "shop": "المحل",
+      "allShops": "كل المحلات",
+      "category": "الفئة",
+      "allCategories": "كل الفئات",
+      "status": "الحالة",
+      "allStatuses": "كل الحالات",
+      "from": "من",
+      "to": "إلى"
+    },
+    "status": {
+      "ACTIVE": "نشط",
+      "CANCELLED": "ملغى"
+    },
+    "form": {
+      "createTitle": "مصروف جديد",
+      "editTitle": "تعديل المصروف",
+      "shop": "المحل",
+      "chooseShop": "— اختر محلاً —",
+      "category": "الفئة",
+      "chooseCategory": "— بدون فئة —",
+      "amount": "المبلغ",
+      "date": "التاريخ",
+      "description": "الوصف",
+      "notes": "ملاحظات"
+    },
+    "cancelConfirm": {
+      "button": "إلغاء المصروف",
+      "title": "هل تريد إلغاء هذا المصروف؟",
+      "body": "سيبقى المصروف في السجل لكنه سيُستبعد من الإجماليات النشطة.",
+      "reason": "السبب (إلزامي)",
+      "reasonPlaceholder": "اشرح سبب إلغاء هذا المصروف.",
+      "confirm": "تأكيد الإلغاء",
+      "reasonRequired": "السبب إلزامي."
+    }
+  },
+  "reports": {
+    "shop": {
+      "title": "تقرير المحل",
+      "subtitle": "المبيعات والتحصيلات والديون خلال الفترة.",
+      "salesValue": "قيمة المبيعات",
+      "cashAtSale": "المُحصَّل عند البيع",
+      "laterPayments": "الدفعات اللاحقة",
+      "totalCollected": "إجمالي المُحصَّل",
+      "newDebt": "دين جديد",
+      "outstanding": "الدين القائم",
+      "expenses": "المصروفات",
+      "netCollected": "الصافي المُحصَّل",
+      "netCollectedHint": "المُحصَّل − المصروفات"
+    },
+    "filter": {
+      "shop": "المحل",
+      "allShops": "كل المحلات",
+      "from": "من",
+      "to": "إلى"
+    }
+  },
+  "dashboard": {
+    "owner": {
+      "title": "لوحة التحكم",
+      "subtitle": "نظرة يومية على النشاط.",
+      "today": "اليوم",
+      "totalOutstanding": "إجمالي الديون القائمة",
+      "lowStockCount": "منتجات ناقصة أو مستوى منخفض",
+      "pendingOrdersCount": "طلبات قيد الاستلام أو جزئية",
+      "perShop": "حسب المحل"
+    },
+    "shop": {
+      "title": "محلي",
+      "subtitle": "أرقام اليوم وإجراءات سريعة.",
+      "todaySalesValue": "مبيعات اليوم",
+      "todayCash": "المُحصَّل اليوم",
+      "todayDebt": "الدين اليوم",
+      "myOutstanding": "الدين القائم",
+      "quickActions": "إجراءات سريعة",
+      "openStock": "عرض مخزوني",
+      "openCustomers": "عرض العملاء",
+      "openExpenses": "تسجيل مصروف"
     }
   },
   "openingStock": {
