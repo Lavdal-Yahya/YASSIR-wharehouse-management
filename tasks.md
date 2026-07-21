@@ -146,18 +146,18 @@ Goal: debts get repaid correctly; every transaction has a printable trace.
 
 Goal: the owner can finally *see* the business.
 
-- [ ] P7-01 Expenses: create (shop-scoped), edit, cancel with reason; cancelled excluded from totals
-- [ ] P7-02 Expenses list + filters (shop, category, date)
-- [ ] P7-03 Report query layer: reusable date-range + shop filters; cancelled records excluded everywhere
-- [ ] P7-04 Shop report: sales value / cash at sale / later debt payments / total collected / new debt / outstanding / expenses / collected-minus-expenses
-- [ ] P7-05 Warehouse reports: current stock, received, transferred out, corrections, low/out-of-stock
-- [ ] P7-06 Sales reports: by status, shop, product, date
-- [ ] P7-07 Debt reports: by customer, by shop, unpaid/partial sales, payments in period
-- [ ] P7-08 Incoming-order report: ordered vs received vs remaining by status
-- [ ] P7-09 Estimated profit block: COGS + gross profit only where costs exist, clearly labeled "estimated"; never "net profit" with missing costs
+- [x] P7-01 Expenses: create (shop-scoped), edit, cancel with reason; cancelled excluded from totals
+- [ ] P7-02 Expenses list + filters (shop, category, date)  *(list endpoint landed in PR-A; UI is PR-B)*
+- [x] P7-03 Report query layer: reusable date-range + shop filters; cancelled records excluded everywhere
+- [x] P7-04 Shop report: sales value / cash at sale / later debt payments / total collected / new debt / outstanding / expenses / collected-minus-expenses
+- [x] P7-05 Warehouse reports: current stock, received, transferred out, corrections, low/out-of-stock
+- [x] P7-06 Sales reports: by status, shop, product, date
+- [x] P7-07 Debt reports: by customer, by shop, unpaid/partial sales, payments in period
+- [x] P7-08 Incoming-order report: ordered vs received vs remaining by status
+- [x] P7-09 Estimated profit block: COGS + gross profit only where costs exist, clearly labeled "estimated"; never "net profit" with missing costs
 - [ ] P7-10 Owner dashboard: today's sales value vs cash collected vs new debt (distinct!), total outstanding debt, low stock, pending orders, per-shop summary
 - [ ] P7-11 Shop-employee dashboard: own shop only
-- [ ] P7-12 Report tests: the spec's 100k sold / 60k collected / 40k debt example; later 10k debt payment moves cash but not sales; totals match DB sums
+- [x] P7-12 Report tests: the spec's 100k sold / 60k collected / 40k debt example; later 10k debt payment moves cash but not sales; totals match DB sums  *(service-level tests landed; HTTP permission matrix follows in PR-B alongside dashboards)*
 
 **Definition of Done:** owner answers every question in spec §2 from the app; sales value ≠ cash collected everywhere they appear.
 
