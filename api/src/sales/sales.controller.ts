@@ -1,10 +1,21 @@
-import { Body, Controller, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { Role } from '@prisma/client';
 import { Roles } from '../common/decorators/roles.decorator';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { ShopScopeGuard } from '../common/guards/shop-scope.guard';
 import type { SessionUser } from '../common/types/session-user';
-import { CreateSaleDto, ListSalesQueryDto } from './dto/sale.dto';
+import { CancelSaleDto, CreateSaleDto, ListSalesQueryDto } from './dto/sale.dto';
+import { SaleCancellationService } from './sale-cancellation.service';
 import { SalesService } from './sales.service';
 
 // Sales routes (phase-5 §4). WAREHOUSE never appears — sales are shop
@@ -16,7 +27,10 @@ import { SalesService } from './sales.service';
 @Controller('sales')
 @UseGuards(ShopScopeGuard)
 export class SalesController {
-  constructor(private readonly svc: SalesService) {}
+  constructor(
+    private readonly svc: SalesService,
+    private readonly cancellation: SaleCancellationService,
+  ) {}
 
   @Roles(Role.OWNER, Role.SHOP)
   @Get()
@@ -36,5 +50,20 @@ export class SalesController {
   @Post()
   create(@Body() dto: CreateSaleDto, @CurrentUser() user: SessionUser) {
     return this.svc.confirm(dto, user);
+  }
+
+  // OWNER only — cancellation is an audit-level operation (spec §24.2).
+  // The service refuses when any active payment allocation points at the
+  // sale (SALE_HAS_ACTIVE_PAYMENTS with the blocking references) so the
+  // owner reverses those first, then cancels.
+  @Roles(Role.OWNER)
+  @Post(':id/cancel')
+  @HttpCode(HttpStatus.OK)
+  cancel(
+    @Param('id') id: string,
+    @Body() dto: CancelSaleDto,
+    @CurrentUser() user: SessionUser,
+  ) {
+    return this.cancellation.cancel(id, dto, user);
   }
 }

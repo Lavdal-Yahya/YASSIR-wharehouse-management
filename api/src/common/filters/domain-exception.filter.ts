@@ -13,6 +13,9 @@ type ErrorResponse = {
   statusCode: number;
   code: string;
   message: string;
+  // Structured payload for errors that need it (e.g. SALE_HAS_ACTIVE_PAYMENTS
+  // carries the blocking payment references so the UI can render links).
+  details?: Record<string, unknown>;
 };
 
 // Global filter. Priority:
@@ -29,10 +32,12 @@ export class DomainExceptionFilter implements ExceptionFilter {
     const res = host.switchToHttp().getResponse<Response>();
 
     if (exception instanceof DomainError) {
+      const details = exception.details();
       const body: ErrorResponse = {
         statusCode: exception.httpStatus,
         code: exception.code,
         message: exception.message,
+        ...(details ? { details } : {}),
       };
       res.status(exception.httpStatus).json(body);
       return;
