@@ -607,7 +607,13 @@
       "totalOutstanding": "إجمالي الديون القائمة",
       "lowStockCount": "منتجات ناقصة أو مستوى منخفض",
       "pendingOrdersCount": "طلبات قيد الاستلام أو جزئية",
-      "perShop": "حسب المحل"
+      "perShop": "حسب المحل",
+      "perShopCount_zero": "لا مبيعات",
+      "perShopCount_one": "بيع واحد",
+      "perShopCount_two": "بيعتان",
+      "perShopCount_few": "{{count}} مبيعات",
+      "perShopCount_many": "{{count}} مبيعة",
+      "perShopCount_other": "{{count}} مبيعة"
     },
     "shop": {
       "title": "محلي",

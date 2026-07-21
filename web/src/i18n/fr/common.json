@@ -607,7 +607,9 @@
       "totalOutstanding": "Dette totale en cours",
       "lowStockCount": "Produits en rupture ou stock bas",
       "pendingOrdersCount": "Commandes en attente ou partielles",
-      "perShop": "Par boutique"
+      "perShop": "Par boutique",
+      "perShopCount_one": "{{count}} vente",
+      "perShopCount_other": "{{count}} ventes"
     },
     "shop": {
       "title": "Ma boutique",

@@ -141,8 +141,8 @@ export default function OwnerDashboardPage() {
                       <span className="text-sm font-medium text-slate-900">
                         {s.shopName}
                       </span>
-                      <span className="text-xs text-slate-500">
-                        {s.salesCount} {t('sales.subtitle') !== 'sales.subtitle' ? '' : ''}
+                      <span className="text-xs text-slate-500 tabular-nums">
+                        {t('dashboard.owner.perShopCount', { count: s.salesCount })}
                       </span>
                     </div>
                     <div className="mt-2 grid grid-cols-2 gap-2 text-xs text-slate-600">
