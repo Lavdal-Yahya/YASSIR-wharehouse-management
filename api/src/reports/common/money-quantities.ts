@@ -30,9 +30,19 @@ export async function computeSalesValue(
   return agg._sum.totalAmount ?? 0;
 }
 
-// New debt created = Σ Sale.amountDue (ACTIVE, filtered by saleDate).
-// Reads the debt that came into existence in the window — not the
-// debt still outstanding as of the window's end (that's computeOutstanding).
+// New debt created = Σ (Sale.totalAmount − Sale.amountPaidAtSale)
+// for ACTIVE sales dated in the window. This is the debt that came
+// into existence in the window AT SALE TIME — later payments do NOT
+// retroactively reduce it (that would silently conflate "new debt"
+// with "still-outstanding portion of new debt" and duplicate the
+// outstanding figure).
+//
+// The phase-7 §4 table shorthanded this as "Σ Sale.amountDue where
+// ACTIVE, by saleDate", which reads the current amountDue and thus
+// drifts as later payments allocate. The owner-useful reading is the
+// initial debt at sale time — matched by phase-7 §7 item 2's
+// invariant that "a later payment moves cash and outstanding but
+// nothing else that day".
 export async function computeNewDebt(
   prisma: PrismaService,
   scope: ReportScope,
@@ -40,8 +50,13 @@ export async function computeNewDebt(
   const where: Prisma.SaleWhereInput = { ...ACTIVE_SALE };
   if (scope.shopId) where.shopId = scope.shopId;
   applyDateBounds(where, 'saleDate', scope);
-  const agg = await prisma.sale.aggregate({ where, _sum: { amountDue: true } });
-  return agg._sum.amountDue ?? 0;
+  const agg = await prisma.sale.aggregate({
+    where,
+    _sum: { totalAmount: true, amountPaidAtSale: true },
+  });
+  const total = agg._sum.totalAmount ?? 0;
+  const paidAtSale = agg._sum.amountPaidAtSale ?? 0;
+  return total - paidAtSale;
 }
 
 // Cash collected — the two-date-column primitive. Advisor flag #1:
