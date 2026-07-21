@@ -560,6 +560,92 @@ describe('receipt immutability (spec §23.4)', () => {
   });
 });
 
+describe('phase-6 DoD · full debt lifecycle acceptance walk', () => {
+  it('debt sale → two payments → reverse one → cancel another → balances correct at every step', async () => {
+    // Three debt sales at three different dates so oldest-first ordering
+    // is predictable. Product costs 1,000/unit; quantities pick prices.
+    const productA = await makeProduct(h.prisma, ctx.categoryId);
+    await seedStock(productA, shop.locationId, 20);
+    const customer = await h.prisma.customer.create({ data: { name: 'Ali' } });
+    const s1 = await debtSale(customer.id, productA, 3, 1_000, '2026-06-01'); // 3,000
+    const s2 = await debtSale(customer.id, productA, 5, 1_000, '2026-06-15'); // 5,000
+    const s3 = await debtSale(customer.id, productA, 2, 1_000, '2026-07-01'); // 2,000
+
+    // Initial state: outstanding is the sum of the three sales.
+    expect(await h.customers.outstanding(customer.id)).toBe(10_000);
+    // Stock was 20; 3+5+2 = 10 units left.
+    expect(
+      (
+        await h.prisma.inventoryBalance.findUnique({
+          where: {
+            locationId_productId: {
+              locationId: shop.locationId,
+              productId: productA,
+            },
+          },
+        })
+      )?.quantity,
+    ).toBe(10);
+
+    // Payment #1: 3,000 → oldest-first settles s1 exactly.
+    const pay1 = await h.payments.register(
+      { customerId: customer.id, shopId: shop.shopId, amount: 3_000 },
+      owner,
+    );
+    expect(pay1.debtBeforePayment).toBe(10_000);
+    expect(pay1.debtAfterPayment).toBe(7_000);
+    expect(await h.customers.outstanding(customer.id)).toBe(7_000);
+    expect((await h.sales.findOne(s1.id)).paymentStatus).toBe(PaymentStatus.PAID);
+
+    // Payment #2: 5,000 → oldest-first settles s2 exactly.
+    const pay2 = await h.payments.register(
+      { customerId: customer.id, shopId: shop.shopId, amount: 5_000 },
+      owner,
+    );
+    expect(pay2.debtBeforePayment).toBe(7_000);
+    expect(pay2.debtAfterPayment).toBe(2_000);
+    expect(await h.customers.outstanding(customer.id)).toBe(2_000);
+    expect((await h.sales.findOne(s2.id)).paymentStatus).toBe(PaymentStatus.PAID);
+
+    // Reverse payment #1 → s1 rises back to UNPAID; s2 unaffected;
+    // outstanding rises by exactly 3,000.
+    await h.payments.reverse(pay1.id, { reason: 'test-lifecycle' }, owner);
+    expect((await h.sales.findOne(s1.id)).paymentStatus).toBe(PaymentStatus.UNPAID);
+    expect((await h.sales.findOne(s2.id)).paymentStatus).toBe(PaymentStatus.PAID);
+    expect(await h.customers.outstanding(customer.id)).toBe(5_000);
+
+    // Cancel s3 — no active allocation touches it (payment #2 only
+    // allocated to s2, payment #1 is now CANCELLED). Plain-cancel path
+    // succeeds; stock returns; outstanding drops by exactly s3's due.
+    await h.saleCancellation.cancel(
+      s3.id,
+      { reason: 'test-lifecycle' },
+      owner,
+    );
+    expect((await h.sales.findOne(s3.id)).status).toBe(SaleStatus.CANCELLED);
+    expect(await h.customers.outstanding(customer.id)).toBe(3_000);
+    // Stock returned: 10 + 2 = 12.
+    expect(
+      (
+        await h.prisma.inventoryBalance.findUnique({
+          where: {
+            locationId_productId: {
+              locationId: shop.locationId,
+              productId: productA,
+            },
+          },
+        })
+      )?.quantity,
+    ).toBe(12);
+
+    // Final state summary — the sale-coherence + payment-snapshot
+    // invariants in afterEach guarantee nothing drifted internally.
+    // The remaining active outstanding is exactly s1's amountDue.
+    const s1Final = await h.sales.findOne(s1.id);
+    expect(s1Final.amountDue).toBe(3_000);
+  });
+});
+
 describe('SHOP permissions at the service level', () => {
   it('SHOP passing targetSaleId → 403 (owner-only escape hatch)', async () => {
     const productA = await makeProduct(h.prisma, ctx.categoryId);
