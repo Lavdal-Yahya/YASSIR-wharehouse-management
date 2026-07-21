@@ -126,17 +126,17 @@ Goal: the core money path. Highest-risk phase — no shortcuts on tests.
 
 Goal: debts get repaid correctly; every transaction has a printable trace.
 
-- [ ] P6-01 Customer account page: totals (purchases / paid / outstanding), unpaid & partially paid sales with balances, payment history
-- [ ] P6-02 Payment service: validate amount (> 0, ≤ outstanding), allocate oldest-sale-first across sales, update sale amounts + statuses, record debtBefore/After — one transaction
-- [ ] P6-03 Admin option: allocate a payment to a specific sale (employee flow stays automatic)
-- [ ] P6-04 Payment reversal (admin): reverse allocations, restore sale balances + statuses + debt, exclude from cash totals, reason recorded — one transaction
+- [ ] P6-01 Customer account page: totals (purchases / paid / outstanding), unpaid & partially paid sales with balances, payment history  *(migration + tables landed in PR-A; UI is PR-B)*
+- [x] P6-02 Payment service: validate amount (> 0, ≤ outstanding), allocate oldest-sale-first across sales, update sale amounts + statuses, record debtBefore/After — one transaction
+- [x] P6-03 Admin option: allocate a payment to a specific sale (employee flow stays automatic)
+- [x] P6-04 Payment reversal (admin): reverse allocations, restore sale balances + statuses + debt, exclude from cash totals, reason recorded — one transaction
 - [ ] P6-05 Register Payment UI from customer page, shop-scoped, confirmation with remaining debt
 - [ ] P6-06 Sale receipt: print-friendly page (white/black, narrow-printer friendly), all spec fields, browser print
 - [ ] P6-07 Payment receipt: spec fields incl. debt before/after
 - [ ] P6-08 Reprint old receipts from sale/payment detail; values frozen from snapshots
-- [ ] P6-09 Integration tests: 4,000 payment over 3,000+5,000 debts → oldest settled + 1,000 allocated; overpay rejected; reversal restores exact prior state
-- [ ] P6-10 Sale cancellation service (admin): restore stock, reverse movements, remove debt, reverse initial payment; sale kept as Cancelled with reason
-- [ ] P6-11 Protected cancellation: sale with later payments — block unless allocations reversed first; warning UI; ordinary employees blocked server-side
+- [x] P6-09 Integration tests: 4,000 payment over 3,000+5,000 debts → oldest settled + 1,000 allocated; overpay rejected; reversal restores exact prior state
+- [x] P6-10 Sale cancellation service (admin): restore stock, reverse movements, remove debt, reverse initial payment; sale kept as Cancelled with reason
+- [x] P6-11 Protected cancellation: sale with later payments — block unless allocations reversed first; warning UI; ordinary employees blocked server-side  *(server-side gate landed in PR-A; warning UI is PR-B)*
 
 **Definition of Done:** full lifecycle works and reverses cleanly: debt sale → two later payments → reverse one payment → cancel a different unpaid sale — balances correct at every step.
 

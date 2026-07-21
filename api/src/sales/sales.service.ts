@@ -1,5 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { MovementType, Prisma, Role, SaleStatus } from '@prisma/client';
+import {
+  CustomerPaymentStatus,
+  MovementType,
+  Prisma,
+  Role,
+  SaleStatus,
+} from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { ResourceNotFoundError } from '../common/errors/generic-errors';
 import { Paginated, skipTake, toPaginated } from '../common/pagination';
@@ -259,11 +265,20 @@ export class SalesService {
     };
   }
 
-  // Standing invariant #2 (phase-5 §6 / architecture §3.5). For every
-  // sale: amountPaid = amountPaidAtSale (+ Σ active allocations in
-  // Phase 6), amountDue = totalAmount − amountPaid, and paymentStatus
-  // matches the derivation function. Called from the integration
-  // suite's afterEach; empty result = healthy.
+  // Standing invariant #2 (architecture §3.5, D-012). For every sale:
+  //   amountPaid  = amountPaidAtSale + Σ active allocations
+  //   amountDue   = totalAmount − amountPaid
+  //   paymentStatus derived from (totalAmount, amountPaid)
+  // where "active allocation" means the parent CustomerPayment is ACTIVE
+  // AND the sale itself is ACTIVE (D-013 — allocations have no status of
+  // their own; liveness derives from both parents). Called from every
+  // integration suite's afterEach; empty result = healthy.
+  //
+  // Cancelled sales still get checked: cancellation preserves their last
+  // amountPaid so the row remains internally consistent — active totals
+  // exclude them by filtering status = ACTIVE elsewhere, not by rewriting
+  // these fields. The invariant catches any place that patches amountPaid
+  // outside the payments + sale services.
   async verifySaleCoherenceInvariant(): Promise<
     Array<{
       saleId: string;
@@ -275,11 +290,16 @@ export class SalesService {
       select: {
         id: true,
         referenceNumber: true,
+        status: true,
         totalAmount: true,
         amountPaidAtSale: true,
         amountPaid: true,
         amountDue: true,
         paymentStatus: true,
+        allocations: {
+          where: { payment: { status: CustomerPaymentStatus.ACTIVE } },
+          select: { amountAllocated: true },
+        },
       },
     });
     const violations: Array<{
@@ -288,13 +308,22 @@ export class SalesService {
       reason: string;
     }> = [];
     for (const s of sales) {
-      // Phase 5: no allocations exist. Phase 6 will replace this branch
-      // with amountPaidAtSale + Σ active allocations.
-      if (s.amountPaid !== s.amountPaidAtSale) {
+      // For cancelled sales, no allocations count as active anyway (their
+      // liveness gate is "sale = ACTIVE"). We still expect amountPaid to
+      // match the last recorded state; the recompute paths guarantee it.
+      const activeAllocSum =
+        s.status === SaleStatus.ACTIVE
+          ? s.allocations.reduce((n, a) => n + a.amountAllocated, 0)
+          : 0;
+      const expectedPaid =
+        s.status === SaleStatus.ACTIVE
+          ? s.amountPaidAtSale + activeAllocSum
+          : s.amountPaid; // cancelled sales are frozen; nothing to recompute
+      if (s.amountPaid !== expectedPaid) {
         violations.push({
           saleId: s.id,
           referenceNumber: s.referenceNumber,
-          reason: `amountPaid ${s.amountPaid} !== amountPaidAtSale ${s.amountPaidAtSale}`,
+          reason: `amountPaid ${s.amountPaid} !== amountPaidAtSale ${s.amountPaidAtSale} + Σ active allocations ${activeAllocSum}`,
         });
       }
       if (s.amountDue !== s.totalAmount - s.amountPaid) {

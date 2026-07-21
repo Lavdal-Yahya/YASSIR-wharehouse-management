@@ -75,3 +75,46 @@ export class SaleNotFoundError extends DomainError {
     this.saleId = saleId;
   }
 }
+
+// Phase 6 — sale cancellation errors.
+//
+// Cancellation refuses on any state other than ACTIVE. Double-cancel
+// must be a hard "no" so the operator sees the sale is already gone,
+// not a silent success. Distinct code from SALE_HAS_ACTIVE_PAYMENTS
+// so the UI shows a specific message ("this sale is already
+// cancelled") without probing the sale row again.
+export class SaleNotCancellableError extends DomainError {
+  readonly code = 'SALE_NOT_CANCELLABLE';
+  readonly httpStatus = HttpStatus.CONFLICT;
+  readonly status: string;
+  constructor(status: string) {
+    super(`Sale in status ${status} cannot be cancelled`);
+    this.status = status;
+  }
+}
+
+// Protected-cancel gate (spec §24.2, phase-6 §5). Cascading a payment
+// reversal from a sale cancel would silently move money — instead we
+// refuse and hand the operator the list of blocking payment refs so
+// they can reverse each one deliberately. paymentReferences is carried
+// on the error so the exception filter can emit it — the UI turns
+// each ref into a link (register-payment reversal dialog).
+export class SaleHasActivePaymentsError extends DomainError {
+  readonly code = 'SALE_HAS_ACTIVE_PAYMENTS';
+  readonly httpStatus = HttpStatus.CONFLICT;
+  readonly saleId: string;
+  readonly paymentReferences: string[];
+  constructor(saleId: string, paymentReferences: string[]) {
+    super(
+      `Sale ${saleId} has active payments allocated to it; reverse them first: ${paymentReferences.join(', ')}`,
+    );
+    this.saleId = saleId;
+    this.paymentReferences = paymentReferences;
+  }
+  details() {
+    return {
+      saleId: this.saleId,
+      paymentReferences: this.paymentReferences,
+    };
+  }
+}

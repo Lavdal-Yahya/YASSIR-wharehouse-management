@@ -100,6 +100,17 @@ export class CreateSaleDto {
   items!: CreateSaleItemDto[];
 }
 
+// Cancelling a sale (P6-10, P6-11). Reason is mandatory (spec §25) so
+// the audit trail always answers "why did this sale disappear from
+// active totals". Trimmed; empty strings after trim fail validation.
+export class CancelSaleDto {
+  @Transform(trim)
+  @IsString()
+  @MinLength(1)
+  @MaxLength(500)
+  reason!: string;
+}
+
 export class ListSalesQueryDto extends PaginationQueryDto {
   // OWNER can filter to a specific shop; SHOP requests get theirs
   // substituted by the guard.
