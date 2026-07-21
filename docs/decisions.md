@@ -117,3 +117,15 @@ The generic (source, destination) transfer service makes shop-to-shop
 free (spec §16 allows it when the process is identical). Shop employees
 never create transfers — matches spec §6.2/§6.3; their visibility is
 their own stock page and movement history.
+
+## D-015 · 2026-07 · Accepted
+**Reports bucket by UTC business days in v1; no `timezone` app setting
+until a non-UTC deployment is on the roadmap.**
+Mauritania is UTC+0 year-round, so UTC bucketing gives the correct
+business-day answer for today's client without a settings surface,
+timezone parsing, or DST edge cases. All Phase 7 date filters and
+groupings use UTC directly; date-boundary tests assert UTC semantics.
+If a future deployment is not UTC+0, add `timezone` to the settings
+whitelist, thread it through the report scope resolver, and update the
+tests — the report layer is the only code that would need to change.
+Full context: phase-7.md draft caveat + advisor tie-break (2026-07-21).

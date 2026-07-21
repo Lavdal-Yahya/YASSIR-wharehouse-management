@@ -18,6 +18,7 @@ import { TransfersModule } from './transfers/transfers.module';
 import { SalesModule } from './sales/sales.module';
 import { PaymentsModule } from './payments/payments.module';
 import { ExpensesModule } from './expenses/expenses.module';
+import { ReportsModule } from './reports/reports.module';
 import { DomainExceptionFilter } from './common/filters/domain-exception.filter';
 import { RolesGuard } from './common/guards/roles.guard';
 import { SessionGuard } from './common/guards/session.guard';
@@ -50,6 +51,7 @@ import { PrismaModule } from './prisma/prisma.module';
     SalesModule,
     PaymentsModule,
     ExpensesModule,
+    ReportsModule,
   ],
   providers: [
     // Order matters: throttle first, then auth, then role check.
