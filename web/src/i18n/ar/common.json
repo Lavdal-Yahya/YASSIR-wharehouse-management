@@ -16,7 +16,8 @@
     "transfers": "التحويلات",
     "logout": "تسجيل الخروج",
     "expenses": "المصروفات",
-    "reports": "التقارير"
+    "reports": "التقارير",
+    "shopStock": "مخزون المحل"
   },
   "login": {
     "title": "تسجيل الدخول",

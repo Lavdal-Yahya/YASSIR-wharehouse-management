@@ -5,8 +5,8 @@ import { RequireAuth } from '@/features/auth/RequireAuth';
 import { RequireRole } from '@/features/auth/RequireRole';
 import { RoleRedirect } from '@/features/auth/RoleRedirect';
 import { AuthedLayout } from './layouts/AuthedLayout';
-import DashboardPage from '@/pages/DashboardPage';
-import ShopPage from '@/pages/ShopPage';
+import OwnerDashboardPage from '@/features/reports/pages/OwnerDashboardPage';
+import ShopDashboardPage from '@/features/reports/pages/ShopDashboardPage';
 import WarehouseStockPage from '@/features/inventory/pages/WarehouseStockPage';
 import ShopStockPage from '@/features/inventory/pages/ShopStockPage';
 import MovementsPage from '@/features/inventory/pages/MovementsPage';
@@ -32,6 +32,7 @@ import UsersPage from '@/features/users/pages/UsersPage';
 import CustomersPage from '@/features/customers/pages/CustomersPage';
 import ExpenseCategoriesPage from '@/features/expense-categories/pages/ExpenseCategoriesPage';
 import ExpensesListPage from '@/features/expenses/pages/ExpensesListPage';
+import ShopReportPage from '@/features/reports/pages/ShopReportPage';
 
 export function AppRoutes() {
   return (
@@ -46,7 +47,7 @@ export function AppRoutes() {
           <Route path="customers" element={<CustomersPage />} />
 
           <Route element={<RequireRole allowed={[Role.OWNER]} />}>
-            <Route path="dashboard" element={<DashboardPage />} />
+            <Route path="dashboard" element={<OwnerDashboardPage />} />
             <Route path="settings" element={<SettingsPage />} />
             <Route path="settings/opening-stock" element={<OpeningStockPage />} />
             <Route path="categories" element={<CategoriesPage />} />
@@ -75,9 +76,10 @@ export function AppRoutes() {
           </Route>
 
           <Route element={<RequireRole allowed={[Role.OWNER, Role.SHOP]} />}>
-            <Route path="shop" element={<ShopPage />} />
+            <Route path="shop" element={<ShopDashboardPage />} />
             <Route path="shop/stock" element={<ShopStockPage />} />
             <Route path="expenses" element={<ExpensesListPage />} />
+            <Route path="reports/shop" element={<ShopReportPage />} />
           </Route>
 
           <Route path="*" element={<NotFoundPage />} />
