@@ -129,3 +129,20 @@ If a future deployment is not UTC+0, add `timezone` to the settings
 whitelist, thread it through the report scope resolver, and update the
 tests — the report layer is the only code that would need to change.
 Full context: phase-7.md draft caveat + advisor tie-break (2026-07-21).
+
+## D-016 · 2026-07 · Accepted
+**"New debt created" in reports = Σ (Sale.totalAmount −
+Sale.amountPaidAtSale) for ACTIVE sales in the window, NOT the
+phase-7.md §4 shorthand Σ Sale.amountDue.**
+The shorthand reads the *current* amountDue and drifts as later
+payments allocate against the sale — which silently conflates "new
+debt" with "still-outstanding portion of new debt" and duplicates
+the `outstanding` figure. The initial-at-sale-time reading is what
+phase-7 §7 item 2's invariant demands ("a later debt payment moves
+cash and outstanding but NOTHING else that day") and matches what
+an owner actually asks: "how much credit did we extend this month",
+independent of what has since been paid back. Implementation:
+`computeNewDebt` in `api/src/reports/common/money-quantities.ts`.
+The phase-7.md §4 table is now out of date on this row; treat this
+memo as the source of truth. Full rationale in the primitive's
+doc-comment.

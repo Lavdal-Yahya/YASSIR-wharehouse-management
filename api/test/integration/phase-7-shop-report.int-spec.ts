@@ -185,6 +185,62 @@ describe('P7-04 · outstanding is as-of, not date-bound', () => {
   });
 });
 
+describe('P7-04 · UTC date-boundary partitioning (D-015)', () => {
+  it('a sale at 23:59:00Z lands in that UTC day; 00:01Z the next day does not', async () => {
+    const customer = await h.prisma.customer.create({ data: { name: 'Ali' } });
+    const p = await h.prisma.product.create({
+      data: {
+        name: `p-${Math.random().toString(36).slice(2, 8)}`,
+        categoryId: ctx.categoryId,
+      },
+    });
+    await h.openingStock.create(
+      { locationId: shopA.locationId, items: [{ productId: p.id, quantity: 5 }] },
+      owner,
+    );
+
+    // Sale A: 23:59:00Z on 2026-06-15 (should count on 2026-06-15).
+    // Sale B: 00:01:00Z on 2026-06-16 (should NOT count on 2026-06-15).
+    await h.sales.confirm(
+      {
+        shopId: shopA.shopId,
+        customerId: customer.id,
+        amountPaidAtSale: 100,
+        saleDate: '2026-06-15T23:59:00.000Z',
+        items: [{ productId: p.id, quantity: 1, unitPrice: 100 }],
+      },
+      owner,
+    );
+    await h.sales.confirm(
+      {
+        shopId: shopA.shopId,
+        customerId: customer.id,
+        amountPaidAtSale: 200,
+        saleDate: '2026-06-16T00:01:00.000Z',
+        items: [{ productId: p.id, quantity: 1, unitPrice: 200 }],
+      },
+      owner,
+    );
+
+    // Filter by DATE-ONLY strings — resolveReportScope widens `to`
+    // to end-of-day (23:59:59.999Z). Only the 23:59:00Z sale must
+    // land in the day-15 window.
+    const day15 = await shopReport.build(
+      { shopId: shopA.shopId, from: '2026-06-15', to: '2026-06-15' },
+      owner,
+    );
+    expect(day15.salesValue).toBe(100);
+    expect(day15.cashAtSale).toBe(100);
+
+    const day16 = await shopReport.build(
+      { shopId: shopA.shopId, from: '2026-06-16', to: '2026-06-16' },
+      owner,
+    );
+    expect(day16.salesValue).toBe(200);
+    expect(day16.cashAtSale).toBe(200);
+  });
+});
+
 describe('P7-04 · shop scoping', () => {
   it('OWNER filtering to shopA excludes shopB entirely', async () => {
     const customer = await h.prisma.customer.create({ data: { name: 'Ali' } });
