@@ -13,6 +13,7 @@ import { SalesService } from '../../src/sales/sales.service';
 import { SaleCancellationService } from '../../src/sales/sale-cancellation.service';
 import { CustomersService } from '../../src/customers/customers.service';
 import { PaymentsService } from '../../src/payments/payments.service';
+import { ExpensesService } from '../../src/expenses/expenses.service';
 
 // Integration harness: instantiate the real services against the dev Postgres.
 // We do NOT go through Nest's TestingModule because we don't need HTTP for
@@ -34,6 +35,7 @@ export function createHarness(): {
   saleCancellation: SaleCancellationService;
   customers: CustomersService;
   payments: PaymentsService;
+  expenses: ExpensesService;
   disconnect: () => Promise<void>;
 } {
   const prisma = new PrismaService();
@@ -50,6 +52,7 @@ export function createHarness(): {
   const saleCancellation = new SaleCancellationService(prisma, inventory, sales);
   const customers = new CustomersService(prisma);
   const payments = new PaymentsService(prisma, refs);
+  const expenses = new ExpensesService(prisma, refs);
   return {
     prisma,
     inventory,
@@ -65,15 +68,19 @@ export function createHarness(): {
     saleCancellation,
     customers,
     payments,
+    expenses,
     disconnect: () => prisma.$disconnect(),
   };
 }
 
-// Wipe everything Phases 3–6 touch. Order matters: children first, then
+// Wipe everything Phases 3–7 touch. Order matters: children first, then
 // parents. Location/AppSetting/User stay (bootstrapped by prod seed).
 // The counter values are reset so every kind's refs start at 1 each test.
 export async function resetDatabase(prisma: PrismaService | PrismaClient): Promise<void> {
   await prisma.$transaction([
+    // Phase 7: Expense sits above ExpenseCategory (SET NULL on delete) and
+    // above Shop; delete first so ExpenseCategory / Shop cascades are clean.
+    prisma.expense.deleteMany(),
     // Phase 6 children first — PaymentAllocation FKs Sale + CustomerPayment,
     // so sale.deleteMany would fail with the FK still holding otherwise.
     prisma.paymentAllocation.deleteMany(),
