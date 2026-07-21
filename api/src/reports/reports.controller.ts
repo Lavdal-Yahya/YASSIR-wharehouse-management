@@ -5,6 +5,7 @@ import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { ShopScopeGuard } from '../common/guards/shop-scope.guard';
 import type { SessionUser } from '../common/types/session-user';
 import { ReportFilterDto } from './dto/report-filter.dto';
+import { DebtReportService } from './debt-report.service';
 import { SalesReportService } from './sales-report.service';
 import { ShopReportService } from './shop-report.service';
 import { WarehouseReportService } from './warehouse-report.service';
@@ -26,6 +27,7 @@ export class ReportsController {
     private readonly shopReport: ShopReportService,
     private readonly warehouseReport: WarehouseReportService,
     private readonly salesReport: SalesReportService,
+    private readonly debtReport: DebtReportService,
   ) {}
 
   // Shop report — the marquee. WAREHOUSE never sees shop money
@@ -50,5 +52,12 @@ export class ReportsController {
   @Get('sales')
   sales(@Query() filter: ReportFilterDto, @CurrentUser() user: SessionUser) {
     return this.salesReport.build(filter, user);
+  }
+
+  // Debt view — outstanding by customer / by shop + payments in window.
+  @Roles(Role.OWNER, Role.SHOP)
+  @Get('debt')
+  debt(@Query() filter: ReportFilterDto, @CurrentUser() user: SessionUser) {
+    return this.debtReport.build(filter, user);
   }
 }
