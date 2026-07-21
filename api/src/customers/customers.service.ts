@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { Prisma, SaleStatus } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { ResourceNotFoundError } from '../common/errors/generic-errors';
 import { Paginated, skipTake, toPaginated } from '../common/pagination';
+import type { Tx } from '../inventory/tx';
 import { CreateCustomerDto, ListCustomersQueryDto, UpdateCustomerDto } from './dto/customer.dto';
 
 export type CustomerOut = {
@@ -81,6 +82,20 @@ export class CustomersService {
   async restore(id: string): Promise<CustomerOut> {
     await this.ensureExists(id);
     return this.prisma.customer.update({ where: { id }, data: { active: true } });
+  }
+
+  // Derived debt (P5-03, D-009). Never stored on Customer — the source
+  // of truth is the sum of amountDue across the customer's active sales.
+  // Callers may pass an existing tx (payment allocation in Phase 6 will
+  // read this inside its own transaction); default is a fresh client
+  // read for the customer list/detail pages.
+  async outstanding(customerId: string, tx?: Tx): Promise<number> {
+    const client = tx ?? this.prisma;
+    const agg = await client.sale.aggregate({
+      where: { customerId, status: SaleStatus.ACTIVE },
+      _sum: { amountDue: true },
+    });
+    return agg._sum.amountDue ?? 0;
   }
 
   private async ensureExists(id: string): Promise<void> {

@@ -63,6 +63,8 @@ model Shop {
   updatedAt  DateTime  @updatedAt
   users      User[]
   location   Location?
+  // Phase 5 back-relations
+  sales      Sale[]
 }
 
 model Location {
@@ -128,6 +130,8 @@ model Product {
   stockCorrections   StockCorrection[]
   // Phase 4 back-relations
   stockTransferItems StockTransferItem[]
+  // Phase 5 back-relations
+  saleItems          SaleItem[]
 
   @@index([categoryId])
   @@index([name])
@@ -142,6 +146,8 @@ model Customer {
   active    Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  // Phase 5 back-relations
+  sales     Sale[]
 
   @@index([name])
   @@index([phone])
@@ -356,4 +362,74 @@ model StockTransferItem {
 
   @@index([productId])
   @@index([stockTransferId])
+}
+
+// ---------- Phase 5: sales ----------
+
+enum SaleStatus {
+  ACTIVE
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PAID
+  PARTIALLY_PAID
+  UNPAID
+}
+
+// A sale is immutable once confirmed — the only future mutation is Phase 6's
+// cancellation. Money fields are whole MRU (D-004). Snapshots (product name,
+// customer name/phone, unit cost at sale time) protect history against later
+// rename/edit of the underlying rows (spec §37.14). See D-012 for why
+// amountPaidAtSale is a distinct field from amountPaid.
+model Sale {
+  id                    String        @id @default(cuid())
+  referenceNumber       String        @unique
+  shopId                String
+  shop                  Shop          @relation(fields: [shopId], references: [id])
+  customerId            String?
+  customer              Customer?     @relation(fields: [customerId], references: [id])
+  customerNameSnapshot  String?
+  customerPhoneSnapshot String?
+  status                SaleStatus    @default(ACTIVE)
+  paymentStatus         PaymentStatus
+  totalAmount           Int
+  // Cash taken when the sale was made. Never mutated after confirmation.
+  amountPaidAtSale      Int           @default(0)
+  // amountPaidAtSale + Σ active allocations (Phase 6). Kept as an invariant,
+  // recomputed by the payments service — never patched.
+  amountPaid            Int
+  amountDue             Int
+  saleDate              DateTime
+  notes                 String?
+  createdBy             String
+  cancelledBy           String?
+  cancelledAt           DateTime?
+  cancellationReason    String?
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+  items                 SaleItem[]
+
+  @@index([shopId, saleDate])
+  @@index([customerId, paymentStatus])
+  @@index([saleDate])
+}
+
+model SaleItem {
+  id                  String  @id @default(cuid())
+  saleId              String
+  sale                Sale    @relation(fields: [saleId], references: [id])
+  productId           String
+  product             Product @relation(fields: [productId], references: [id])
+  productNameSnapshot String
+  quantity            Int
+  unitPrice           Int
+  // product.defaultPurchaseCost at sale time (may be null). Used later by
+  // margin reports (Phase 7); snapshotted so later cost edits don't rewrite
+  // history.
+  unitCostSnapshot    Int?
+  lineTotal           Int
+
+  @@index([productId])
+  @@index([saleId])
 }

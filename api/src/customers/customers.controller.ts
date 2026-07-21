@@ -46,4 +46,14 @@ export class CustomersController {
   restore(@Param('id') id: string) {
     return this.svc.restore(id);
   }
+
+  // Derived debt (P5-03, D-009). Exposed as its own tiny endpoint so
+  // pages that only need the total don't have to pull the whole sale
+  // list. Available to every authenticated role — the customer list is
+  // shared and this is just a projection over sales they can see.
+  @Roles(Role.OWNER, Role.WAREHOUSE, Role.SHOP)
+  @Get(':id/outstanding')
+  async outstanding(@Param('id') id: string): Promise<{ outstanding: number }> {
+    return { outstanding: await this.svc.outstanding(id) };
+  }
 }

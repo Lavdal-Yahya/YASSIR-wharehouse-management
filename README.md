@@ -91,4 +91,4 @@ when built.
 
 ## Status
 
-Current phase: **Phase 4** (`docs/phases/phase-4.md`).
+Current phase: **Phase 5** (`docs/phases/phase-5.md`).
