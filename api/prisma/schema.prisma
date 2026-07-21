@@ -67,6 +67,8 @@ model Shop {
   sales      Sale[]
   // Phase 6 back-relations (money-received-by-shop, per phase-6 §3 step 8)
   payments   CustomerPayment[]
+  // Phase 7 back-relations
+  expenses   Expense[]
 }
 
 model Location {
@@ -162,6 +164,8 @@ model ExpenseCategory {
   name      String   @unique
   active    Boolean  @default(true)
   createdAt DateTime @default(now())
+  // Phase 7 back-relations
+  expenses  Expense[]
 }
 
 // ---------- Phase 3: warehouse & incoming orders ----------
@@ -498,4 +502,40 @@ model PaymentAllocation {
 
   @@unique([customerPaymentId, saleId])
   @@index([saleId])
+}
+
+// ---------- Phase 7: expenses ----------
+
+enum ExpenseStatus {
+  ACTIVE
+  CANCELLED
+}
+
+// An expense is money spent by the business, recorded against a shop
+// (spec §26). Cancellation-not-deletion (spec §26.3): a cancelled
+// expense stays in history and drops out of every active total by
+// the report layer's ACTIVE filter. Description is required so the
+// audit trail always answers "what was this for"; category is
+// optional because the vocabulary evolves with the business.
+model Expense {
+  id                 String           @id @default(cuid())
+  referenceNumber    String           @unique
+  shopId             String
+  shop               Shop             @relation(fields: [shopId], references: [id])
+  categoryId         String?
+  category           ExpenseCategory? @relation(fields: [categoryId], references: [id])
+  amount             Int
+  expenseDate        DateTime
+  description        String
+  notes              String?
+  status             ExpenseStatus    @default(ACTIVE)
+  createdBy          String
+  cancelledBy        String?
+  cancelledAt        DateTime?
+  cancellationReason String?
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+
+  @@index([shopId, expenseDate])
+  @@index([categoryId])
 }

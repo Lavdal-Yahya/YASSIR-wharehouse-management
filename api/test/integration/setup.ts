@@ -69,11 +69,14 @@ export function createHarness(): {
   };
 }
 
-// Wipe everything Phases 3–6 touch. Order matters: children first, then
+// Wipe everything Phases 3–7 touch. Order matters: children first, then
 // parents. Location/AppSetting/User stay (bootstrapped by prod seed).
 // The counter values are reset so every kind's refs start at 1 each test.
 export async function resetDatabase(prisma: PrismaService | PrismaClient): Promise<void> {
   await prisma.$transaction([
+    // Phase 7: Expense sits above ExpenseCategory (SET NULL on delete) and
+    // above Shop; delete first so ExpenseCategory / Shop cascades are clean.
+    prisma.expense.deleteMany(),
     // Phase 6 children first — PaymentAllocation FKs Sale + CustomerPayment,
     // so sale.deleteMany would fail with the FK still holding otherwise.
     prisma.paymentAllocation.deleteMany(),
