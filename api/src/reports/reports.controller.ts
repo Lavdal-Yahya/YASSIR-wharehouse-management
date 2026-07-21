@@ -6,6 +6,7 @@ import { ShopScopeGuard } from '../common/guards/shop-scope.guard';
 import type { SessionUser } from '../common/types/session-user';
 import { ReportFilterDto } from './dto/report-filter.dto';
 import { DebtReportService } from './debt-report.service';
+import { IncomingOrdersReportService } from './incoming-orders-report.service';
 import { SalesReportService } from './sales-report.service';
 import { ShopReportService } from './shop-report.service';
 import { WarehouseReportService } from './warehouse-report.service';
@@ -28,6 +29,7 @@ export class ReportsController {
     private readonly warehouseReport: WarehouseReportService,
     private readonly salesReport: SalesReportService,
     private readonly debtReport: DebtReportService,
+    private readonly incomingOrdersReport: IncomingOrdersReportService,
   ) {}
 
   // Shop report — the marquee. WAREHOUSE never sees shop money
@@ -59,5 +61,15 @@ export class ReportsController {
   @Get('debt')
   debt(@Query() filter: ReportFilterDto, @CurrentUser() user: SessionUser) {
     return this.debtReport.build(filter, user);
+  }
+
+  // Incoming orders — warehouse-side, no shop scoping.
+  @Roles(Role.OWNER, Role.WAREHOUSE)
+  @Get('incoming-orders')
+  incomingOrders(
+    @Query() filter: ReportFilterDto,
+    @CurrentUser() user: SessionUser,
+  ) {
+    return this.incomingOrdersReport.build(filter, user);
   }
 }
