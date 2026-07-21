@@ -6,6 +6,7 @@ import { ShopScopeGuard } from '../common/guards/shop-scope.guard';
 import type { SessionUser } from '../common/types/session-user';
 import { ReportFilterDto } from './dto/report-filter.dto';
 import { DebtReportService } from './debt-report.service';
+import { EstimatedProfitService } from './estimated-profit.service';
 import { IncomingOrdersReportService } from './incoming-orders-report.service';
 import { SalesReportService } from './sales-report.service';
 import { ShopReportService } from './shop-report.service';
@@ -30,6 +31,7 @@ export class ReportsController {
     private readonly salesReport: SalesReportService,
     private readonly debtReport: DebtReportService,
     private readonly incomingOrdersReport: IncomingOrdersReportService,
+    private readonly estimatedProfit: EstimatedProfitService,
   ) {}
 
   // Shop report — the marquee. WAREHOUSE never sees shop money
@@ -71,5 +73,17 @@ export class ReportsController {
     @CurrentUser() user: SessionUser,
   ) {
     return this.incomingOrdersReport.build(filter, user);
+  }
+
+  // Estimated gross profit. Response NEVER carries a "net profit"
+  // (spec §27); the caller reads isEstimated + coverage and renders
+  // the label accordingly.
+  @Roles(Role.OWNER, Role.SHOP)
+  @Get('estimated-profit')
+  estimatedProfit(
+    @Query() filter: ReportFilterDto,
+    @CurrentUser() user: SessionUser,
+  ) {
+    return this.estimatedProfit.build(filter, user);
   }
 }
