@@ -39,7 +39,7 @@ const NAV: readonly NavEntry[] = [
   { to: '/customers', labelKey: 'nav.customers', allowed: [Role.OWNER, Role.WAREHOUSE, Role.SHOP], icon: UsersIcon },
   { to: '/sales', labelKey: 'nav.sales', allowed: [Role.OWNER, Role.SHOP], icon: ReceiptIcon },
   { to: '/expenses', labelKey: 'nav.expenses', allowed: [Role.OWNER, Role.SHOP], icon: CardIcon },
-  { to: '/reports/shop', labelKey: 'nav.reports', allowed: [Role.OWNER, Role.SHOP], icon: ChartIcon },
+  { to: '/reports', labelKey: 'nav.reports', allowed: [Role.OWNER, Role.WAREHOUSE, Role.SHOP], icon: ChartIcon },
   { to: '/shop/stock', labelKey: 'nav.shopStock', allowed: [Role.OWNER, Role.SHOP], icon: PackageIcon },
   { to: '/warehouse', labelKey: 'nav.warehouse', allowed: [Role.OWNER, Role.WAREHOUSE], icon: PackageIcon },
   { to: '/orders', labelKey: 'nav.orders', allowed: [Role.OWNER, Role.WAREHOUSE], icon: ReceiptIcon },
@@ -59,7 +59,7 @@ const BOTTOM_NAV: Record<Role, readonly NavEntry[]> = {
   OWNER: [
     { to: '/dashboard', labelKey: 'nav.dashboard', allowed: [Role.OWNER], icon: HomeIcon },
     { to: '/customers', labelKey: 'nav.customers', allowed: [Role.OWNER], icon: UsersIcon },
-    { to: '/reports/shop', labelKey: 'nav.reports', allowed: [Role.OWNER], icon: ChartIcon },
+    { to: '/reports', labelKey: 'nav.reports', allowed: [Role.OWNER], icon: ChartIcon },
     { to: '/warehouse', labelKey: 'nav.warehouse', allowed: [Role.OWNER], icon: PackageIcon },
     { to: '/settings', labelKey: 'nav.settings', allowed: [Role.OWNER], icon: SettingsIcon },
   ],

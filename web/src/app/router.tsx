@@ -33,6 +33,12 @@ import CustomersPage from '@/features/customers/pages/CustomersPage';
 import ExpenseCategoriesPage from '@/features/expense-categories/pages/ExpenseCategoriesPage';
 import ExpensesListPage from '@/features/expenses/pages/ExpensesListPage';
 import ShopReportPage from '@/features/reports/pages/ShopReportPage';
+import ReportsIndexPage from '@/features/reports/pages/ReportsIndexPage';
+import WarehouseReportPage from '@/features/reports/pages/WarehouseReportPage';
+import SalesReportPage from '@/features/reports/pages/SalesReportPage';
+import DebtReportPage from '@/features/reports/pages/DebtReportPage';
+import IncomingOrdersReportPage from '@/features/reports/pages/IncomingOrdersReportPage';
+import EstimatedProfitPage from '@/features/reports/pages/EstimatedProfitPage';
 import SellPage from '@/features/sales/pages/SellPage';
 import SaleConfirmationPage from '@/features/sales/pages/SaleConfirmationPage';
 import SalesListPage from '@/features/sales/pages/SalesListPage';
@@ -49,6 +55,11 @@ export function AppRoutes() {
 
           {/* Customers — accessible to all authenticated roles (spec §31). */}
           <Route path="customers" element={<CustomersPage />} />
+
+          {/* Reports index — tile grid filters by role internally so
+              every authenticated role can land here. Each dedicated
+              report route sits under its own role-gated block below. */}
+          <Route path="reports" element={<ReportsIndexPage />} />
 
           <Route element={<RequireRole allowed={[Role.OWNER]} />}>
             <Route path="dashboard" element={<OwnerDashboardPage />} />
@@ -77,6 +88,10 @@ export function AppRoutes() {
             <Route path="transfers" element={<TransfersListPage />} />
             <Route path="transfers/new" element={<TransferNewPage />} />
             <Route path="transfers/:id" element={<TransferDetailPage />} />
+            {/* Warehouse-side reports — no shop scope; SHOP is 403 on
+                the API side and the route guard blocks them here. */}
+            <Route path="reports/warehouse" element={<WarehouseReportPage />} />
+            <Route path="reports/incoming-orders" element={<IncomingOrdersReportPage />} />
           </Route>
 
           <Route element={<RequireRole allowed={[Role.OWNER, Role.SHOP]} />}>
@@ -84,6 +99,9 @@ export function AppRoutes() {
             <Route path="shop/stock" element={<ShopStockPage />} />
             <Route path="expenses" element={<ExpensesListPage />} />
             <Route path="reports/shop" element={<ShopReportPage />} />
+            <Route path="reports/sales" element={<SalesReportPage />} />
+            <Route path="reports/debt" element={<DebtReportPage />} />
+            <Route path="reports/estimated-profit" element={<EstimatedProfitPage />} />
             {/* Sale flow — cart → payment → confirmation. Server
                 enforces shopId (SHOP → forced to assigned shop;
                 OWNER → any). */}
