@@ -18,7 +18,8 @@
     "expenses": "المصروفات",
     "reports": "التقارير",
     "shopStock": "مخزون المحل",
-    "sell": "بيع"
+    "sell": "بيع",
+    "sales": "المبيعات"
   },
   "login": {
     "title": "تسجيل الدخول",
@@ -630,26 +631,130 @@
     }
   },
   "wip": {
-    "saleFlow": {
-      "title": "شاشة البيع — قريباً",
-      "message": "شاشة البيع قيد الإنشاء. ستتمكن قريباً من البحث عن المنتجات، تحديد السعر المتفاوض عليه، وتسجيل الدفعة الأولى من الزبون."
-    },
-    "shopStockSell": "قريباً"
+    "receipt": "قريباً"
   },
   "sell": {
-    "mockTitle": "بيع جديد",
-    "mockSubtitle": "معاينة شاشة البيع القادمة.",
-    "mock": {
-      "searchPlaceholder": "ابحث باسم المنتج أو الفئة",
-      "categoryAll": "الكل",
-      "categoryPhones": "هواتف",
-      "categoryAudio": "سماعات",
+    "title": "بيع جديد",
+    "subtitle": "اختر المنتجات، حدّد السعر، احصّل الدفعة.",
+    "stepCartTitle": "السلة — بيع جديد",
+    "stepPaymentTitle": "الدفع — بيع جديد",
+    "ownerPickShop": "من أي محل؟",
+    "switchShop": "تغيير المحل",
+    "noShops": "لا يوجد محل نشط مُعدّ.",
+    "noAssignedShop": "لا يوجد محل مُخصَّص لحسابك. تواصل مع المالك.",
+    "backToCart": "العودة إلى السلة",
+    "goToPayment": "الاستمرار إلى الدفع",
+    "confirm": "تأكيد البيع",
+    "cart": {
+      "pickTitle": "اختر منتجاً",
+      "title": "السلة",
+      "empty": "أضف منتجاً للبدء.",
+      "remove": "حذف",
+      "increaseQty": "زيادة الكمية",
+      "decreaseQty": "نقص الكمية",
+      "unitPrice": "سعر الوحدة لـ {{product}}",
+      "available": "متاح",
+      "maxReached": "تم بلوغ الحد الأقصى المتاح ({{max}}).",
+      "total": "الإجمالي"
+    },
+    "picker": {
+      "searchPlaceholder": "اسم المنتج أو الفئة…",
+      "category": "الفئة",
+      "allCategories": "كل الفئات",
+      "empty": "لا يوجد منتج مطابق.",
+      "add": "إضافة",
+      "outOfStock": "نفد",
+      "lowStock": "مخزون منخفض",
+      "available": "متاح"
+    },
+    "customer": {
+      "title": "الزبون",
+      "pickExisting": "موجود",
+      "pickNew": "جديد",
+      "searchPlaceholder": "الاسم أو الهاتف…",
+      "noMatch": "لا يوجد زبون مطابق.",
+      "newName": "اسم الزبون",
+      "newPhone": "الهاتف",
+      "attachNew": "إنشاء وإرفاق",
+      "newSuffix": "(جديد)",
+      "noPhone": "لا يوجد رقم هاتف",
+      "clear": "إزالة",
+      "requiredHint": "يجب تحديد زبون لأنه يبقى مبلغ للدفع."
+    },
+    "payment": {
+      "title": "الدفع",
       "total": "الإجمالي",
-      "paymentStep": "الدفع",
-      "partialBadge": "جزئي",
-      "customerRequired": "يجب تحديد الزبون عندما يبقى مبلغ للدفع.",
-      "paidNow": "المدفوع الآن",
-      "remaining": "الباقي"
+      "remaining": "الباقي",
+      "paidNow": "المُحصَّل الآن",
+      "payFull": "الكل",
+      "markPayFull": "دفع كامل",
+      "summary": "ملخّص",
+      "summaryTotal": "الإجمالي",
+      "summaryPaid": "المُحصَّل",
+      "summaryRemaining": "الباقي",
+      "summaryCustomer": "الزبون",
+      "summaryNoCustomer": "بدون (زبون عابر)"
+    },
+    "confirm": {
+      "titlePaid": "تم تسجيل البيع",
+      "titlePartial": "تم تسجيل البيع — يبقى دين للتحصيل",
+      "subtitle": "المرجع {{ref}}",
+      "totalSold": "إجمالي البيع",
+      "paidNow": "المُحصَّل",
+      "owed": "الباقي",
+      "customer": "الزبون",
+      "itemsTitle": "المواد المباعة",
+      "newSale": "بيع جديد",
+      "openDetail": "عرض البيع",
+      "printReceipt": "طباعة الإيصال"
+    }
+  },
+  "sales": {
+    "title": "المبيعات",
+    "subtitle": "سجل مبيعات المحل.",
+    "new": "بيع جديد",
+    "searchPlaceholder": "المرجع…",
+    "row": {
+      "due": "الباقي"
+    },
+    "payment": {
+      "PAID": "مدفوع",
+      "PARTIALLY_PAID": "جزئي",
+      "UNPAID": "غير مدفوع"
+    },
+    "status": {
+      "ACTIVE": "نشط",
+      "CANCELLED": "ملغى"
+    },
+    "filter": {
+      "shop": "المحل",
+      "allShops": "كل المحلات",
+      "paymentStatus": "حالة الدفع",
+      "allPaymentStatuses": "كل حالات الدفع",
+      "status": "الحالة",
+      "allStatuses": "كل الحالات",
+      "from": "من",
+      "to": "إلى"
+    },
+    "detail": {
+      "backToList": "العودة إلى القائمة",
+      "total": "الإجمالي",
+      "paid": "المُحصَّل",
+      "due": "الباقي",
+      "cashAtSale": "المُحصَّل عند البيع",
+      "laterPayments": "الدفعات اللاحقة",
+      "customer": "الزبون",
+      "itemsTitle": "المواد",
+      "cancelledOn": "أُلغيت في {{date}}",
+      "reason": "السبب",
+      "cancel": "إلغاء البيع",
+      "printReceipt": "طباعة الإيصال",
+      "cancelTitle": "إلغاء البيع {{ref}}؟",
+      "cancelBody": "سيعود المخزون إلى المحل، وسينخفض دين الزبون إن وُجد.",
+      "cancelReason": "السبب (إلزامي)",
+      "cancelReasonPlaceholder": "اشرح سبب إلغاء هذا البيع.",
+      "cancelConfirm": "تأكيد الإلغاء",
+      "blockingHint": "هذه الدفعات ما زالت نشطة على هذا البيع — قم بإلغائها أولاً."
     }
   },
   "openingStock": {

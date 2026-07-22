@@ -33,7 +33,10 @@ import CustomersPage from '@/features/customers/pages/CustomersPage';
 import ExpenseCategoriesPage from '@/features/expense-categories/pages/ExpenseCategoriesPage';
 import ExpensesListPage from '@/features/expenses/pages/ExpensesListPage';
 import ShopReportPage from '@/features/reports/pages/ShopReportPage';
-import SellPlaceholderPage from '@/features/sales/pages/SellPlaceholderPage';
+import SellPage from '@/features/sales/pages/SellPage';
+import SaleConfirmationPage from '@/features/sales/pages/SaleConfirmationPage';
+import SalesListPage from '@/features/sales/pages/SalesListPage';
+import SaleDetailPage from '@/features/sales/pages/SaleDetailPage';
 
 export function AppRoutes() {
   return (
@@ -81,10 +84,13 @@ export function AppRoutes() {
             <Route path="shop/stock" element={<ShopStockPage />} />
             <Route path="expenses" element={<ExpensesListPage />} />
             <Route path="reports/shop" element={<ShopReportPage />} />
-            {/* Placeholder until Phase 6 PR-B ships the real sale flow.
-                Kept behind the OWNER/SHOP guard because those are the
-                roles the sale flow will admit. */}
-            <Route path="sell" element={<SellPlaceholderPage />} />
+            {/* Sale flow — cart → payment → confirmation. Server
+                enforces shopId (SHOP → forced to assigned shop;
+                OWNER → any). */}
+            <Route path="sell" element={<SellPage />} />
+            <Route path="sell/:id/confirmation" element={<SaleConfirmationPage />} />
+            <Route path="sales" element={<SalesListPage />} />
+            <Route path="sales/:id" element={<SaleDetailPage />} />
           </Route>
 
           <Route path="*" element={<NotFoundPage />} />
