@@ -246,6 +246,22 @@
     "archiveConfirm": {
       "title": "Archiver le client ?",
       "body": "« {{name}} » sera masqué des listes actives."
+    },
+    "account": {
+      "view": "Voir",
+      "noPhone": "Aucun numéro",
+      "backToList": "Retour aux clients",
+      "totalPurchases": "Total achats",
+      "totalPaid": "Total payé",
+      "outstanding": "Solde dû",
+      "unpaidSales": "Ventes à recouvrer",
+      "noUnpaidSales": "Ce client est à jour — aucune vente impayée.",
+      "saleAmountDue": "Reste",
+      "viewSale": "Voir",
+      "registerPayment": "Enregistrer un versement",
+      "paymentHistory": "Historique des versements",
+      "noPayments": "Aucun versement enregistré.",
+      "viewReceipt": "Reçu"
     }
   },
   "users": {
@@ -851,7 +867,60 @@
       "cancelReason": "Motif (obligatoire)",
       "cancelReasonPlaceholder": "Expliquez pourquoi cette vente est annulée.",
       "cancelConfirm": "Confirmer l'annulation",
-      "blockingHint": "Ces paiements sont encore actifs sur cette vente — annulez-les d'abord."
+      "blockingHint": "Ces paiements sont encore actifs sur cette vente — annulez-les d'abord.",
+      "viewCustomer": "Voir le client"
+    }
+  },
+  "payment": {
+    "ACTIVE": "Actif",
+    "CANCELLED": "Annulé",
+    "title": "Enregistrer un versement",
+    "customer": "Client",
+    "outstanding": "Solde à recouvrer",
+    "amount": "Montant versé",
+    "shopLabel": "Boutique ayant reçu le versement",
+    "chooseShop": "— Choisir une boutique —",
+    "preview": "Simulation d'allocation",
+    "debtBefore": "Solde avant",
+    "debtAfter": "Solde après versement",
+    "confirm": "Confirmer le versement",
+    "noOutstanding": "Ce client n'a pas de solde à payer.",
+    "backToCustomer": "Retour au client",
+    "errorExceedsDebt": "Le montant dépasse le solde dû.",
+    "errorNoShop": "Sélectionnez la boutique ayant reçu ce versement.",
+    "reverse": {
+      "action": "Annuler",
+      "title": "Annuler le versement {{ref}} ?",
+      "body": "Les ventes impactées retrouveront leur solde antérieur.",
+      "reason": "Motif (obligatoire)",
+      "reasonPlaceholder": "Expliquez pourquoi ce versement est annulé.",
+      "confirm": "Confirmer l'annulation"
+    }
+  },
+  "receipt": {
+    "sale": {
+      "title": "Reçu de vente",
+      "print": "Imprimer",
+      "reference": "Référence",
+      "date": "Date",
+      "customer": "Client",
+      "items": "Articles",
+      "total": "Total",
+      "cashAtSale": "Encaissé",
+      "totalDue": "Reste dû"
+    },
+    "payment": {
+      "title": "Reçu de versement",
+      "print": "Imprimer",
+      "reference": "Référence",
+      "date": "Date",
+      "customer": "Client",
+      "amount": "Montant versé",
+      "debtBefore": "Solde avant versement",
+      "debtAfter": "Solde après versement",
+      "allocations": "Ventes créditées",
+      "settled": "Soldée",
+      "partial": "Partiel"
     }
   },
   "openingStock": {

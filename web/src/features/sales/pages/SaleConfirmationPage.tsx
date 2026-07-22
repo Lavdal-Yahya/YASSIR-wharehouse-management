@@ -7,7 +7,6 @@ import { BalanceBar } from '@/components/BalanceBar';
 import { Money } from '@/components/Money';
 import { StatusBadge } from '@/components/StatusBadge';
 import { Spinner } from '@/components/Spinner';
-import { ConstructionOverlay } from '@/components/ConstructionOverlay';
 import { errorMessage } from '@/shared/error-message';
 import { useSale } from '../api';
 
@@ -74,7 +73,7 @@ export default function SaleConfirmationPage() {
               {t('sell.confirm.customer')}
             </span>
             <Link
-              to={`/customers`}
+              to={s.customerId ? `/customers/${s.customerId}` : '/customers'}
               className="text-[14px] font-semibold text-brand hover:underline"
             >
               {s.customerName}
@@ -118,14 +117,11 @@ export default function SaleConfirmationPage() {
             {t('sell.confirm.openDetail')}
           </Button>
         </Link>
-        {/* Print Receipt lives here in the design; the actual print page
-            lands in Phase 6 PR-B (P6-06). Tape marks the button so
-            nobody expects paper. */}
-        <ConstructionOverlay variant="ribbon" title={t('wip.receipt')}>
-          <Button variant="secondary" disabled className="!h-12">
+        <Link to={`/sales/${s.id}/receipt`}>
+          <Button variant="secondary" className="!h-12">
             {t('sell.confirm.printReceipt')}
           </Button>
-        </ConstructionOverlay>
+        </Link>
         <div className="grow" />
         <StatusBadge
           tone={paidInFull ? 'ok' : s.paymentStatus === 'PARTIALLY_PAID' ? 'warn' : 'danger'}

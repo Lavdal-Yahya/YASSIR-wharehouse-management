@@ -13,3 +13,9 @@ export type CustomerWriteBody = {
   phone?: string | null;
   notes?: string | null;
 };
+
+export type CustomerSummary = {
+  totalPurchases: number;
+  totalPaid: number;
+  outstanding: number;
+};

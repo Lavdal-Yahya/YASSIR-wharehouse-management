@@ -98,6 +98,29 @@ export class CustomersService {
     return agg._sum.amountDue ?? 0;
   }
 
+  // Account summary for the customer account page (P6-01). Single
+  // aggregate over active sales — no pagination needed because these
+  // are true totals, not a list.
+  async summary(id: string): Promise<{
+    totalPurchases: number;
+    totalPaid: number;
+    outstanding: number;
+  }> {
+    const [customer, agg] = await this.prisma.$transaction([
+      this.prisma.customer.findUnique({ where: { id }, select: { id: true } }),
+      this.prisma.sale.aggregate({
+        where: { customerId: id, status: SaleStatus.ACTIVE },
+        _sum: { totalAmount: true, amountPaid: true, amountDue: true },
+      }),
+    ]);
+    if (!customer) throw new ResourceNotFoundError('Customer', id);
+    return {
+      totalPurchases: agg._sum.totalAmount ?? 0,
+      totalPaid: agg._sum.amountPaid ?? 0,
+      outstanding: agg._sum.amountDue ?? 0,
+    };
+  }
+
   private async ensureExists(id: string): Promise<void> {
     const found = await this.prisma.customer.findUnique({ where: { id } });
     if (!found) throw new ResourceNotFoundError('Customer', id);

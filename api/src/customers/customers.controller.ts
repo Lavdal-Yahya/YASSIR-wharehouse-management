@@ -56,4 +56,11 @@ export class CustomersController {
   async outstanding(@Param('id') id: string): Promise<{ outstanding: number }> {
     return { outstanding: await this.svc.outstanding(id) };
   }
+
+  // Account totals for the customer account page (P6-01).
+  @Roles(Role.OWNER, Role.WAREHOUSE, Role.SHOP)
+  @Get(':id/summary')
+  summary(@Param('id') id: string) {
+    return this.svc.summary(id);
+  }
 }

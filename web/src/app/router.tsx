@@ -30,6 +30,8 @@ import ProductFormPage from '@/features/products/pages/ProductFormPage';
 import ShopsPage from '@/features/shops/pages/ShopsPage';
 import UsersPage from '@/features/users/pages/UsersPage';
 import CustomersPage from '@/features/customers/pages/CustomersPage';
+import CustomerAccountPage from '@/features/customers/pages/CustomerAccountPage';
+import RegisterPaymentPage from '@/features/customers/pages/RegisterPaymentPage';
 import ExpenseCategoriesPage from '@/features/expense-categories/pages/ExpenseCategoriesPage';
 import ExpensesListPage from '@/features/expenses/pages/ExpensesListPage';
 import ShopReportPage from '@/features/reports/pages/ShopReportPage';
@@ -43,6 +45,8 @@ import SellPage from '@/features/sales/pages/SellPage';
 import SaleConfirmationPage from '@/features/sales/pages/SaleConfirmationPage';
 import SalesListPage from '@/features/sales/pages/SalesListPage';
 import SaleDetailPage from '@/features/sales/pages/SaleDetailPage';
+import SaleReceiptPage from '@/features/sales/pages/SaleReceiptPage';
+import PaymentReceiptPage from '@/features/payments/pages/PaymentReceiptPage';
 
 export function AppRoutes() {
   return (
@@ -50,11 +54,21 @@ export function AppRoutes() {
       <Route path="/login" element={<LoginPage />} />
 
       <Route element={<RequireAuth />}>
+        {/* Receipt pages — no app chrome so browser print is clean. */}
+        <Route path="sales/:id/receipt" element={<SaleReceiptPage />} />
+        <Route path="payments/:id/receipt" element={<PaymentReceiptPage />} />
+
         <Route element={<AuthedLayout />}>
           <Route index element={<RoleRedirect />} />
 
           {/* Customers — accessible to all authenticated roles (spec §31). */}
           <Route path="customers" element={<CustomersPage />} />
+          <Route path="customers/:id" element={<CustomerAccountPage />} />
+          <Route
+            element={<RequireRole allowed={[Role.OWNER, Role.SHOP]} />}
+          >
+            <Route path="customers/:id/payments/new" element={<RegisterPaymentPage />} />
+          </Route>
 
           {/* Reports index — tile grid filters by role internally so
               every authenticated role can land here. Each dedicated

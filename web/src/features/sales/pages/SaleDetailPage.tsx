@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { PageHeader } from '@/components/PageHeader';
 import { SectionCard } from '@/components/SectionCard';
@@ -10,7 +10,6 @@ import { Input } from '@/components/Input';
 import { BalanceBar } from '@/components/BalanceBar';
 import { Money } from '@/components/Money';
 import { Spinner } from '@/components/Spinner';
-import { ConstructionOverlay } from '@/components/ConstructionOverlay';
 import { errorMessage } from '@/shared/error-message';
 import { Role } from '@/shared/enums';
 import { useMe } from '@/features/auth/api';
@@ -162,11 +161,18 @@ export default function SaleDetailPage() {
             {t('sales.detail.cancel')}
           </Button>
         ) : null}
-        <ConstructionOverlay variant="ribbon" title={t('wip.receipt')}>
-          <Button variant="secondary" disabled>
+        <Link to={`/sales/${s.id}/receipt`}>
+          <Button variant="secondary">
             {t('sales.detail.printReceipt')}
           </Button>
-        </ConstructionOverlay>
+        </Link>
+        {s.customerId ? (
+          <Link to={`/customers/${s.customerId}`}>
+            <Button variant="ghost" size="sm">
+              {t('sales.detail.viewCustomer')}
+            </Button>
+          </Link>
+        ) : null}
       </div>
 
       <ConfirmDialog

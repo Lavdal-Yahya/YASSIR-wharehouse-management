@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -168,6 +169,9 @@ export default function CustomersPage() {
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
+                  <Link to={`/customers/${c.id}`}>
+                    <Button variant="secondary" size="sm">{t('customers.account.view')}</Button>
+                  </Link>
                   {canEdit(c) && c.active ? (
                     <Button variant="secondary" onClick={() => startEdit(c)}>{t('common.edit')}</Button>
                   ) : null}

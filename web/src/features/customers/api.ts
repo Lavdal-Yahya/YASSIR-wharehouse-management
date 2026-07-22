@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { api, ApiError } from '@/shared/api-client';
 import { toQueryString, type Paginated } from '@/shared/pagination';
-import type { Customer, CustomerWriteBody } from './types';
+import type { Customer, CustomerSummary, CustomerWriteBody } from './types';
 
 export const CUSTOMERS_KEY = ['customers'] as const;
 
@@ -48,6 +48,18 @@ export function useArchiveCustomer() {
   return useMutation<Customer, ApiError, string>({
     mutationFn: (id) => api<Customer>(`/customers/${id}/archive`, { method: 'POST' }),
     onSuccess: () => qc.invalidateQueries({ queryKey: CUSTOMERS_KEY }),
+  });
+}
+
+// Account totals for the customer account page (P6-01). staleTime: 0
+// because outstanding changes with every payment or sale.
+export function useCustomerSummary(id: string | undefined) {
+  return useQuery<CustomerSummary, ApiError>({
+    queryKey: [...CUSTOMERS_KEY, 'summary', id] as const,
+    queryFn: ({ signal }) =>
+      api<CustomerSummary>(`/customers/${id}/summary`, { signal }),
+    enabled: !!id,
+    staleTime: 0,
   });
 }
 

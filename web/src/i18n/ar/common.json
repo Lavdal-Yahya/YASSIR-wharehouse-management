@@ -246,6 +246,22 @@
     "archiveConfirm": {
       "title": "أرشفة العميل؟",
       "body": "سيتم إخفاء « {{name}} » من القوائم النشطة."
+    },
+    "account": {
+      "view": "عرض",
+      "noPhone": "لا يوجد رقم",
+      "backToList": "العودة للعملاء",
+      "totalPurchases": "إجمالي المشتريات",
+      "totalPaid": "إجمالي المدفوع",
+      "outstanding": "الرصيد المستحق",
+      "unpaidSales": "المبيعات غير المسددة",
+      "noUnpaidSales": "العميل بلا ديون — جميع المبيعات مسددة.",
+      "saleAmountDue": "المتبقي",
+      "viewSale": "عرض",
+      "registerPayment": "تسجيل دفعة",
+      "paymentHistory": "سجل الدفعات",
+      "noPayments": "لا توجد دفعات مسجلة.",
+      "viewReceipt": "إيصال"
     }
   },
   "users": {
@@ -867,7 +883,60 @@
       "cancelReason": "السبب (إلزامي)",
       "cancelReasonPlaceholder": "اشرح سبب إلغاء هذا البيع.",
       "cancelConfirm": "تأكيد الإلغاء",
-      "blockingHint": "هذه الدفعات ما زالت نشطة على هذا البيع — قم بإلغائها أولاً."
+      "blockingHint": "هذه الدفعات ما زالت نشطة على هذا البيع — قم بإلغائها أولاً.",
+      "viewCustomer": "عرض العميل"
+    }
+  },
+  "payment": {
+    "ACTIVE": "نشط",
+    "CANCELLED": "ملغى",
+    "title": "تسجيل دفعة",
+    "customer": "العميل",
+    "outstanding": "الرصيد المستحق",
+    "amount": "المبلغ المدفوع",
+    "shopLabel": "المحل الذي استلم الدفعة",
+    "chooseShop": "— اختر محلاً —",
+    "preview": "محاكاة التوزيع",
+    "debtBefore": "الرصيد قبل",
+    "debtAfter": "الرصيد بعد الدفعة",
+    "confirm": "تأكيد الدفعة",
+    "noOutstanding": "ليس على هذا العميل أي رصيد مستحق.",
+    "backToCustomer": "العودة للعميل",
+    "errorExceedsDebt": "المبلغ يتجاوز الرصيد المستحق.",
+    "errorNoShop": "اختر المحل الذي استلم هذه الدفعة.",
+    "reverse": {
+      "action": "إلغاء",
+      "title": "إلغاء الدفعة {{ref}}؟",
+      "body": "ستعود المبيعات المتأثرة إلى أرصدتها السابقة.",
+      "reason": "السبب (إلزامي)",
+      "reasonPlaceholder": "اشرح سبب إلغاء هذه الدفعة.",
+      "confirm": "تأكيد الإلغاء"
+    }
+  },
+  "receipt": {
+    "sale": {
+      "title": "إيصال بيع",
+      "print": "طباعة",
+      "reference": "المرجع",
+      "date": "التاريخ",
+      "customer": "العميل",
+      "items": "المواد",
+      "total": "المجموع",
+      "cashAtSale": "المدفوع",
+      "totalDue": "المتبقي"
+    },
+    "payment": {
+      "title": "إيصال دفعة",
+      "print": "طباعة",
+      "reference": "المرجع",
+      "date": "التاريخ",
+      "customer": "العميل",
+      "amount": "المبلغ المدفوع",
+      "debtBefore": "الرصيد قبل الدفعة",
+      "debtAfter": "الرصيد بعد الدفعة",
+      "allocations": "المبيعات المُسوَّاة",
+      "settled": "مُسوَّاة",
+      "partial": "جزئي"
     }
   },
   "openingStock": {
