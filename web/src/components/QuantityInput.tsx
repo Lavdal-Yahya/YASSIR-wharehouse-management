@@ -1,14 +1,15 @@
 import { forwardRef } from 'react';
 import type { InputHTMLAttributes } from 'react';
 
-// Integer-only stepper. Used everywhere a quantity is entered — order lines,
-// receive amounts, corrections, opening stock. Blank string when value is
-// null/undefined so the field can be truly empty.
+// Integer stepper input — quantities everywhere (order lines, receive
+// amounts, corrections, opening stock). Kept as a raw number input so
+// mobile keyboards surface the numeric pad; a true +/- stepper widget
+// lives inside the sale flow when that ships.
 
 type Props = Omit<InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange' | 'type'> & {
   value: number | null;
   onChange: (v: number | null) => void;
-  min?: number; // defaults to 0
+  min?: number;
   max?: number;
 };
 
@@ -33,10 +34,11 @@ export const QuantityInput = forwardRef<HTMLInputElement, Props>(function Quanti
         onChange(n);
       }}
       className={
-        'w-24 rounded-md border border-slate-300 bg-white px-3 py-2 text-end text-sm tabular-nums text-slate-900 ' +
-        'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400 ' +
+        'w-24 h-[46px] rounded-[8px] border-[1.5px] border-[#C8C9D4] bg-surface px-3 text-end text-[15px] font-semibold tabular-nums text-ink ' +
+        'focus:outline focus:outline-2 focus:outline-brand ' +
         className
       }
+      style={{ fontVariantNumeric: 'tabular-nums' }}
       {...rest}
     />
   );
