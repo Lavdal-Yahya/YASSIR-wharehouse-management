@@ -9,15 +9,15 @@ export function LanguageSwitcher() {
     : 'fr';
 
   return (
-    <label className="flex items-center gap-2 text-sm">
+    <label className="inline-flex items-center gap-1.5 text-[13px]">
       <span className="sr-only">{t('language.label')}</span>
       <select
         value={current}
         onChange={(e) => void i18n.changeLanguage(e.target.value)}
-        className="rounded-md border border-slate-300 bg-white px-2 py-1 text-sm text-slate-800"
+        className="rounded-input border border-white/20 bg-white/10 px-2 py-1 text-[13px] font-semibold text-white focus:outline focus:outline-2 focus:outline-white/40"
       >
         {SUPPORTED_LANGUAGES.map((lng) => (
-          <option key={lng} value={lng}>
+          <option key={lng} value={lng} className="text-ink">
             {t(`language.${lng}`)}
           </option>
         ))}
