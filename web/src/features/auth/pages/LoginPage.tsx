@@ -73,7 +73,7 @@ export default function LoginPage() {
             />
           ) : (
             <div
-              className="flex h-16 w-16 items-center justify-center rounded-lg bg-white/10 text-2xl font-bold text-white"
+              className="flex h-16 w-16 items-center justify-center rounded-lg bg-surface/10 text-2xl font-bold text-white"
               aria-hidden
             >
               {businessName.slice(0, 1).toUpperCase()}

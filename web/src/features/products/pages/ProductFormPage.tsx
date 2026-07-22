@@ -136,7 +136,7 @@ export default function ProductFormPage() {
       />
 
       <form onSubmit={onSubmit} className="grid gap-6 lg:grid-cols-3">
-        <div className="rounded-lg border border-line bg-white p-4 shadow-sm lg:col-span-2">
+        <div className="rounded-lg border border-line bg-surface p-4 shadow-sm lg:col-span-2">
           <div className="grid gap-4 md:grid-cols-2">
             <Input
               label={t('products.form.name')}
@@ -150,7 +150,7 @@ export default function ProductFormPage() {
               </label>
               <select
                 id="p-cat"
-                className="w-full rounded-md border border-[#C8C9D4] bg-white px-3 py-2 text-sm text-ink focus:outline focus:outline-2 focus:outline-brand"
+                className="w-full rounded-md border border-[#C8C9D4] bg-surface px-3 py-2 text-sm text-ink focus:outline focus:outline-2 focus:outline-brand"
                 {...form.register('categoryId')}
               >
                 <option value="">{t('products.form.chooseCategory')}</option>
@@ -192,7 +192,7 @@ export default function ProductFormPage() {
               <textarea
                 id="p-desc"
                 rows={3}
-                className="mt-1 w-full rounded-md border border-[#C8C9D4] bg-white px-3 py-2 text-sm text-ink focus:outline focus:outline-2 focus:outline-brand"
+                className="mt-1 w-full rounded-md border border-[#C8C9D4] bg-surface px-3 py-2 text-sm text-ink focus:outline focus:outline-2 focus:outline-brand"
                 {...form.register('description', { setValueAs: (v) => (v === '' ? null : v) })}
               />
             </div>
@@ -211,7 +211,7 @@ export default function ProductFormPage() {
             </p>
           ) : null}
 
-          <div className="sticky bottom-0 mt-4 flex flex-wrap justify-end gap-2 border-t border-line-soft bg-white pt-3">
+          <div className="sticky bottom-0 mt-4 flex flex-wrap justify-end gap-2 border-t border-line-soft bg-surface pt-3">
             <Button type="button" variant="secondary" onClick={() => nav('/products')}>
               {t('common.cancel')}
             </Button>
@@ -223,7 +223,7 @@ export default function ProductFormPage() {
 
         <aside className="space-y-4">
           {isNew ? null : (
-            <section className="rounded-lg border border-line bg-white p-4 shadow-sm">
+            <section className="rounded-lg border border-line bg-surface p-4 shadow-sm">
               <ImageUploadField
                 label={t('products.form.image')}
                 currentUrl={product.data?.imageUrl ?? null}
@@ -236,7 +236,7 @@ export default function ProductFormPage() {
             </section>
           )}
           {isNew ? null : (
-            <section className="rounded-lg border border-line bg-white p-4 shadow-sm">
+            <section className="rounded-lg border border-line bg-surface p-4 shadow-sm">
               <h2 className="mb-2 text-sm font-semibold text-ink text-start">
                 {t('products.dangerZone.title')}
               </h2>

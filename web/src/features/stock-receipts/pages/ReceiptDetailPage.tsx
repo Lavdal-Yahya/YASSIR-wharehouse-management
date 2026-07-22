@@ -40,7 +40,7 @@ export default function ReceiptDetailPage() {
         }
       />
 
-      <div className="grid gap-3 rounded-lg border border-line bg-white p-4 shadow-sm md:grid-cols-3 text-sm text-ink">
+      <div className="grid gap-3 rounded-lg border border-line bg-surface p-4 shadow-sm md:grid-cols-3 text-sm text-ink">
         <div>
           <div className="text-xs text-muted">{t('receipts.direct.receiptDate')}</div>
           <div>{new Date(r.receiptDate).toLocaleDateString()}</div>
@@ -55,7 +55,7 @@ export default function ReceiptDetailPage() {
         </div>
       </div>
 
-      <div className="rounded-lg border border-line bg-white shadow-sm">
+      <div className="rounded-lg border border-line bg-surface shadow-sm">
         <h2 className="border-b border-line-soft p-4 text-sm font-semibold text-ink">
           {t('receipts.direct.items')}
         </h2>

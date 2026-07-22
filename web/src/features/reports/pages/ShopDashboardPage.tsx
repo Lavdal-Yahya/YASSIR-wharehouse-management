@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import type { ReactElement } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { PageHeader } from '@/components/PageHeader';
@@ -26,7 +27,7 @@ function todayIso(): string {
 type QuickActionProps = {
   to: string;
   label: string;
-  Icon: (p: { size?: number }) => JSX.Element;
+  Icon: (p: { size?: number }) => ReactElement;
 };
 
 function QuickAction({ to, label, Icon }: QuickActionProps) {

@@ -99,7 +99,7 @@ export default function OrderReceivePage() {
         subtitle={t('orders.receive.subtitle', { ref: o.referenceNumber })}
       />
 
-      <div className="grid gap-3 rounded-lg border border-line bg-white p-4 shadow-sm md:grid-cols-2">
+      <div className="grid gap-3 rounded-lg border border-line bg-surface p-4 shadow-sm md:grid-cols-2">
         <label className="block text-sm">
           <span className="mb-1 block text-ink">
             {t('orders.receive.receiptDate')}
@@ -116,7 +116,7 @@ export default function OrderReceivePage() {
         </label>
       </div>
 
-      <div className="rounded-lg border border-line bg-white shadow-sm">
+      <div className="rounded-lg border border-line bg-surface shadow-sm">
         <h2 className="border-b border-line-soft p-4 text-sm font-semibold text-ink">
           {t('orders.receive.items')}
         </h2>

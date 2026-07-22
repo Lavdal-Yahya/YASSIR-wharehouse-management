@@ -60,7 +60,7 @@ export default function MovementsPage() {
         <select
           value={locationId}
           onChange={(e) => setFilter('locationId', e.target.value)}
-          className="rounded-md border border-[#C8C9D4] bg-white px-3 py-2 text-sm text-ink"
+          className="rounded-md border border-[#C8C9D4] bg-surface px-3 py-2 text-sm text-ink"
           aria-label={t('movements.filter.location')}
         >
           <option value="">{t('movements.filter.allLocations')}</option>
@@ -73,7 +73,7 @@ export default function MovementsPage() {
         <select
           value={movementType}
           onChange={(e) => setFilter('movementType', e.target.value)}
-          className="rounded-md border border-[#C8C9D4] bg-white px-3 py-2 text-sm text-ink"
+          className="rounded-md border border-[#C8C9D4] bg-surface px-3 py-2 text-sm text-ink"
           aria-label={t('movements.filter.type')}
         >
           <option value="">{t('movements.filter.allTypes')}</option>
@@ -97,7 +97,7 @@ export default function MovementsPage() {
         ) : null}
       </div>
 
-      <div className="rounded-lg border border-line bg-white p-2 shadow-sm">
+      <div className="rounded-lg border border-line bg-surface p-2 shadow-sm">
         {list.isLoading ? (
           <div className="flex items-center gap-2 p-3 text-sm text-muted">
             <Spinner /> {t('loading')}

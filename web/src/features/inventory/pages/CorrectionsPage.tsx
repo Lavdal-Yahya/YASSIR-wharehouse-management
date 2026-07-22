@@ -58,7 +58,7 @@ export default function CorrectionsPage() {
         subtitle={t('corrections.subtitle')}
       />
 
-      <div className="rounded-lg border border-line bg-white p-4 shadow-sm">
+      <div className="rounded-lg border border-line bg-surface p-4 shadow-sm">
         <h2 className="mb-3 text-sm font-semibold text-ink">
           {t('corrections.form.title')}
         </h2>
@@ -66,7 +66,7 @@ export default function CorrectionsPage() {
           <select
             value={locationId}
             onChange={(e) => setLocationId(e.target.value)}
-            className="rounded-md border border-[#C8C9D4] bg-white px-3 py-2 text-sm text-ink"
+            className="rounded-md border border-[#C8C9D4] bg-surface px-3 py-2 text-sm text-ink"
             aria-label={t('corrections.form.location')}
           >
             <option value="">{t('corrections.form.chooseLocation')}</option>
@@ -116,7 +116,7 @@ export default function CorrectionsPage() {
         ) : null}
       </div>
 
-      <div className="rounded-lg border border-line bg-white p-2 shadow-sm">
+      <div className="rounded-lg border border-line bg-surface p-2 shadow-sm">
         {list.isLoading ? (
           <div className="flex items-center gap-2 p-3 text-sm text-muted">
             <Spinner /> {t('loading')}

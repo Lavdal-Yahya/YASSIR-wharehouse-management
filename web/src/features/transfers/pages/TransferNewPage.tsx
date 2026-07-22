@@ -159,7 +159,7 @@ export default function TransferNewPage() {
         subtitle={t('transfers.form.newSubtitle')}
       />
 
-      <div className="grid gap-3 rounded-lg border border-line bg-white p-4 shadow-sm md:grid-cols-3">
+      <div className="grid gap-3 rounded-lg border border-line bg-surface p-4 shadow-sm md:grid-cols-3">
         <label className="block text-sm">
           <span className="mb-1 block text-ink">
             {t('transfers.form.source')}
@@ -167,7 +167,7 @@ export default function TransferNewPage() {
           <select
             value={sourceLocationId}
             onChange={(e) => onSourceChange(e.target.value)}
-            className="block w-full rounded-md border border-[#C8C9D4] bg-white px-3 py-2 text-sm text-ink"
+            className="block w-full rounded-md border border-[#C8C9D4] bg-surface px-3 py-2 text-sm text-ink"
             aria-label={t('transfers.form.source')}
           >
             <option value="">{t('transfers.form.chooseSource')}</option>
@@ -186,7 +186,7 @@ export default function TransferNewPage() {
           <select
             value={destinationLocationId}
             onChange={(e) => setDestinationLocationId(e.target.value)}
-            className="block w-full rounded-md border border-[#C8C9D4] bg-white px-3 py-2 text-sm text-ink"
+            className="block w-full rounded-md border border-[#C8C9D4] bg-surface px-3 py-2 text-sm text-ink"
             aria-label={t('transfers.form.destination')}
             disabled={!sourceLocationId}
           >
@@ -207,7 +207,7 @@ export default function TransferNewPage() {
             type="date"
             value={transferDate}
             onChange={(e) => setTransferDate(e.target.value)}
-            className="block w-full rounded-md border border-[#C8C9D4] bg-white px-3 py-2 text-sm text-ink"
+            className="block w-full rounded-md border border-[#C8C9D4] bg-surface px-3 py-2 text-sm text-ink"
           />
         </label>
 
@@ -219,12 +219,12 @@ export default function TransferNewPage() {
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             rows={2}
-            className="block w-full rounded-md border border-[#C8C9D4] bg-white px-3 py-2 text-sm text-ink"
+            className="block w-full rounded-md border border-[#C8C9D4] bg-surface px-3 py-2 text-sm text-ink"
           />
         </label>
       </div>
 
-      <div className="rounded-lg border border-line bg-white p-4 shadow-sm">
+      <div className="rounded-lg border border-line bg-surface p-4 shadow-sm">
         <div className="mb-3 flex items-center justify-between">
           <h2 className="text-sm font-semibold text-ink">
             {t('transfers.form.items')}
@@ -276,7 +276,7 @@ export default function TransferNewPage() {
                         })
                       }
                       aria-label={t('transfers.form.product')}
-                      className="w-full rounded-md border border-[#C8C9D4] bg-white px-3 py-2 text-sm text-ink"
+                      className="w-full rounded-md border border-[#C8C9D4] bg-surface px-3 py-2 text-sm text-ink"
                     >
                       <option value="">{t('orders.form.chooseProduct')}</option>
                       {productsAtSource.map((row) => (

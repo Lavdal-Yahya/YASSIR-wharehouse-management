@@ -15,7 +15,7 @@ export function LanguageSwitcher({ variant = 'default' }: Props) {
 
   const cls =
     variant === 'onBrand'
-      ? 'rounded-input border border-white/20 bg-white/10 px-2 py-1 text-[13px] font-semibold text-white focus:outline focus:outline-2 focus:outline-white/40'
+      ? 'rounded-input border border-white/20 bg-surface/10 px-2 py-1 text-[13px] font-semibold text-white focus:outline focus:outline-2 focus:outline-white/40'
       : 'rounded-input border border-[#C8C9D4] bg-surface px-2 py-1 text-[13px] font-semibold text-ink focus:outline focus:outline-2 focus:outline-brand';
 
   return (

@@ -62,7 +62,7 @@ export default function TransfersListPage() {
             setPage(1);
             setSourceLocationId(e.target.value);
           }}
-          className="rounded-md border border-[#C8C9D4] bg-white px-3 py-2 text-sm text-ink"
+          className="rounded-md border border-[#C8C9D4] bg-surface px-3 py-2 text-sm text-ink"
           aria-label={t('transfers.filter.source')}
         >
           <option value="">
@@ -80,7 +80,7 @@ export default function TransfersListPage() {
             setPage(1);
             setDestinationLocationId(e.target.value);
           }}
-          className="rounded-md border border-[#C8C9D4] bg-white px-3 py-2 text-sm text-ink"
+          className="rounded-md border border-[#C8C9D4] bg-surface px-3 py-2 text-sm text-ink"
           aria-label={t('transfers.filter.destination')}
         >
           <option value="">
@@ -99,7 +99,7 @@ export default function TransfersListPage() {
             setPage(1);
             setStatus(e.target.value);
           }}
-          className="rounded-md border border-[#C8C9D4] bg-white px-3 py-2 text-sm text-ink"
+          className="rounded-md border border-[#C8C9D4] bg-surface px-3 py-2 text-sm text-ink"
           aria-label={t('transfers.filter.status')}
         >
           <option value="">{t('transfers.filter.allStatuses')}</option>
@@ -111,7 +111,7 @@ export default function TransfersListPage() {
         </select>
       </div>
 
-      <div className="rounded-lg border border-line bg-white p-2 shadow-sm">
+      <div className="rounded-lg border border-line bg-surface p-2 shadow-sm">
         {list.isLoading ? (
           <div className="flex items-center gap-2 p-3 text-sm text-muted">
             <Spinner /> {t('loading')}

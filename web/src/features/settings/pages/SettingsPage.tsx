@@ -60,7 +60,7 @@ export default function SettingsPage() {
       <div className="grid gap-6 lg:grid-cols-3">
         <form
           onSubmit={onSubmit}
-          className="rounded-lg border border-line bg-white p-4 shadow-sm lg:col-span-2"
+          className="rounded-lg border border-line bg-surface p-4 shadow-sm lg:col-span-2"
         >
           <div className="grid gap-4 md:grid-cols-2">
             <Input
@@ -73,7 +73,7 @@ export default function SettingsPage() {
               </label>
               <select
                 id="s-cur"
-                className="w-full rounded-md border border-[#C8C9D4] bg-white px-3 py-2 text-sm text-ink"
+                className="w-full rounded-md border border-[#C8C9D4] bg-surface px-3 py-2 text-sm text-ink"
                 {...form.register('currency')}
               >
                 <option value="MRU">MRU</option>
@@ -87,7 +87,7 @@ export default function SettingsPage() {
               <textarea
                 id="s-footer"
                 rows={3}
-                className="mt-1 w-full rounded-md border border-[#C8C9D4] bg-white px-3 py-2 text-sm text-ink"
+                className="mt-1 w-full rounded-md border border-[#C8C9D4] bg-surface px-3 py-2 text-sm text-ink"
                 {...form.register('receiptFooter')}
               />
             </div>
@@ -103,7 +103,7 @@ export default function SettingsPage() {
         </form>
 
         <aside className="space-y-4">
-          <section className="rounded-lg border border-line bg-white p-4 shadow-sm">
+          <section className="rounded-lg border border-line bg-surface p-4 shadow-sm">
             <ImageUploadField
               label={t('settings.form.logo')}
               currentUrl={settings.data?.logoUrl || null}
@@ -113,7 +113,7 @@ export default function SettingsPage() {
             />
           </section>
 
-          <section className="rounded-lg border border-line bg-white p-4 shadow-sm text-start">
+          <section className="rounded-lg border border-line bg-surface p-4 shadow-sm text-start">
             <h2 className="mb-2 text-sm font-semibold text-ink">{t('settings.related.title')}</h2>
             <ul className="flex flex-col gap-2 text-sm">
               <li>

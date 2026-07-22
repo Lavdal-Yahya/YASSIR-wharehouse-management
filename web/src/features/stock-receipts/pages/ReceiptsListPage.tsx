@@ -49,7 +49,7 @@ export default function ReceiptsListPage() {
             setPage(1);
             setSource(e.target.value as '' | 'direct' | 'order');
           }}
-          className="rounded-md border border-[#C8C9D4] bg-white px-3 py-2 text-sm text-ink"
+          className="rounded-md border border-[#C8C9D4] bg-surface px-3 py-2 text-sm text-ink"
           aria-label={t('receipts.filter.source')}
         >
           <option value="">{t('receipts.filter.allSources')}</option>
@@ -58,7 +58,7 @@ export default function ReceiptsListPage() {
         </select>
       </div>
 
-      <div className="rounded-lg border border-line bg-white p-2 shadow-sm">
+      <div className="rounded-lg border border-line bg-surface p-2 shadow-sm">
         {list.isLoading ? (
           <div className="flex items-center gap-2 p-3 text-sm text-muted">
             <Spinner /> {t('loading')}

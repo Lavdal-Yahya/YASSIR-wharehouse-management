@@ -63,7 +63,7 @@ export default function CustomersPage() {
     form.reset({ name: c.name, phone: c.phone, notes: c.notes });
   };
 
-  const canEdit = (c: Customer) =>
+  const canEdit = (_c: Customer) =>
     isOwner || role === Role.SHOP; // shop employees can edit customer info
 
   const onSubmit = form.handleSubmit(async (values) => {
@@ -88,7 +88,7 @@ export default function CustomersPage() {
     <div>
       <PageHeader title={t('customers.title')} subtitle={t('customers.subtitle')} />
 
-      <section className="mb-6 rounded-lg border border-line bg-white p-4 shadow-sm">
+      <section className="mb-6 rounded-lg border border-line bg-surface p-4 shadow-sm">
         <h2 className="mb-3 text-sm font-semibold text-ink text-start">
           {editing ? t('customers.form.editTitle') : t('customers.form.createTitle')}
         </h2>
@@ -124,7 +124,7 @@ export default function CustomersPage() {
         </form>
       </section>
 
-      <section className="rounded-lg border border-line bg-white p-4 shadow-sm">
+      <section className="rounded-lg border border-line bg-surface p-4 shadow-sm">
         <div className="mb-3 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <div className="grow md:max-w-sm">
             <SearchInput

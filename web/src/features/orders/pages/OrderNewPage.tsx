@@ -114,7 +114,7 @@ export default function OrderNewPage() {
         subtitle={t('orders.form.newSubtitle')}
       />
 
-      <div className="grid gap-3 rounded-lg border border-line bg-white p-4 shadow-sm md:grid-cols-3">
+      <div className="grid gap-3 rounded-lg border border-line bg-surface p-4 shadow-sm md:grid-cols-3">
         <label className="block text-sm">
           <span className="mb-1 block text-ink">{t('orders.form.supplier')}</span>
           <Input
@@ -143,12 +143,12 @@ export default function OrderNewPage() {
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             rows={2}
-            className="block w-full rounded-md border border-[#C8C9D4] bg-white px-3 py-2 text-sm text-ink"
+            className="block w-full rounded-md border border-[#C8C9D4] bg-surface px-3 py-2 text-sm text-ink"
           />
         </label>
       </div>
 
-      <div className="rounded-lg border border-line bg-white p-4 shadow-sm">
+      <div className="rounded-lg border border-line bg-surface p-4 shadow-sm">
         <div className="mb-3 flex items-center justify-between">
           <h2 className="text-sm font-semibold text-ink">
             {t('orders.form.items')}
@@ -183,7 +183,7 @@ export default function OrderNewPage() {
                   className={`rounded-md border px-2 py-1 ${
                     it.mode === 'existing'
                       ? 'border-slate-900 bg-brand-pressed text-white'
-                      : 'border-line bg-white text-ink'
+                      : 'border-line bg-surface text-ink'
                   }`}
                 >
                   {t('orders.form.existingProduct')}
@@ -194,7 +194,7 @@ export default function OrderNewPage() {
                   className={`rounded-md border px-2 py-1 ${
                     it.mode === 'new'
                       ? 'border-slate-900 bg-brand-pressed text-white'
-                      : 'border-line bg-white text-ink'
+                      : 'border-line bg-surface text-ink'
                   }`}
                 >
                   {t('orders.form.newProduct')}
@@ -224,7 +224,7 @@ export default function OrderNewPage() {
                         updateItem(idx, { newProductCategoryId: e.target.value })
                       }
                       aria-label={t('orders.form.category')}
-                      className="w-full rounded-md border border-[#C8C9D4] bg-white px-3 py-2 text-sm text-ink"
+                      className="w-full rounded-md border border-[#C8C9D4] bg-surface px-3 py-2 text-sm text-ink"
                     >
                       <option value="">{t('orders.form.chooseCategory')}</option>
                       {cats.data?.items.map((c) => (

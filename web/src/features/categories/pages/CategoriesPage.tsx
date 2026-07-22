@@ -74,7 +74,7 @@ export default function CategoriesPage() {
 
       <section
         aria-label={t('categories.form.title')}
-        className="mb-6 rounded-lg border border-line bg-white p-4 shadow-sm"
+        className="mb-6 rounded-lg border border-line bg-surface p-4 shadow-sm"
       >
         <h2 className="mb-3 text-sm font-semibold text-ink text-start">
           {editing ? t('categories.form.editTitle') : t('categories.form.createTitle')}
@@ -107,7 +107,7 @@ export default function CategoriesPage() {
         ) : null}
       </section>
 
-      <section className="rounded-lg border border-line bg-white p-4 shadow-sm">
+      <section className="rounded-lg border border-line bg-surface p-4 shadow-sm">
         <div className="mb-3 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <div className="grow md:max-w-sm">
             <SearchInput value={search} onChange={(v) => { setPage(1); setSearch(v); }} />

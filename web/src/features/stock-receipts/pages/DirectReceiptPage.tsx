@@ -78,7 +78,7 @@ export default function DirectReceiptPage() {
         subtitle={t('receipts.direct.subtitle')}
       />
 
-      <div className="grid gap-3 rounded-lg border border-line bg-white p-4 shadow-sm md:grid-cols-3">
+      <div className="grid gap-3 rounded-lg border border-line bg-surface p-4 shadow-sm md:grid-cols-3">
         <label className="block text-sm">
           <span className="mb-1 block text-ink">
             {t('receipts.direct.receiptDate')}
@@ -105,7 +105,7 @@ export default function DirectReceiptPage() {
         </label>
       </div>
 
-      <div className="rounded-lg border border-line bg-white p-4 shadow-sm">
+      <div className="rounded-lg border border-line bg-surface p-4 shadow-sm">
         <div className="mb-3 flex items-center justify-between">
           <h2 className="text-sm font-semibold text-ink">
             {t('receipts.direct.items')}

@@ -125,7 +125,7 @@ export default function UsersPage() {
     <div>
       <PageHeader title={t('users.title')} subtitle={t('users.subtitle')} />
 
-      <section className="mb-6 rounded-lg border border-line bg-white p-4 shadow-sm">
+      <section className="mb-6 rounded-lg border border-line bg-surface p-4 shadow-sm">
         <h2 className="mb-3 text-sm font-semibold text-ink text-start">
           {editing ? t('users.form.editTitle') : t('users.form.createTitle')}
         </h2>
@@ -157,7 +157,7 @@ export default function UsersPage() {
             </label>
             <select
               id="u-role"
-              className="w-full rounded-md border border-[#C8C9D4] bg-white px-3 py-2 text-sm text-ink"
+              className="w-full rounded-md border border-[#C8C9D4] bg-surface px-3 py-2 text-sm text-ink"
               {...form.register('role')}
             >
               {roleValues.map((r) => (
@@ -175,7 +175,7 @@ export default function UsersPage() {
               </label>
               <select
                 id="u-shop"
-                className="w-full rounded-md border border-[#C8C9D4] bg-white px-3 py-2 text-sm text-ink"
+                className="w-full rounded-md border border-[#C8C9D4] bg-surface px-3 py-2 text-sm text-ink"
                 value={form.watch('assignedShopId') ?? ''}
                 onChange={(e) => form.setValue('assignedShopId', e.target.value || null, { shouldDirty: true })}
               >
@@ -205,7 +205,7 @@ export default function UsersPage() {
         </form>
       </section>
 
-      <section className="rounded-lg border border-line bg-white p-4 shadow-sm">
+      <section className="rounded-lg border border-line bg-surface p-4 shadow-sm">
         <div className="mb-3 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <div className="grow md:max-w-sm">
             <SearchInput value={search} onChange={(v) => { setPage(1); setSearch(v); }} />

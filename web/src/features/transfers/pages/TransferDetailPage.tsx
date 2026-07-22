@@ -78,7 +78,7 @@ export default function TransferDetailPage() {
         }
       />
 
-      <div className="grid gap-3 rounded-lg border border-line bg-white p-4 shadow-sm md:grid-cols-3 text-sm text-ink">
+      <div className="grid gap-3 rounded-lg border border-line bg-surface p-4 shadow-sm md:grid-cols-3 text-sm text-ink">
         <div>
           <div className="text-xs text-muted">{t('transfers.detail.source')}</div>
           <div>{tr.sourceLocationName}</div>
@@ -131,7 +131,7 @@ export default function TransferDetailPage() {
         ) : null}
       </div>
 
-      <div className="rounded-lg border border-line bg-white shadow-sm">
+      <div className="rounded-lg border border-line bg-surface shadow-sm">
         <h2 className="border-b border-line-soft p-4 text-sm font-semibold text-ink">
           {t('transfers.detail.items')}
         </h2>
@@ -181,7 +181,7 @@ export default function TransferDetailPage() {
                 onChange={(e) => setReason(e.target.value)}
                 rows={3}
                 placeholder={t('transfers.reverse.reasonPlaceholder')}
-                className="block w-full rounded-md border border-[#C8C9D4] bg-white px-3 py-2 text-sm text-ink"
+                className="block w-full rounded-md border border-[#C8C9D4] bg-surface px-3 py-2 text-sm text-ink"
               />
             </label>
             {reasonError ? (

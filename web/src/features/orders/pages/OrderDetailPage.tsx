@@ -85,7 +85,7 @@ export default function OrderDetailPage() {
         }
       />
 
-      <div className="grid gap-3 rounded-lg border border-line bg-white p-4 shadow-sm md:grid-cols-3 text-sm text-ink">
+      <div className="grid gap-3 rounded-lg border border-line bg-surface p-4 shadow-sm md:grid-cols-3 text-sm text-ink">
         <div>
           <div className="text-xs text-muted">{t('orders.form.orderDate')}</div>
           <div>{new Date(o.orderDate).toLocaleDateString()}</div>
@@ -112,7 +112,7 @@ export default function OrderDetailPage() {
         ) : null}
       </div>
 
-      <div className="rounded-lg border border-line bg-white shadow-sm">
+      <div className="rounded-lg border border-line bg-surface shadow-sm">
         <h2 className="border-b border-line-soft p-4 text-sm font-semibold text-ink">
           {t('orders.detail.items')}
         </h2>
@@ -150,7 +150,7 @@ export default function OrderDetailPage() {
       </div>
 
       {o.receipts.length > 0 ? (
-        <div className="rounded-lg border border-line bg-white shadow-sm">
+        <div className="rounded-lg border border-line bg-surface shadow-sm">
           <h2 className="border-b border-line-soft p-4 text-sm font-semibold text-ink">
             {t('orders.detail.receipts')}
           </h2>
@@ -193,7 +193,7 @@ export default function OrderDetailPage() {
                 value={reason}
                 onChange={(e) => setReason(e.target.value)}
                 rows={3}
-                className="block w-full rounded-md border border-[#C8C9D4] bg-white px-3 py-2 text-sm text-ink"
+                className="block w-full rounded-md border border-[#C8C9D4] bg-surface px-3 py-2 text-sm text-ink"
               />
             </label>
             {cancel.error ? (

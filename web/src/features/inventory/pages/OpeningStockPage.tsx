@@ -68,13 +68,13 @@ export default function OpeningStockPage() {
         subtitle={t('openingStock.subtitle')}
       />
 
-      <div className="rounded-lg border border-line bg-white p-4 shadow-sm">
+      <div className="rounded-lg border border-line bg-surface p-4 shadow-sm">
         <label className="block text-sm">
           <span className="mb-1 block text-ink">{t('openingStock.location')}</span>
           <select
             value={locationId}
             onChange={(e) => setLocationId(e.target.value)}
-            className="w-full rounded-md border border-[#C8C9D4] bg-white px-3 py-2 text-sm text-ink"
+            className="w-full rounded-md border border-[#C8C9D4] bg-surface px-3 py-2 text-sm text-ink"
             aria-label={t('openingStock.location')}
           >
             <option value="">{t('corrections.form.chooseLocation')}</option>
@@ -87,7 +87,7 @@ export default function OpeningStockPage() {
         </label>
       </div>
 
-      <div className="rounded-lg border border-line bg-white p-4 shadow-sm">
+      <div className="rounded-lg border border-line bg-surface p-4 shadow-sm">
         <div className="mb-3 flex items-center justify-between">
           <h2 className="text-sm font-semibold text-ink">
             {t('openingStock.items')}
