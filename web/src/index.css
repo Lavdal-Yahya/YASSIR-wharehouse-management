@@ -1,7 +1,65 @@
 @import 'tailwindcss';
 
-/* Base app frame. Tailwind v4 utilities cover the rest; keep custom CSS
-   minimal so RTL and dark-mode reasoning stays inside class names. */
+/*
+ * Ledger design tokens (see docs/uploads/design-brief.md + Ledger UI.dc.html).
+ *
+ * Colors: melhfa indigo carries the chrome; everything else is true-neutral
+ * white for sunlight legibility. Money is green (collected) vs red (debt) —
+ * the app's one dangerous confusion made pre-attentive.
+ *
+ * Fonts: IBM Plex Sans (Latin) + IBM Plex Sans Arabic. Arabic gets slightly
+ * larger sizes and looser leading; the RTL selector swaps the body font in
+ * one place. Numbers use tabular-nums via the <Money> component.
+ *
+ * Tailwind v4 exposes @theme keys as utilities:
+ *   --color-brand → bg-brand, text-brand, border-brand
+ *   --font-sans   → font-sans
+ *   --radius-card → rounded-card
+ */
+
+@theme {
+  /* Chrome — melhfa indigo */
+  --color-brand: #2F3272;
+  --color-brand-pressed: #24274F;
+  --color-tint: #EDEEF7;
+
+  /* Text + surfaces */
+  --color-ink: #1B1C26;
+  --color-muted: #5B5D70;
+  --color-app: #F4F4F6;
+  --color-surface: #FFFFFF;
+  --color-line: #E4E4EA;
+  --color-line-soft: #EEEEF2;
+
+  /* Status — money side (design's signature distinction) */
+  --color-collected: #1E8A4C;
+  --color-collected-bg: #DFF2E6;
+  --color-collected-fg: #17693B;
+  --color-debt: #BB4237;
+  --color-debt-bg: #FCE9E6;
+  --color-debt-fg: #A32C21;
+  --color-partial: #C98A2B;
+  --color-partial-bg: #FBEED6;
+  --color-partial-fg: #82500A;
+
+  /* Neutral status (cancelled / archived) */
+  --color-neutral-dot: #8A8B99;
+  --color-neutral-bg: #ECECF1;
+  --color-neutral-fg: #4A4C5C;
+
+  /* Fonts — IBM Plex Sans (Latin) is the default; the RTL selector below
+     swaps to IBM Plex Sans Arabic when i18next sets html[dir="rtl"]. */
+  --font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-arabic: 'IBM Plex Sans Arabic', 'IBM Plex Sans', 'Noto Sans Arabic', ui-sans-serif, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Radii — 8/12/14/999 per spec */
+  --radius-input: 8px;
+  --radius-card: 12px;
+  --radius-lg: 14px;
+  --radius-pill: 999px;
+}
+
 html,
 body,
 #root {
@@ -9,14 +67,31 @@ body,
 }
 
 body {
-  background-color: theme(colors.slate.50);
-  color: theme(colors.slate.900);
-  font-family:
-    ui-sans-serif,
-    system-ui,
-    -apple-system,
-    'Segoe UI',
-    Roboto,
-    'Noto Sans Arabic',
-    sans-serif;
+  background-color: var(--color-app);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* One-selector RTL font swap — react-i18next sets document.documentElement.dir
+   on language change, so this activates without any per-element override. */
+html[dir='rtl'] body {
+  font-family: var(--font-arabic);
+}
+
+/* Arabic body text needs a touch more line-height at the same optical size
+   (design brief §3.2). Applied to text nodes only — form controls carry
+   their own font-family via inputs' `font: inherit` chain. */
+html[dir='rtl'] {
+  line-height: 1.65;
+}
+
+/* Reduced-motion — respect OS preference on every transition we ship. */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
