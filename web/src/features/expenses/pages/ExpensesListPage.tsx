@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { useTranslation } from 'react-i18next';
 import { Role } from '@/shared/enums';
 import { PageHeader } from '@/components/PageHeader';
+import { SectionCard } from '@/components/SectionCard';
 import { SearchInput } from '@/components/SearchInput';
 import { Pagination } from '@/components/Pagination';
 import { StatusBadge } from '@/components/StatusBadge';
@@ -12,8 +13,8 @@ import { ConfirmDialog } from '@/components/ConfirmDialog';
 import { Button } from '@/components/Button';
 import { Input } from '@/components/Input';
 import { MoneyInput } from '@/components/MoneyInput';
+import { Money } from '@/components/Money';
 import { Spinner } from '@/components/Spinner';
-import { formatMoney } from '@/shared/money';
 import { errorMessage } from '@/shared/error-message';
 import { useMe } from '@/features/auth/api';
 import { useShopsList } from '@/features/shops/api';
@@ -26,16 +27,11 @@ import {
 } from '../api';
 import type { Expense, ExpenseStatus } from '../types';
 
-// Expenses UI (P7-02). Follows the CustomersPage split-panel pattern:
-// create/edit form on top, filterable list below, ConfirmDialog for
-// the cancel-with-reason flow. Shop employees see only their own
-// shop (ShopScopeGuard + service list() defensively re-constrains);
-// the shop dropdown is hidden for them and their shopId is implied.
+// Expenses UI (P7-02) — ledger design. Split-panel: create/edit form
+// on top (in a SectionCard), filterable list below (also SectionCard),
+// ConfirmDialog for cancel-with-reason. SHOP users get their shopId
+// implicit — dropdown hidden.
 
-// zod schema mirrors CreateExpenseDto server-side. amount ≥ 1 matches
-// the DB CHECK expense_amount_positive. Note we can't share the DTO
-// class from /api — that's the "duplicated shared enums" tradeoff
-// from D-001 (§2). Keep both in sync by hand.
 const schema = z.object({
   shopId: z.string().min(1),
   categoryId: z.string().nullable(),
@@ -63,6 +59,9 @@ function todayIso(): string {
   const day = String(d.getDate()).padStart(2, '0');
   return `${y}-${m}-${day}`;
 }
+
+const selectClass =
+  'h-[50px] rounded-input border-[1.5px] border-[#C8C9D4] bg-surface px-3 text-[15px] text-ink focus:outline focus:outline-2 focus:outline-brand disabled:bg-neutral-bg';
 
 export default function ExpensesListPage() {
   const { t } = useTranslation();
@@ -99,8 +98,6 @@ export default function ExpensesListPage() {
   const update = useUpdateExpense(editing?.id ?? '');
   const cancel = useCancelExpense();
 
-  // Default shopId for the form: SHOP user's own shop; OWNER picks
-  // from the dropdown (blank until first selection).
   const defaultShopId = isShop && user?.assignedShopId ? user.assignedShopId : '';
 
   const form = useForm<FormValues>({
@@ -127,9 +124,6 @@ export default function ExpensesListPage() {
   const onSubmit = form.handleSubmit(async (values) => {
     try {
       if (editing) {
-        // shopId is intentionally not in the PATCH body — the server
-        // rejects moving an expense between shops (would silently
-        // rewrite cash-outflow attribution).
         await update.mutateAsync({
           categoryId: values.categoryId,
           amount: values.amount,
@@ -160,24 +154,25 @@ export default function ExpensesListPage() {
 
   return (
     <div>
-      <PageHeader title={t('expenses.title')} subtitle={t('expenses.subtitle')} />
+      <PageHeader
+        title={t('expenses.title')}
+        subtitle={t('expenses.subtitle')}
+      />
 
-      <section className="mb-6 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-        <h2 className="mb-3 text-sm font-semibold text-slate-800 text-start">
-          {editing ? t('expenses.form.editTitle') : t('expenses.form.createTitle')}
-        </h2>
+      <SectionCard
+        title={editing ? t('expenses.form.editTitle') : t('expenses.form.createTitle')}
+        className="mb-5"
+      >
         <form onSubmit={onSubmit} className="grid gap-3 md:grid-cols-3">
-          {/* Shop — hidden for SHOP users; OWNER picks. Edit mode locks
-              the shop (server refuses shopId in PATCH anyway). */}
           {!isShop ? (
-            <div className="flex flex-col gap-1 text-start">
-              <label className="text-sm font-medium text-slate-700">
+            <div className="flex flex-col gap-1.5 text-start">
+              <label className="text-[14px] font-semibold text-ink">
                 {t('expenses.form.shop')}
               </label>
               <select
                 {...form.register('shopId')}
                 disabled={!!editing}
-                className="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 disabled:bg-slate-50"
+                className={selectClass}
               >
                 <option value="">{t('expenses.form.chooseShop')}</option>
                 {shops.data?.items.map((s) => (
@@ -188,16 +183,19 @@ export default function ExpensesListPage() {
               </select>
             </div>
           ) : null}
-          <div className="flex flex-col gap-1 text-start">
-            <label className="text-sm font-medium text-slate-700">
+          <div className="flex flex-col gap-1.5 text-start">
+            <label className="text-[14px] font-semibold text-ink">
               {t('expenses.form.category')}
             </label>
             <select
               value={form.watch('categoryId') ?? ''}
               onChange={(e) =>
-                form.setValue('categoryId', e.target.value === '' ? null : e.target.value)
+                form.setValue(
+                  'categoryId',
+                  e.target.value === '' ? null : e.target.value,
+                )
               }
-              className="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+              className={selectClass}
             >
               <option value="">{t('expenses.form.chooseCategory')}</option>
               {categories.data?.items.map((c) => (
@@ -207,14 +205,12 @@ export default function ExpensesListPage() {
               ))}
             </select>
           </div>
-          <div>
-            <MoneyInput
-              label={t('expenses.form.amount')}
-              value={form.watch('amount') || null}
-              onChange={(v) => form.setValue('amount', v ?? 0, { shouldValidate: true })}
-              error={form.formState.errors.amount ? t('errors.BAD_REQUEST') : undefined}
-            />
-          </div>
+          <MoneyInput
+            label={t('expenses.form.amount')}
+            value={form.watch('amount') || null}
+            onChange={(v) => form.setValue('amount', v ?? 0, { shouldValidate: true })}
+            error={form.formState.errors.amount ? t('errors.BAD_REQUEST') : undefined}
+          />
           <Input
             type="date"
             label={t('expenses.form.date')}
@@ -224,7 +220,9 @@ export default function ExpensesListPage() {
             <Input
               label={t('expenses.form.description')}
               {...form.register('description')}
-              error={form.formState.errors.description ? t('errors.BAD_REQUEST') : undefined}
+              error={
+                form.formState.errors.description ? t('errors.BAD_REQUEST') : undefined
+              }
             />
           </div>
           <div className="md:col-span-3">
@@ -232,7 +230,9 @@ export default function ExpensesListPage() {
               label={
                 <>
                   {t('expenses.form.notes')}{' '}
-                  <span className="text-xs text-slate-400">({t('common.optional')})</span>
+                  <span className="text-[13px] font-medium text-muted">
+                    ({t('common.optional')})
+                  </span>
                 </>
               }
               {...form.register('notes', {
@@ -242,7 +242,12 @@ export default function ExpensesListPage() {
           </div>
           <div className="md:col-span-3 flex justify-end gap-2">
             {editing ? (
-              <Button type="button" variant="secondary" onClick={startCreate} disabled={mutating}>
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={startCreate}
+                disabled={mutating}
+              >
                 {t('common.cancel')}
               </Button>
             ) : null}
@@ -251,15 +256,18 @@ export default function ExpensesListPage() {
             </Button>
           </div>
           {mutationError ? (
-            <p role="alert" className="md:col-span-3 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
+            <p
+              role="alert"
+              className="md:col-span-3 rounded-input bg-debt-bg px-3 py-2 text-[14px] font-medium text-debt-fg"
+            >
               {errorMessage(mutationError, t)}
             </p>
           ) : null}
         </form>
-      </section>
+      </SectionCard>
 
-      <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-        <div className="mb-3 grid gap-3 md:grid-cols-6">
+      <SectionCard>
+        <div className="mb-4 grid gap-3 md:grid-cols-6">
           <div className="md:col-span-2">
             <SearchInput
               value={search}
@@ -277,7 +285,7 @@ export default function ExpensesListPage() {
                 setPage(1);
                 setShopFilter(e.target.value);
               }}
-              className="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+              className={selectClass}
               aria-label={t('expenses.filter.shop')}
             >
               <option value="">{t('expenses.filter.allShops')}</option>
@@ -294,7 +302,7 @@ export default function ExpensesListPage() {
               setPage(1);
               setCategoryFilter(e.target.value);
             }}
-            className="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+            className={selectClass}
             aria-label={t('expenses.filter.category')}
           >
             <option value="">{t('expenses.filter.allCategories')}</option>
@@ -310,7 +318,7 @@ export default function ExpensesListPage() {
               setPage(1);
               setStatusFilter(e.target.value as '' | ExpenseStatus);
             }}
-            className="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+            className={selectClass}
             aria-label={t('expenses.filter.status')}
           >
             <option value="">{t('expenses.filter.allStatuses')}</option>
@@ -347,50 +355,59 @@ export default function ExpensesListPage() {
         </div>
 
         {list.isLoading ? (
-          <div className="flex items-center gap-2 text-sm text-slate-500">
+          <div className="flex items-center gap-2 text-[14px] text-muted">
             <Spinner /> {t('loading')}
           </div>
         ) : list.error ? (
-          <p role="alert" className="text-sm text-red-700">
+          <p role="alert" className="text-[14px] text-debt-fg">
             {errorMessage(list.error, t)}
           </p>
         ) : list.data && list.data.items.length === 0 ? (
-          <p className="text-sm text-slate-500">{t('common.emptyList')}</p>
+          <p className="text-[14px] text-muted">{t('common.emptyList')}</p>
         ) : (
-          <ul className="divide-y divide-slate-100">
+          <ul className="divide-y divide-line-soft">
             {list.data?.items.map((e) => (
-              <li key={e.id} className="flex flex-wrap items-center gap-3 py-3 text-start">
+              <li
+                key={e.id}
+                className="flex flex-wrap items-center gap-3 py-3 text-start"
+              >
                 <div className="min-w-0 grow">
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium text-slate-900">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="text-[15px] font-semibold text-ink">
                       {e.referenceNumber}
                     </span>
                     <StatusBadge tone={toneFor(e.status)}>
                       {t(`expenses.status.${e.status}`)}
                     </StatusBadge>
                   </div>
-                  <div className="text-xs text-slate-500">
+                  <div className="text-[13px] text-muted">
                     {new Date(e.expenseDate).toLocaleDateString()} · {e.shopName}
                     {e.categoryName ? <> · {e.categoryName}</> : null}
                   </div>
-                  <div className="text-sm text-slate-700 mt-1">{e.description}</div>
+                  <div className="mt-1 text-[14px] text-ink">{e.description}</div>
                 </div>
-                <div className="text-end text-sm font-semibold text-slate-900 tabular-nums">
-                  {formatMoney(e.amount)}
+                <div className="text-end">
+                  <Money value={e.amount} size="md" />
                 </div>
                 <div className="flex items-center gap-2">
                   {e.status === 'ACTIVE' ? (
                     <>
-                      <Button variant="secondary" onClick={() => startEdit(e)}>
+                      <Button
+                        size="sm"
+                        variant="secondary"
+                        onClick={() => startEdit(e)}
+                      >
                         {t('common.edit')}
                       </Button>
                       {isOwner || isShop ? (
                         <Button
+                          size="sm"
                           variant="ghost"
                           onClick={() => {
                             setCancelTarget(e);
                             setCancelReason('');
                           }}
+                          className="!text-debt-fg hover:!bg-debt-bg"
                         >
                           {t('expenses.cancelConfirm.button')}
                         </Button>
@@ -411,7 +428,7 @@ export default function ExpensesListPage() {
             onChange={setPage}
           />
         ) : null}
-      </section>
+      </SectionCard>
 
       <ConfirmDialog
         open={!!cancelTarget}
@@ -424,9 +441,7 @@ export default function ExpensesListPage() {
               value={cancelReason}
               onChange={(e) => setCancelReason(e.target.value)}
               placeholder={t('expenses.cancelConfirm.reasonPlaceholder')}
-              error={
-                cancel.error ? errorMessage(cancel.error, t) : undefined
-              }
+              error={cancel.error ? errorMessage(cancel.error, t) : undefined}
             />
           </div>
         }

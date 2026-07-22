@@ -15,13 +15,15 @@ export function Pagination({ page, pageSize, total, onChange }: Props) {
   const canNext = page < totalPages;
 
   return (
-    <div className="flex items-center justify-between gap-2 pt-3 text-sm text-slate-600">
-      <span>{t('common.paginationLabel', { page, total: totalPages })}</span>
+    <div className="flex items-center justify-between gap-2 pt-4 text-[13.5px] text-muted">
+      <span className="tabular-nums">
+        {t('common.paginationLabel', { page, total: totalPages })}
+      </span>
       <div className="flex gap-2">
-        <Button variant="secondary" onClick={() => onChange(page - 1)} disabled={!canPrev}>
+        <Button size="sm" variant="secondary" onClick={() => onChange(page - 1)} disabled={!canPrev}>
           {t('common.previous')}
         </Button>
-        <Button variant="secondary" onClick={() => onChange(page + 1)} disabled={!canNext}>
+        <Button size="sm" variant="secondary" onClick={() => onChange(page + 1)} disabled={!canNext}>
           {t('common.next')}
         </Button>
       </div>

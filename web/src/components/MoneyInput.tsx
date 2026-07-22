@@ -2,9 +2,10 @@ import { forwardRef, useId } from 'react';
 import type { ReactNode } from 'react';
 import { normalizeDigits } from '@/shared/money';
 
-// Integer MRU input. Accepts arabic-indic digits, strips spaces/commas as the
-// user types, and only lets digits through. Emits an integer number (or null)
-// via onChange — never a raw string.
+// MoneyInput — the number is the interface (design brief §3.3).
+// Tall (64px), heavy typography, brand-outline focus. Currency suffix
+// is muted grey pinned to the end (RTL-safe via `end`).
+// Accepts Arabic-Indic digits, strips spaces/commas, emits an integer.
 
 type Props = {
   label: ReactNode;
@@ -26,11 +27,16 @@ export const MoneyInput = forwardRef<HTMLInputElement, Props>(function MoneyInpu
   const display = value === null || value === undefined ? '' : String(value);
 
   return (
-    <div className="flex flex-col gap-1 text-start">
-      <label htmlFor={id} className="text-sm font-medium text-slate-700">
+    <div className="flex flex-col gap-1.5 text-start">
+      <label htmlFor={id} className="text-[14px] font-semibold text-ink">
         {label}
       </label>
-      <div className="relative">
+      <div
+        className={
+          'relative flex items-center h-16 rounded-[10px] border-[2px] bg-surface pe-16 ps-4 ' +
+          (error ? 'border-debt' : 'border-brand')
+        }
+      >
         <input
           ref={ref}
           id={id}
@@ -47,17 +53,15 @@ export const MoneyInput = forwardRef<HTMLInputElement, Props>(function MoneyInpu
           }}
           aria-invalid={error ? 'true' : undefined}
           aria-describedby={errorId}
-          className={
-            'w-full rounded-md border bg-white px-3 py-2 pe-14 text-sm text-slate-900 placeholder:text-slate-400 focus:outline focus:outline-2 focus:outline-offset-0 ' +
-            (error ? 'border-red-400 focus:outline-red-400' : 'border-slate-300 focus:outline-slate-400')
-          }
+          className="w-full bg-transparent text-[28px] font-bold tabular-nums text-ink outline-none font-sans placeholder:text-muted placeholder:font-medium"
+          style={{ fontVariantNumeric: 'tabular-nums' }}
         />
-        <span className="pointer-events-none absolute inset-y-0 end-3 flex items-center text-xs text-slate-500">
+        <span className="pointer-events-none absolute inset-y-0 end-4 flex items-center text-[15px] font-semibold text-muted font-sans">
           {suffix}
         </span>
       </div>
       {error ? (
-        <p id={errorId} className="text-sm text-red-600">
+        <p id={errorId} className="text-[13.5px] leading-tight text-debt-fg">
           {error}
         </p>
       ) : null}

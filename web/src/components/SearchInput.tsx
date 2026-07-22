@@ -8,8 +8,8 @@ type Props = {
   debounceMs?: number;
 };
 
-// Debounced search box (300ms default, per phase-2.md §4).
-// Keeps a local draft so typing stays fluid while the parent list re-fetches.
+// Debounced search field (300ms default, phase-2.md §4). Icon-in-input
+// with a magnifier so users on a phone recognise it without a label.
 export function SearchInput({ value, onChange, placeholder, debounceMs = 300 }: Props) {
   const { t } = useTranslation();
   const [draft, setDraft] = useState(value);
@@ -26,12 +26,20 @@ export function SearchInput({ value, onChange, placeholder, debounceMs = 300 }: 
   }, [draft, debounceMs]);
 
   return (
-    <input
-      type="search"
-      value={draft}
-      onChange={(e) => setDraft(e.target.value)}
-      placeholder={placeholder ?? t('common.search')}
-      className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:outline focus:outline-2 focus:outline-slate-400"
-    />
+    <div className="relative">
+      <span className="pointer-events-none absolute inset-y-0 start-3 flex items-center text-muted">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+          <circle cx="11" cy="11" r="7" />
+          <path d="m21 21-4-4" />
+        </svg>
+      </span>
+      <input
+        type="search"
+        value={draft}
+        onChange={(e) => setDraft(e.target.value)}
+        placeholder={placeholder ?? t('common.search')}
+        className="w-full h-[50px] rounded-[10px] border-[1.5px] border-[#C8C9D4] bg-surface pe-[14px] ps-10 text-[15px] text-ink placeholder:text-muted focus:outline focus:outline-2 focus:outline-brand"
+      />
+    </div>
   );
 }

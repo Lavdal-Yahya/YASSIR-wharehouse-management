@@ -60,7 +60,7 @@ export default function MovementsPage() {
         <select
           value={locationId}
           onChange={(e) => setFilter('locationId', e.target.value)}
-          className="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+          className="rounded-md border border-[#C8C9D4] bg-surface px-3 py-2 text-sm text-ink"
           aria-label={t('movements.filter.location')}
         >
           <option value="">{t('movements.filter.allLocations')}</option>
@@ -73,7 +73,7 @@ export default function MovementsPage() {
         <select
           value={movementType}
           onChange={(e) => setFilter('movementType', e.target.value)}
-          className="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+          className="rounded-md border border-[#C8C9D4] bg-surface px-3 py-2 text-sm text-ink"
           aria-label={t('movements.filter.type')}
         >
           <option value="">{t('movements.filter.allTypes')}</option>
@@ -84,12 +84,12 @@ export default function MovementsPage() {
           ))}
         </select>
         {productId ? (
-          <div className="flex items-center justify-between rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-600">
+          <div className="flex items-center justify-between rounded-md border border-line bg-app px-3 py-2 text-xs text-muted">
             <span>{t('movements.filter.pinnedProduct')}</span>
             <button
               type="button"
               onClick={() => setFilter('productId', '')}
-              className="text-xs font-medium text-slate-900 hover:underline"
+              className="text-xs font-medium text-ink hover:underline"
             >
               {t('common.cancel')}
             </button>
@@ -97,19 +97,19 @@ export default function MovementsPage() {
         ) : null}
       </div>
 
-      <div className="rounded-xl border border-slate-200 bg-white p-2 shadow-sm">
+      <div className="rounded-lg border border-line bg-surface p-2 shadow-sm">
         {list.isLoading ? (
-          <div className="flex items-center gap-2 p-3 text-sm text-slate-500">
+          <div className="flex items-center gap-2 p-3 text-sm text-muted">
             <Spinner /> {t('loading')}
           </div>
         ) : list.error ? (
-          <p role="alert" className="p-3 text-sm text-red-700">
+          <p role="alert" className="p-3 text-sm text-debt-fg">
             {errorMessage(list.error, t)}
           </p>
         ) : list.data && list.data.items.length === 0 ? (
-          <p className="p-3 text-sm text-slate-500">{t('common.emptyList')}</p>
+          <p className="p-3 text-sm text-muted">{t('common.emptyList')}</p>
         ) : (
-          <ul className="divide-y divide-slate-100">
+          <ul className="divide-y divide-line-soft">
             {list.data?.items.map((m) => (
               <MovementRowView key={m.id} row={m} />
             ))}
@@ -137,10 +137,10 @@ function MovementRowView({ row }: { row: MovementRow }) {
   const isIn = !row.sourceLocationId && row.destinationLocationId;
   const dir = isMove ? '→' : isIn ? '＋' : '−';
   const dirTone = isMove
-    ? 'text-slate-600'
+    ? 'text-muted'
     : isIn
     ? 'text-emerald-700'
-    : 'text-red-700';
+    : 'text-debt-fg';
   const dateFmt = new Intl.DateTimeFormat(i18n.language, {
     dateStyle: 'short',
     timeStyle: 'short',
@@ -153,17 +153,17 @@ function MovementRowView({ row }: { row: MovementRow }) {
 
   return (
     <li className="grid gap-1 p-3 text-start md:grid-cols-[7rem_10rem_1fr_9rem_5rem] md:items-center md:gap-3">
-      <div className="text-xs text-slate-500 tabular-nums">
+      <div className="text-xs text-muted tabular-nums">
         {dateFmt.format(new Date(row.createdAt))}
       </div>
-      <div className="text-xs font-medium text-slate-700">
+      <div className="text-xs font-medium text-ink">
         {t(`movements.type.${row.movementType}`)}
       </div>
       <div className="min-w-0">
-        <div className="truncate text-sm text-slate-900">{row.productName}</div>
-        <div className="truncate text-xs text-slate-500">{routeLabel ?? '—'}</div>
+        <div className="truncate text-sm text-ink">{row.productName}</div>
+        <div className="truncate text-xs text-muted">{routeLabel ?? '—'}</div>
       </div>
-      <div className="truncate text-xs text-slate-500">
+      <div className="truncate text-xs text-muted">
         {row.relatedEntityReference ?? row.relatedEntityType ?? '—'}
       </div>
       <div className={`text-end text-sm font-semibold tabular-nums ${dirTone}`}>

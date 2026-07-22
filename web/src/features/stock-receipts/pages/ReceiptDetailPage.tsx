@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { PageHeader } from '@/components/PageHeader';
 import { Button } from '@/components/Button';
 import { Spinner } from '@/components/Spinner';
-import { formatMoney } from '@/shared/money';
+import { Money } from '@/components/Money';
 import { errorMessage } from '@/shared/error-message';
 import { useReceipt } from '../api';
 
@@ -15,14 +15,14 @@ export default function ReceiptDetailPage() {
 
   if (q.isLoading) {
     return (
-      <div className="flex items-center gap-2 text-sm text-slate-500">
+      <div className="flex items-center gap-2 text-sm text-muted">
         <Spinner /> {t('loading')}
       </div>
     );
   }
   if (q.error || !q.data) {
     return (
-      <p role="alert" className="p-3 text-sm text-red-700">
+      <p role="alert" className="p-3 text-sm text-debt-fg">
         {q.error ? errorMessage(q.error, t) : t('errors.NOT_FOUND')}
       </p>
     );
@@ -40,35 +40,39 @@ export default function ReceiptDetailPage() {
         }
       />
 
-      <div className="grid gap-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm md:grid-cols-3 text-sm text-slate-700">
+      <div className="grid gap-3 rounded-lg border border-line bg-surface p-4 shadow-sm md:grid-cols-3 text-sm text-ink">
         <div>
-          <div className="text-xs text-slate-500">{t('receipts.direct.receiptDate')}</div>
+          <div className="text-xs text-muted">{t('receipts.direct.receiptDate')}</div>
           <div>{new Date(r.receiptDate).toLocaleDateString()}</div>
         </div>
         <div>
-          <div className="text-xs text-slate-500">{t('orders.form.supplier')}</div>
+          <div className="text-xs text-muted">{t('orders.form.supplier')}</div>
           <div>{r.supplierName ?? '—'}</div>
         </div>
         <div>
-          <div className="text-xs text-slate-500">{t('orders.form.notes')}</div>
+          <div className="text-xs text-muted">{t('orders.form.notes')}</div>
           <div>{r.notes || '—'}</div>
         </div>
       </div>
 
-      <div className="rounded-xl border border-slate-200 bg-white shadow-sm">
-        <h2 className="border-b border-slate-100 p-4 text-sm font-semibold text-slate-900">
+      <div className="rounded-lg border border-line bg-surface shadow-sm">
+        <h2 className="border-b border-line-soft p-4 text-sm font-semibold text-ink">
           {t('receipts.direct.items')}
         </h2>
-        <ul className="divide-y divide-slate-100">
+        <ul className="divide-y divide-line-soft">
           {r.items.map((it) => (
             <li
               key={it.id}
-              className="grid gap-1 p-4 text-sm text-slate-700 md:grid-cols-[1fr_6rem_7rem] md:items-center md:gap-3"
+              className="grid gap-1 p-4 text-sm text-ink md:grid-cols-[1fr_6rem_7rem] md:items-center md:gap-3"
             >
-              <div className="text-slate-900">{it.productName}</div>
+              <div className="text-ink">{it.productName}</div>
               <div className="text-end tabular-nums">{it.quantity}</div>
-              <div className="text-end text-xs text-slate-500">
-                {it.unitCost !== null ? formatMoney(it.unitCost) : '—'}
+              <div className="text-end text-xs text-muted">
+                {it.unitCost !== null ? (
+                  <Money value={it.unitCost} size="sm" />
+                ) : (
+                  '—'
+                )}
               </div>
             </li>
           ))}

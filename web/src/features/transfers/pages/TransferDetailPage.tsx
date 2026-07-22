@@ -28,14 +28,14 @@ export default function TransferDetailPage() {
 
   if (q.isLoading) {
     return (
-      <div className="flex items-center gap-2 text-sm text-slate-500">
+      <div className="flex items-center gap-2 text-sm text-muted">
         <Spinner /> {t('loading')}
       </div>
     );
   }
   if (q.error || !q.data) {
     return (
-      <p role="alert" className="p-3 text-sm text-red-700">
+      <p role="alert" className="p-3 text-sm text-debt-fg">
         {q.error ? errorMessage(q.error, t) : t('errors.NOT_FOUND')}
       </p>
     );
@@ -78,41 +78,41 @@ export default function TransferDetailPage() {
         }
       />
 
-      <div className="grid gap-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm md:grid-cols-3 text-sm text-slate-700">
+      <div className="grid gap-3 rounded-lg border border-line bg-surface p-4 shadow-sm md:grid-cols-3 text-sm text-ink">
         <div>
-          <div className="text-xs text-slate-500">{t('transfers.detail.source')}</div>
+          <div className="text-xs text-muted">{t('transfers.detail.source')}</div>
           <div>{tr.sourceLocationName}</div>
         </div>
         <div>
-          <div className="text-xs text-slate-500">
+          <div className="text-xs text-muted">
             {t('transfers.detail.destination')}
           </div>
           <div>{tr.destinationLocationName}</div>
         </div>
         <div>
-          <div className="text-xs text-slate-500">{t('transfers.detail.date')}</div>
+          <div className="text-xs text-muted">{t('transfers.detail.date')}</div>
           <div>{new Date(tr.transferDate).toLocaleDateString()}</div>
         </div>
         <div>
-          <div className="text-xs text-slate-500">
+          <div className="text-xs text-muted">
             {t('transfers.detail.createdBy')}
           </div>
           <div>{tr.createdBy}</div>
         </div>
         <div className="md:col-span-2">
-          <div className="text-xs text-slate-500">{t('transfers.detail.notes')}</div>
+          <div className="text-xs text-muted">{t('transfers.detail.notes')}</div>
           <div>{tr.notes || '—'}</div>
         </div>
         {tr.status === 'REVERSED' ? (
           <>
             <div>
-              <div className="text-xs text-slate-500">
+              <div className="text-xs text-muted">
                 {t('transfers.detail.reversedBy')}
               </div>
               <div>{tr.reversedBy || '—'}</div>
             </div>
             <div>
-              <div className="text-xs text-slate-500">
+              <div className="text-xs text-muted">
                 {t('transfers.detail.reversedAt')}
               </div>
               <div>
@@ -122,26 +122,26 @@ export default function TransferDetailPage() {
               </div>
             </div>
             <div>
-              <div className="text-xs text-slate-500">
+              <div className="text-xs text-muted">
                 {t('transfers.detail.reversalReason')}
               </div>
-              <div className="text-red-700">{tr.reversalReason || '—'}</div>
+              <div className="text-debt-fg">{tr.reversalReason || '—'}</div>
             </div>
           </>
         ) : null}
       </div>
 
-      <div className="rounded-xl border border-slate-200 bg-white shadow-sm">
-        <h2 className="border-b border-slate-100 p-4 text-sm font-semibold text-slate-900">
+      <div className="rounded-lg border border-line bg-surface shadow-sm">
+        <h2 className="border-b border-line-soft p-4 text-sm font-semibold text-ink">
           {t('transfers.detail.items')}
         </h2>
-        <ul className="divide-y divide-slate-100">
+        <ul className="divide-y divide-line-soft">
           {tr.items.map((it) => (
             <li
               key={it.id}
-              className="grid gap-1 p-4 text-sm text-slate-700 md:grid-cols-[1fr_6rem] md:items-center md:gap-3"
+              className="grid gap-1 p-4 text-sm text-ink md:grid-cols-[1fr_6rem] md:items-center md:gap-3"
             >
-              <div className="text-slate-900">
+              <div className="text-ink">
                 <Link
                   to={`/warehouse/movements?productId=${it.productId}`}
                   className="hover:underline"
@@ -169,11 +169,11 @@ export default function TransferDetailPage() {
         loading={reverse.isPending}
         body={
           <>
-            <p className="mb-2 text-sm text-slate-700">
+            <p className="mb-2 text-sm text-ink">
               {t('transfers.reverse.body')}
             </p>
             <label className="block text-sm">
-              <span className="mb-1 block text-slate-700">
+              <span className="mb-1 block text-ink">
                 {t('transfers.reverse.reason')}
               </span>
               <textarea
@@ -181,16 +181,16 @@ export default function TransferDetailPage() {
                 onChange={(e) => setReason(e.target.value)}
                 rows={3}
                 placeholder={t('transfers.reverse.reasonPlaceholder')}
-                className="block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+                className="block w-full rounded-md border border-[#C8C9D4] bg-surface px-3 py-2 text-sm text-ink"
               />
             </label>
             {reasonError ? (
-              <p role="alert" className="mt-2 text-sm text-red-700">
+              <p role="alert" className="mt-2 text-sm text-debt-fg">
                 {reasonError}
               </p>
             ) : null}
             {reverse.error ? (
-              <p role="alert" className="mt-2 text-sm text-red-700">
+              <p role="alert" className="mt-2 text-sm text-debt-fg">
                 {errorMessage(reverse.error, t)}
               </p>
             ) : null}

@@ -74,7 +74,7 @@ export default function OrdersListPage() {
             setPage(1);
             setStatus(e.target.value);
           }}
-          className="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+          className="rounded-md border border-[#C8C9D4] bg-surface px-3 py-2 text-sm text-ink"
           aria-label={t('orders.filter.status')}
         >
           <option value="">{t('orders.filter.allStatuses')}</option>
@@ -86,35 +86,35 @@ export default function OrdersListPage() {
         </select>
       </div>
 
-      <div className="rounded-xl border border-slate-200 bg-white p-2 shadow-sm">
+      <div className="rounded-lg border border-line bg-surface p-2 shadow-sm">
         {list.isLoading ? (
-          <div className="flex items-center gap-2 p-3 text-sm text-slate-500">
+          <div className="flex items-center gap-2 p-3 text-sm text-muted">
             <Spinner /> {t('loading')}
           </div>
         ) : list.error ? (
-          <p role="alert" className="p-3 text-sm text-red-700">
+          <p role="alert" className="p-3 text-sm text-debt-fg">
             {errorMessage(list.error, t)}
           </p>
         ) : list.data && list.data.items.length === 0 ? (
-          <p className="p-3 text-sm text-slate-500">{t('common.emptyList')}</p>
+          <p className="p-3 text-sm text-muted">{t('common.emptyList')}</p>
         ) : (
-          <ul className="divide-y divide-slate-100">
+          <ul className="divide-y divide-line-soft">
             {list.data?.items.map((o) => (
               <li key={o.id} className="flex items-center gap-3 p-3 text-start">
                 <div className="min-w-0 grow">
                   <Link
                     to={`/orders/${o.id}`}
-                    className="text-sm font-medium text-slate-900 hover:underline"
+                    className="text-sm font-medium text-ink hover:underline"
                   >
                     {o.referenceNumber}
                   </Link>
-                  <div className="text-xs text-slate-500">
+                  <div className="text-xs text-muted">
                     {o.supplierName ?? t('orders.noSupplier')}
                     {' · '}
                     {new Date(o.orderDate).toLocaleDateString()}
                   </div>
                 </div>
-                <div className="text-end text-xs text-slate-600 tabular-nums">
+                <div className="text-end text-xs text-muted tabular-nums">
                   <div>
                     {t('orders.receivedOf', {
                       received: o.totalReceived,

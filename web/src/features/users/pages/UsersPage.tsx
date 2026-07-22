@@ -125,8 +125,8 @@ export default function UsersPage() {
     <div>
       <PageHeader title={t('users.title')} subtitle={t('users.subtitle')} />
 
-      <section className="mb-6 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-        <h2 className="mb-3 text-sm font-semibold text-slate-800 text-start">
+      <section className="mb-6 rounded-lg border border-line bg-surface p-4 shadow-sm">
+        <h2 className="mb-3 text-sm font-semibold text-ink text-start">
           {editing ? t('users.form.editTitle') : t('users.form.createTitle')}
         </h2>
         <form onSubmit={onSubmit} className="grid gap-3 md:grid-cols-2">
@@ -152,12 +152,12 @@ export default function UsersPage() {
           )}
 
           <div className="flex flex-col gap-1 text-start">
-            <label className="text-sm font-medium text-slate-700" htmlFor="u-role">
+            <label className="text-sm font-medium text-ink" htmlFor="u-role">
               {t('users.form.role')}
             </label>
             <select
               id="u-role"
-              className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+              className="w-full rounded-md border border-[#C8C9D4] bg-surface px-3 py-2 text-sm text-ink"
               {...form.register('role')}
             >
               {roleValues.map((r) => (
@@ -170,12 +170,12 @@ export default function UsersPage() {
 
           {role === Role.SHOP ? (
             <div className="flex flex-col gap-1 text-start md:col-span-2">
-              <label className="text-sm font-medium text-slate-700" htmlFor="u-shop">
+              <label className="text-sm font-medium text-ink" htmlFor="u-shop">
                 {t('users.form.assignedShop')}
               </label>
               <select
                 id="u-shop"
-                className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+                className="w-full rounded-md border border-[#C8C9D4] bg-surface px-3 py-2 text-sm text-ink"
                 value={form.watch('assignedShopId') ?? ''}
                 onChange={(e) => form.setValue('assignedShopId', e.target.value || null, { shouldDirty: true })}
               >
@@ -198,19 +198,19 @@ export default function UsersPage() {
             </Button>
           </div>
           {mutationError ? (
-            <p role="alert" className="md:col-span-2 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
+            <p role="alert" className="md:col-span-2 rounded-md bg-debt-bg px-3 py-2 text-sm text-debt-fg">
               {errorMessage(mutationError, t)}
             </p>
           ) : null}
         </form>
       </section>
 
-      <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+      <section className="rounded-lg border border-line bg-surface p-4 shadow-sm">
         <div className="mb-3 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <div className="grow md:max-w-sm">
             <SearchInput value={search} onChange={(v) => { setPage(1); setSearch(v); }} />
           </div>
-          <label className="inline-flex items-center gap-2 text-sm text-slate-600">
+          <label className="inline-flex items-center gap-2 text-sm text-muted">
             <input
               type="checkbox"
               checked={includeInactive}
@@ -221,20 +221,20 @@ export default function UsersPage() {
         </div>
 
         {list.isLoading ? (
-          <div className="flex items-center gap-2 text-sm text-slate-500">
+          <div className="flex items-center gap-2 text-sm text-muted">
             <Spinner /> {t('loading')}
           </div>
         ) : list.error ? (
-          <p role="alert" className="text-sm text-red-700">{errorMessage(list.error, t)}</p>
+          <p role="alert" className="text-sm text-debt-fg">{errorMessage(list.error, t)}</p>
         ) : list.data && list.data.items.length === 0 ? (
-          <p className="text-sm text-slate-500">{t('common.emptyList')}</p>
+          <p className="text-sm text-muted">{t('common.emptyList')}</p>
         ) : (
-          <ul className="divide-y divide-slate-100">
+          <ul className="divide-y divide-line-soft">
             {list.data?.items.map((u) => (
               <li key={u.id} className="flex flex-wrap items-center justify-between gap-3 py-2 text-start">
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium text-slate-900">{u.name}</span>
+                    <span className="text-sm font-medium text-ink">{u.name}</span>
                     <StatusBadge tone={u.active ? 'ok' : 'muted'}>
                       {t(`role.${u.role}`)}
                     </StatusBadge>
@@ -242,7 +242,7 @@ export default function UsersPage() {
                       <StatusBadge tone="muted">{t('users.badge.disabled')}</StatusBadge>
                     )}
                   </div>
-                  <div className="text-xs text-slate-500">
+                  <div className="text-xs text-muted">
                     @{u.username}
                     {u.assignedShopName ? <> · {u.assignedShopName}</> : null}
                   </div>
@@ -327,13 +327,13 @@ export default function UsersPage() {
         title={t('users.resetResult.title')}
         body={
           <div>
-            <p className="mb-2 text-sm text-slate-700">
+            <p className="mb-2 text-sm text-ink">
               {t('users.resetResult.body', { name: resetTarget?.name })}
             </p>
-            <code className="block rounded-md bg-slate-100 px-3 py-2 text-base font-mono text-slate-900">
+            <code className="block rounded-md bg-tint px-3 py-2 text-base font-mono text-ink">
               {generatedPassword}
             </code>
-            <p className="mt-2 text-xs text-slate-500">{t('users.resetResult.warning')}</p>
+            <p className="mt-2 text-xs text-muted">{t('users.resetResult.warning')}</p>
           </div>
         }
         confirmLabel={t('common.confirm')}

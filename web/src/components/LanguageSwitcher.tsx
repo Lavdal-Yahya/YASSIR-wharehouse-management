@@ -2,22 +2,32 @@ import { useTranslation } from 'react-i18next';
 import { SUPPORTED_LANGUAGES } from '@/i18n';
 import type { Language } from '@/i18n';
 
-export function LanguageSwitcher() {
+type Props = {
+  /** 'onBrand' inverts the palette so the switcher reads on the indigo header. */
+  variant?: 'default' | 'onBrand';
+};
+
+export function LanguageSwitcher({ variant = 'default' }: Props) {
   const { i18n, t } = useTranslation();
   const current = (SUPPORTED_LANGUAGES as readonly string[]).includes(i18n.language)
     ? (i18n.language as Language)
     : 'fr';
 
+  const cls =
+    variant === 'onBrand'
+      ? 'rounded-input border border-white/20 bg-surface/10 px-2 py-1 text-[13px] font-semibold text-white focus:outline focus:outline-2 focus:outline-white/40'
+      : 'rounded-input border border-[#C8C9D4] bg-surface px-2 py-1 text-[13px] font-semibold text-ink focus:outline focus:outline-2 focus:outline-brand';
+
   return (
-    <label className="flex items-center gap-2 text-sm">
+    <label className="inline-flex items-center gap-1.5">
       <span className="sr-only">{t('language.label')}</span>
       <select
         value={current}
         onChange={(e) => void i18n.changeLanguage(e.target.value)}
-        className="rounded-md border border-slate-300 bg-white px-2 py-1 text-sm text-slate-800"
+        className={cls}
       >
         {SUPPORTED_LANGUAGES.map((lng) => (
-          <option key={lng} value={lng}>
+          <option key={lng} value={lng} className="text-ink">
             {t(`language.${lng}`)}
           </option>
         ))}

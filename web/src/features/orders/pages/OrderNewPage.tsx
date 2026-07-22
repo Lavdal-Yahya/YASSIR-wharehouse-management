@@ -114,9 +114,9 @@ export default function OrderNewPage() {
         subtitle={t('orders.form.newSubtitle')}
       />
 
-      <div className="grid gap-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm md:grid-cols-3">
+      <div className="grid gap-3 rounded-lg border border-line bg-surface p-4 shadow-sm md:grid-cols-3">
         <label className="block text-sm">
-          <span className="mb-1 block text-slate-700">{t('orders.form.supplier')}</span>
+          <span className="mb-1 block text-ink">{t('orders.form.supplier')}</span>
           <Input
             value={supplierName}
             onChange={(e) => setSupplierName(e.target.value)}
@@ -124,11 +124,11 @@ export default function OrderNewPage() {
           />
         </label>
         <label className="block text-sm">
-          <span className="mb-1 block text-slate-700">{t('orders.form.orderDate')}</span>
+          <span className="mb-1 block text-ink">{t('orders.form.orderDate')}</span>
           <Input type="date" value={orderDate} onChange={(e) => setOrderDate(e.target.value)} />
         </label>
         <label className="block text-sm">
-          <span className="mb-1 block text-slate-700">
+          <span className="mb-1 block text-ink">
             {t('orders.form.expectedArrivalDate')}
           </span>
           <Input
@@ -138,19 +138,19 @@ export default function OrderNewPage() {
           />
         </label>
         <label className="block text-sm md:col-span-3">
-          <span className="mb-1 block text-slate-700">{t('orders.form.notes')}</span>
+          <span className="mb-1 block text-ink">{t('orders.form.notes')}</span>
           <textarea
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             rows={2}
-            className="block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+            className="block w-full rounded-md border border-[#C8C9D4] bg-surface px-3 py-2 text-sm text-ink"
           />
         </label>
       </div>
 
-      <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+      <div className="rounded-lg border border-line bg-surface p-4 shadow-sm">
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-slate-900">
+          <h2 className="text-sm font-semibold text-ink">
             {t('orders.form.items')}
           </h2>
           <Button variant="ghost" onClick={addRow}>
@@ -160,16 +160,16 @@ export default function OrderNewPage() {
 
         <ul className="space-y-4">
           {items.map((it, idx) => (
-            <li key={idx} className="rounded-lg border border-slate-200 p-3">
+            <li key={idx} className="rounded-lg border border-line p-3">
               <div className="mb-2 flex items-center justify-between">
-                <div className="text-xs font-medium text-slate-600">
+                <div className="text-xs font-medium text-muted">
                   {t('orders.form.line', { n: idx + 1 })}
                 </div>
                 {items.length > 1 ? (
                   <button
                     type="button"
                     onClick={() => removeItem(idx)}
-                    className="text-xs text-red-700 hover:underline"
+                    className="text-xs text-debt-fg hover:underline"
                   >
                     {t('common.delete')}
                   </button>
@@ -182,8 +182,8 @@ export default function OrderNewPage() {
                   onClick={() => updateItem(idx, { mode: 'existing' })}
                   className={`rounded-md border px-2 py-1 ${
                     it.mode === 'existing'
-                      ? 'border-slate-900 bg-slate-900 text-white'
-                      : 'border-slate-200 bg-white text-slate-700'
+                      ? 'border-slate-900 bg-brand-pressed text-white'
+                      : 'border-line bg-surface text-ink'
                   }`}
                 >
                   {t('orders.form.existingProduct')}
@@ -193,8 +193,8 @@ export default function OrderNewPage() {
                   onClick={() => updateItem(idx, { mode: 'new' })}
                   className={`rounded-md border px-2 py-1 ${
                     it.mode === 'new'
-                      ? 'border-slate-900 bg-slate-900 text-white'
-                      : 'border-slate-200 bg-white text-slate-700'
+                      ? 'border-slate-900 bg-brand-pressed text-white'
+                      : 'border-line bg-surface text-ink'
                   }`}
                 >
                   {t('orders.form.newProduct')}
@@ -224,7 +224,7 @@ export default function OrderNewPage() {
                         updateItem(idx, { newProductCategoryId: e.target.value })
                       }
                       aria-label={t('orders.form.category')}
-                      className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+                      className="w-full rounded-md border border-[#C8C9D4] bg-surface px-3 py-2 text-sm text-ink"
                     >
                       <option value="">{t('orders.form.chooseCategory')}</option>
                       {cats.data?.items.map((c) => (
@@ -236,7 +236,7 @@ export default function OrderNewPage() {
                   </div>
                 )}
                 <label className="block text-sm">
-                  <span className="mb-1 block text-xs text-slate-600">
+                  <span className="mb-1 block text-xs text-muted">
                     {t('orders.form.quantity')}
                   </span>
                   <QuantityInput
@@ -259,7 +259,7 @@ export default function OrderNewPage() {
       </div>
 
       {(localError || create.error) ? (
-        <p role="alert" className="rounded-md bg-red-50 p-3 text-sm text-red-700">
+        <p role="alert" className="rounded-md bg-debt-bg p-3 text-sm text-debt-fg">
           {localError ?? (create.error ? errorMessage(create.error, t) : '')}
         </p>
       ) : null}

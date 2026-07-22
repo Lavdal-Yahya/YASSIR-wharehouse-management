@@ -1,13 +1,26 @@
 import { forwardRef, useId } from 'react';
 import type { InputHTMLAttributes, ReactNode } from 'react';
 
+// Ledger field — 50px min height, 1.5px border, always-visible label
+// (design brief §5). Label placement is start-aligned via text-start
+// so it flips correctly under html[dir="rtl"]. Errors sit immediately
+// under the field, never as tooltips.
+
 type Props = InputHTMLAttributes<HTMLInputElement> & {
-  label: ReactNode;
+  label?: ReactNode; // optional so a raw <input> can borrow the styling
   error?: string;
+  hint?: ReactNode;
 };
 
+const inputClass =
+  'w-full h-[50px] rounded-[8px] border-[1.5px] bg-surface px-[14px] text-[16px] text-ink ' +
+  'placeholder:text-muted focus:outline focus:outline-2 focus:outline-offset-0';
+
+const okBorder = 'border-[#C8C9D4] focus:outline-brand';
+const badBorder = 'border-debt focus:outline-debt';
+
 export const Input = forwardRef<HTMLInputElement, Props>(function Input(
-  { label, error, className = '', id, ...rest },
+  { label, error, hint, className = '', id, ...rest },
   ref,
 ) {
   const generated = useId();
@@ -15,29 +28,26 @@ export const Input = forwardRef<HTMLInputElement, Props>(function Input(
   const errorId = error ? `${inputId}-error` : undefined;
 
   return (
-    <div className="flex flex-col gap-1 text-start">
-      <label htmlFor={inputId} className="text-sm font-medium text-slate-700">
-        {label}
-      </label>
+    <div className="flex flex-col gap-1.5 text-start">
+      {label ? (
+        <label htmlFor={inputId} className="text-[14px] font-semibold text-ink">
+          {label}
+        </label>
+      ) : null}
       <input
         ref={ref}
         id={inputId}
         aria-invalid={error ? 'true' : undefined}
         aria-describedby={errorId}
-        className={
-          'w-full rounded-md border bg-white px-3 py-2 text-sm text-slate-900 ' +
-          'placeholder:text-slate-400 focus:outline focus:outline-2 focus:outline-offset-0 ' +
-          (error
-            ? 'border-red-400 focus:outline-red-400 '
-            : 'border-slate-300 focus:outline-slate-400 ') +
-          className
-        }
+        className={`${inputClass} ${error ? badBorder : okBorder} ${className}`}
         {...rest}
       />
       {error ? (
-        <p id={errorId} className="text-sm text-red-600">
+        <p id={errorId} className="text-[13.5px] leading-tight text-debt-fg">
           {error}
         </p>
+      ) : hint ? (
+        <p className="text-[13.5px] leading-tight text-muted">{hint}</p>
       ) : null}
     </div>
   );

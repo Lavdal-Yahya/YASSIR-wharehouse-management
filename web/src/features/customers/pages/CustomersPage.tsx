@@ -63,7 +63,7 @@ export default function CustomersPage() {
     form.reset({ name: c.name, phone: c.phone, notes: c.notes });
   };
 
-  const canEdit = (c: Customer) =>
+  const canEdit = (_c: Customer) =>
     isOwner || role === Role.SHOP; // shop employees can edit customer info
 
   const onSubmit = form.handleSubmit(async (values) => {
@@ -88,8 +88,8 @@ export default function CustomersPage() {
     <div>
       <PageHeader title={t('customers.title')} subtitle={t('customers.subtitle')} />
 
-      <section className="mb-6 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-        <h2 className="mb-3 text-sm font-semibold text-slate-800 text-start">
+      <section className="mb-6 rounded-lg border border-line bg-surface p-4 shadow-sm">
+        <h2 className="mb-3 text-sm font-semibold text-ink text-start">
           {editing ? t('customers.form.editTitle') : t('customers.form.createTitle')}
         </h2>
         <form onSubmit={onSubmit} className="grid gap-3 md:grid-cols-3">
@@ -99,11 +99,11 @@ export default function CustomersPage() {
             error={form.formState.errors.name ? t('errors.BAD_REQUEST') : undefined}
           />
           <Input
-            label={<>{t('customers.form.phone')} <span className="text-xs text-slate-400">({t('common.optional')})</span></>}
+            label={<>{t('customers.form.phone')} <span className="text-xs text-muted">({t('common.optional')})</span></>}
             {...form.register('phone', { setValueAs: (v) => (v === '' ? null : v) })}
           />
           <Input
-            label={<>{t('customers.form.notes')} <span className="text-xs text-slate-400">({t('common.optional')})</span></>}
+            label={<>{t('customers.form.notes')} <span className="text-xs text-muted">({t('common.optional')})</span></>}
             {...form.register('notes', { setValueAs: (v) => (v === '' ? null : v) })}
           />
           <div className="md:col-span-3 flex justify-end gap-2">
@@ -117,14 +117,14 @@ export default function CustomersPage() {
             </Button>
           </div>
           {mutationError ? (
-            <p role="alert" className="md:col-span-3 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
+            <p role="alert" className="md:col-span-3 rounded-md bg-debt-bg px-3 py-2 text-sm text-debt-fg">
               {errorMessage(mutationError, t)}
             </p>
           ) : null}
         </form>
       </section>
 
-      <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+      <section className="rounded-lg border border-line bg-surface p-4 shadow-sm">
         <div className="mb-3 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <div className="grow md:max-w-sm">
             <SearchInput
@@ -134,7 +134,7 @@ export default function CustomersPage() {
             />
           </div>
           {isOwner ? (
-            <label className="inline-flex items-center gap-2 text-sm text-slate-600">
+            <label className="inline-flex items-center gap-2 text-sm text-muted">
               <input
                 type="checkbox"
                 checked={includeArchived}
@@ -146,23 +146,23 @@ export default function CustomersPage() {
         </div>
 
         {list.isLoading ? (
-          <div className="flex items-center gap-2 text-sm text-slate-500">
+          <div className="flex items-center gap-2 text-sm text-muted">
             <Spinner /> {t('loading')}
           </div>
         ) : list.error ? (
-          <p role="alert" className="text-sm text-red-700">{errorMessage(list.error, t)}</p>
+          <p role="alert" className="text-sm text-debt-fg">{errorMessage(list.error, t)}</p>
         ) : list.data && list.data.items.length === 0 ? (
-          <p className="text-sm text-slate-500">{t('common.emptyList')}</p>
+          <p className="text-sm text-muted">{t('common.emptyList')}</p>
         ) : (
-          <ul className="divide-y divide-slate-100">
+          <ul className="divide-y divide-line-soft">
             {list.data?.items.map((c) => (
               <li key={c.id} className="flex items-center justify-between gap-3 py-2 text-start">
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="text-sm text-slate-900">{c.name}</span>
+                    <span className="text-sm text-ink">{c.name}</span>
                     {c.active ? null : <StatusBadge tone="muted">{t('common.archived')}</StatusBadge>}
                   </div>
-                  <div className="text-xs text-slate-500">
+                  <div className="text-xs text-muted">
                     {c.phone ?? '—'}
                     {c.notes ? <> · {c.notes}</> : null}
                   </div>

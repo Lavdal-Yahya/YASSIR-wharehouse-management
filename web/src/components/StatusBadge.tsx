@@ -1,20 +1,37 @@
 import type { ReactNode } from 'react';
 
-type Tone = 'ok' | 'muted' | 'warn' | 'danger';
+// Status pill — text + color + a small dot, never color alone
+// (spec §38.4, design brief §3.4). Tones map to the money-status
+// palette from the design tokens.
 
-const styles: Record<Tone, string> = {
-  // Text + color, never color alone (accessibility).
-  ok: 'bg-emerald-50 text-emerald-800 border-emerald-200',
-  muted: 'bg-slate-100 text-slate-700 border-slate-200',
-  warn: 'bg-amber-50 text-amber-800 border-amber-200',
-  danger: 'bg-red-50 text-red-800 border-red-200',
+type Tone = 'ok' | 'warn' | 'danger' | 'muted';
+
+const bg: Record<Tone, string> = {
+  ok: 'bg-collected-bg text-collected-fg',
+  warn: 'bg-partial-bg text-partial-fg',
+  danger: 'bg-debt-bg text-debt-fg',
+  muted: 'bg-neutral-bg text-neutral-fg',
 };
 
-export function StatusBadge({ tone = 'muted', children }: { tone?: Tone; children: ReactNode }) {
+const dot: Record<Tone, string> = {
+  ok: 'bg-collected',
+  warn: 'bg-partial',
+  danger: 'bg-debt',
+  muted: 'bg-neutral-dot',
+};
+
+export function StatusBadge({
+  tone = 'muted',
+  children,
+}: {
+  tone?: Tone;
+  children: ReactNode;
+}) {
   return (
     <span
-      className={`inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-medium ${styles[tone]}`}
+      className={`inline-flex items-center gap-1.5 rounded-pill px-3 py-1 text-[13px] font-semibold ${bg[tone]}`}
     >
+      <span className={`h-[7px] w-[7px] rounded-full ${dot[tone]}`} aria-hidden />
       {children}
     </span>
   );

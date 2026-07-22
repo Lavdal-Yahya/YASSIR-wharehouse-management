@@ -3,6 +3,10 @@ import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from './Button';
 
+// Destructive confirmation — always a reason (design brief §4.11 +
+// spec §25). Modal is small (max 400px), backdrop dims lightly, ESC
+// closes. The confirm button colour switches on `danger`.
+
 type Props = {
   open: boolean;
   title: ReactNode;
@@ -43,24 +47,40 @@ export function ConfirmDialog({
     <div
       role="dialog"
       aria-modal="true"
-      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-ink/40 p-4"
       onClick={onCancel}
     >
       <div
-        className="w-full max-w-sm rounded-xl border border-slate-200 bg-white p-5 shadow-lg text-start"
+        className="w-full max-w-sm rounded-[14px] border border-line bg-surface p-5 shadow-[0_16px_40px_rgba(24,25,40,0.14)] text-start"
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 className="text-base font-semibold text-slate-900">{title}</h2>
-        {body ? <div className="mt-2 text-sm text-slate-600">{body}</div> : null}
-        <div className="mt-5 flex justify-end gap-2">
-          <Button variant="secondary" onClick={onCancel} disabled={loading}>
+        <h2 className="text-[18px] font-semibold leading-snug text-ink">
+          {title}
+        </h2>
+        {body ? (
+          <div className="mt-3 text-[14.5px] leading-relaxed text-ink/85">
+            {body}
+          </div>
+        ) : null}
+        <div className="mt-5 flex gap-2">
+          <Button
+            variant="secondary"
+            onClick={onCancel}
+            disabled={loading}
+            className="flex-1 !bg-neutral-bg !text-ink hover:!bg-line"
+          >
             {cancelLabel ?? t('common.cancel')}
           </Button>
           <Button
             variant={danger ? 'primary' : 'primary'}
             onClick={onConfirm}
             loading={loading}
-            className={danger ? '!bg-red-600 hover:!bg-red-700 focus-visible:!outline-red-600' : ''}
+            className={
+              'flex-1 ' +
+              (danger
+                ? '!bg-debt hover:!bg-debt-fg focus-visible:!outline-debt'
+                : '')
+            }
           >
             {confirmLabel ?? t('common.confirm')}
           </Button>
