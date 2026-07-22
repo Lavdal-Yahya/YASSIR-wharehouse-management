@@ -18,6 +18,7 @@
     "reports": "Rapports",
     "shopStock": "Stock boutique",
     "sell": "Vendre",
+    "sales": "Ventes",
     "logout": "Se déconnecter"
   },
   "login": {
@@ -626,26 +627,130 @@
     }
   },
   "wip": {
-    "saleFlow": {
-      "title": "Vente — bientôt disponible",
-      "message": "L'écran de vente est en cours de construction. Vous pourrez rechercher des produits, définir le prix négocié et enregistrer l'acompte du client dès la prochaine mise à jour."
-    },
-    "shopStockSell": "Bientôt"
+    "receipt": "Bientôt"
   },
   "sell": {
-    "mockTitle": "Nouvelle vente",
-    "mockSubtitle": "Aperçu de l'écran de vente à venir.",
-    "mock": {
-      "searchPlaceholder": "Rechercher un produit ou une catégorie",
-      "categoryAll": "Tout",
-      "categoryPhones": "Téléphones",
-      "categoryAudio": "Audio",
+    "title": "Nouvelle vente",
+    "subtitle": "Choisir les produits, définir le prix, encaisser.",
+    "stepCartTitle": "Panier — nouvelle vente",
+    "stepPaymentTitle": "Paiement — nouvelle vente",
+    "ownerPickShop": "Vendre depuis quelle boutique ?",
+    "switchShop": "Changer de boutique",
+    "noShops": "Aucune boutique active configurée.",
+    "noAssignedShop": "Aucune boutique assignée à votre compte. Contactez le propriétaire.",
+    "backToCart": "Retour au panier",
+    "goToPayment": "Continuer vers le paiement",
+    "confirm": "Confirmer la vente",
+    "cart": {
+      "pickTitle": "Choisir un produit",
+      "title": "Panier",
+      "empty": "Ajoutez un produit pour commencer.",
+      "remove": "Retirer",
+      "increaseQty": "Augmenter la quantité",
+      "decreaseQty": "Diminuer la quantité",
+      "unitPrice": "Prix unitaire pour {{product}}",
+      "available": "dispo",
+      "maxReached": "Quantité maximale disponible ({{max}}) atteinte.",
+      "total": "Total"
+    },
+    "picker": {
+      "searchPlaceholder": "Nom du produit, catégorie…",
+      "category": "Catégorie",
+      "allCategories": "Toutes les catégories",
+      "empty": "Aucun produit ne correspond.",
+      "add": "Ajouter",
+      "outOfStock": "Rupture",
+      "lowStock": "Stock bas",
+      "available": "dispo"
+    },
+    "customer": {
+      "title": "Client",
+      "pickExisting": "Existant",
+      "pickNew": "Nouveau",
+      "searchPlaceholder": "Nom ou téléphone…",
+      "noMatch": "Aucun client ne correspond.",
+      "newName": "Nom du client",
+      "newPhone": "Téléphone",
+      "attachNew": "Créer et attacher",
+      "newSuffix": "(nouveau)",
+      "noPhone": "Aucun numéro renseigné",
+      "clear": "Retirer",
+      "requiredHint": "Un client est requis parce qu'il reste un solde à payer."
+    },
+    "payment": {
+      "title": "Paiement",
       "total": "Total",
-      "paymentStep": "Paiement",
-      "partialBadge": "Partiel",
-      "customerRequired": "Un client est requis quand le reste à payer est positif.",
-      "paidNow": "Payé maintenant",
-      "remaining": "Reste à payer"
+      "remaining": "Reste à payer",
+      "paidNow": "Encaissé maintenant",
+      "payFull": "Tout",
+      "markPayFull": "Marquer entièrement payé",
+      "summary": "Résumé",
+      "summaryTotal": "Total",
+      "summaryPaid": "Encaissé",
+      "summaryRemaining": "Reste",
+      "summaryCustomer": "Client",
+      "summaryNoCustomer": "Aucun (client de passage)"
+    },
+    "confirm": {
+      "titlePaid": "Vente enregistrée",
+      "titlePartial": "Vente enregistrée — solde à recouvrer",
+      "subtitle": "Référence {{ref}}",
+      "totalSold": "Total vendu",
+      "paidNow": "Encaissé",
+      "owed": "Reste dû",
+      "customer": "Client",
+      "itemsTitle": "Articles vendus",
+      "newSale": "Nouvelle vente",
+      "openDetail": "Voir la vente",
+      "printReceipt": "Imprimer le reçu"
+    }
+  },
+  "sales": {
+    "title": "Ventes",
+    "subtitle": "Historique des ventes de la boutique.",
+    "new": "Nouvelle vente",
+    "searchPlaceholder": "Référence…",
+    "row": {
+      "due": "Reste"
+    },
+    "payment": {
+      "PAID": "Payé",
+      "PARTIALLY_PAID": "Partiel",
+      "UNPAID": "Non payé"
+    },
+    "status": {
+      "ACTIVE": "Actif",
+      "CANCELLED": "Annulé"
+    },
+    "filter": {
+      "shop": "Boutique",
+      "allShops": "Toutes les boutiques",
+      "paymentStatus": "Statut du paiement",
+      "allPaymentStatuses": "Tous les paiements",
+      "status": "Statut",
+      "allStatuses": "Tous les statuts",
+      "from": "Depuis",
+      "to": "Jusqu'à"
+    },
+    "detail": {
+      "backToList": "Retour à la liste",
+      "total": "Total",
+      "paid": "Encaissé",
+      "due": "Reste",
+      "cashAtSale": "Encaissé à la vente",
+      "laterPayments": "Versements ultérieurs",
+      "customer": "Client",
+      "itemsTitle": "Articles",
+      "cancelledOn": "Annulée le {{date}}",
+      "reason": "Motif",
+      "cancel": "Annuler la vente",
+      "printReceipt": "Imprimer le reçu",
+      "cancelTitle": "Annuler la vente {{ref}} ?",
+      "cancelBody": "Le stock revient à la boutique. La dette du client, s'il y en a, disparaît.",
+      "cancelReason": "Motif (obligatoire)",
+      "cancelReasonPlaceholder": "Expliquez pourquoi cette vente est annulée.",
+      "cancelConfirm": "Confirmer l'annulation",
+      "blockingHint": "Ces paiements sont encore actifs sur cette vente — annulez-les d'abord."
     }
   },
   "openingStock": {

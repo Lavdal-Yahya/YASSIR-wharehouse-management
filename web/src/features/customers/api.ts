@@ -51,6 +51,19 @@ export function useArchiveCustomer() {
   });
 }
 
+// Derived debt (D-009). Not aggressively cached — the register-payment
+// flow reads it right before submitting so the "settles X" preview is
+// exact.
+export function useCustomerOutstanding(id: string | undefined) {
+  return useQuery<{ outstanding: number }, ApiError>({
+    queryKey: [...CUSTOMERS_KEY, 'outstanding', id] as const,
+    queryFn: ({ signal }) =>
+      api<{ outstanding: number }>(`/customers/${id}/outstanding`, { signal }),
+    enabled: !!id,
+    staleTime: 0,
+  });
+}
+
 export function useRestoreCustomer() {
   const qc = useQueryClient();
   return useMutation<Customer, ApiError, string>({
