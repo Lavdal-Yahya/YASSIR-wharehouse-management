@@ -33,6 +33,7 @@ import CustomersPage from '@/features/customers/pages/CustomersPage';
 import ExpenseCategoriesPage from '@/features/expense-categories/pages/ExpenseCategoriesPage';
 import ExpensesListPage from '@/features/expenses/pages/ExpensesListPage';
 import ShopReportPage from '@/features/reports/pages/ShopReportPage';
+import SellPlaceholderPage from '@/features/sales/pages/SellPlaceholderPage';
 
 export function AppRoutes() {
   return (
@@ -80,6 +81,10 @@ export function AppRoutes() {
             <Route path="shop/stock" element={<ShopStockPage />} />
             <Route path="expenses" element={<ExpensesListPage />} />
             <Route path="reports/shop" element={<ShopReportPage />} />
+            {/* Placeholder until Phase 6 PR-B ships the real sale flow.
+                Kept behind the OWNER/SHOP guard because those are the
+                roles the sale flow will admit. */}
+            <Route path="sell" element={<SellPlaceholderPage />} />
           </Route>
 
           <Route path="*" element={<NotFoundPage />} />

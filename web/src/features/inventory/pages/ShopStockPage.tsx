@@ -6,6 +6,7 @@ import { SearchInput } from '@/components/SearchInput';
 import { Pagination } from '@/components/Pagination';
 import { StatusBadge } from '@/components/StatusBadge';
 import { Button } from '@/components/Button';
+import { ConstructionOverlay } from '@/components/ConstructionOverlay';
 import { Spinner } from '@/components/Spinner';
 import { Money } from '@/components/Money';
 import { errorMessage } from '@/shared/error-message';
@@ -64,11 +65,18 @@ export default function ShopStockPage() {
         subtitle={t('shopStock.subtitle')}
         actions={
           <div className="flex flex-wrap gap-2">
-            {/* Sell is placeholder (Phase 5 wires it). Kept visible so the
-                shop layout is final. */}
-            <Button disabled title={t('shopStock.sellSoon')}>
-              {t('shopStock.sell')}
-            </Button>
+            {/* Sell button lives here for continuity with the design; the
+                sale flow itself isn't wired yet (Phase 6 PR-B). The
+                ConstructionOverlay ribbon marks the button visibly so
+                a clerk knows the click routes to a placeholder. */}
+            <ConstructionOverlay
+              variant="ribbon"
+              title={t('wip.shopStockSell')}
+            >
+              <Link to="/sell">
+                <Button>{t('shopStock.sell')}</Button>
+              </Link>
+            </ConstructionOverlay>
           </div>
         }
       />

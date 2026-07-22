@@ -629,6 +629,29 @@
       "openExpenses": "تسجيل مصروف"
     }
   },
+  "wip": {
+    "saleFlow": {
+      "title": "شاشة البيع — قريباً",
+      "message": "شاشة البيع قيد الإنشاء. ستتمكن قريباً من البحث عن المنتجات، تحديد السعر المتفاوض عليه، وتسجيل الدفعة الأولى من الزبون."
+    },
+    "shopStockSell": "قريباً"
+  },
+  "sell": {
+    "mockTitle": "بيع جديد",
+    "mockSubtitle": "معاينة شاشة البيع القادمة.",
+    "mock": {
+      "searchPlaceholder": "ابحث باسم المنتج أو الفئة",
+      "categoryAll": "الكل",
+      "categoryPhones": "هواتف",
+      "categoryAudio": "سماعات",
+      "total": "الإجمالي",
+      "paymentStep": "الدفع",
+      "partialBadge": "جزئي",
+      "customerRequired": "يجب تحديد الزبون عندما يبقى مبلغ للدفع.",
+      "paidNow": "المدفوع الآن",
+      "remaining": "الباقي"
+    }
+  },
   "openingStock": {
     "title": "المخزون الافتتاحي",
     "subtitle": "يُستعمل مرة واحدة لكل (موقع، منتج) عند بدء التشغيل.",

@@ -625,6 +625,29 @@
       "openExpenses": "Enregistrer une dépense"
     }
   },
+  "wip": {
+    "saleFlow": {
+      "title": "Vente — bientôt disponible",
+      "message": "L'écran de vente est en cours de construction. Vous pourrez rechercher des produits, définir le prix négocié et enregistrer l'acompte du client dès la prochaine mise à jour."
+    },
+    "shopStockSell": "Bientôt"
+  },
+  "sell": {
+    "mockTitle": "Nouvelle vente",
+    "mockSubtitle": "Aperçu de l'écran de vente à venir.",
+    "mock": {
+      "searchPlaceholder": "Rechercher un produit ou une catégorie",
+      "categoryAll": "Tout",
+      "categoryPhones": "Téléphones",
+      "categoryAudio": "Audio",
+      "total": "Total",
+      "paymentStep": "Paiement",
+      "partialBadge": "Partiel",
+      "customerRequired": "Un client est requis quand le reste à payer est positif.",
+      "paidNow": "Payé maintenant",
+      "remaining": "Reste à payer"
+    }
+  },
   "openingStock": {
     "title": "Stock d'ouverture",
     "subtitle": "À utiliser une seule fois par (emplacement, produit) lors de la mise en route.",
