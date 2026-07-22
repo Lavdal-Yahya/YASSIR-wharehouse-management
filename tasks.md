@@ -91,15 +91,15 @@ Goal: ordered ≠ stock; only received quantities enter the warehouse; movement 
 
 Goal: stock moves between locations atomically; each shop sees only its own stock.
 
-- [ ] P4-01 Prisma migration: `StockTransfer(+Items)` with reversal fields
-- [ ] P4-02 Transfer service: warehouse→shop and shop→warehouse, multi-item, single transaction via inventory core; validations (qty > 0, stock available, source ≠ destination, no archived locations)
-- [ ] P4-03 (Optional, decide before building) shop→shop transfer using the same service
-- [ ] P4-04 Transfer reversal (admin): checks destination still has qty, restores both sides, reason recorded, original preserved as Reversed
-- [ ] P4-05 Transfer UI: searchable product picker with available qty shown, destination select, confirm summary
-- [ ] P4-06 Transfers list + detail view (reference, items, user, status)
-- [ ] P4-07 Shop inventory page (scoped by role): search, filters, low/out-of-stock badges
-- [ ] P4-08 Wire shop-archive warning: block/warn when archiving a shop that still holds stock
-- [ ] P4-09 Integration tests: both balances update together, rollback on induced failure mid-transfer, transfer above stock rejected, shop employee cannot transfer/see another shop (API-level test)
+- [x] P4-01 Prisma migration: `StockTransfer(+Items)` with reversal fields
+- [x] P4-02 Transfer service: warehouse→shop and shop→warehouse, multi-item, single transaction via inventory core; validations (qty > 0, stock available, source ≠ destination, no archived locations)
+- [x] P4-03 (Optional, decide before building) shop→shop transfer using the same service  *(D-014: enabled, WAREHOUSE/OWNER-only)*
+- [x] P4-04 Transfer reversal (admin): checks destination still has qty, restores both sides, reason recorded, original preserved as Reversed
+- [x] P4-05 Transfer UI: searchable product picker with available qty shown, destination select, confirm summary
+- [x] P4-06 Transfers list + detail view (reference, items, user, status)
+- [x] P4-07 Shop inventory page (scoped by role): search, filters, low/out-of-stock badges
+- [x] P4-08 Wire shop-archive warning: block/warn when archiving a shop that still holds stock
+- [x] P4-09 Integration tests: both balances update together, rollback on induced failure mid-transfer, transfer above stock rejected, shop employee cannot transfer/see another shop (API-level test)
 
 **Definition of Done:** transfer 5 of 20 phones → warehouse 15, shop 5, TRF record + two movement legs; a forced failure between the two legs leaves both balances untouched.
 
@@ -109,14 +109,14 @@ Goal: stock moves between locations atomically; each shop sees only its own stoc
 
 Goal: the core money path. Highest-risk phase — no shortcuts on tests.
 
-- [ ] P5-01 Prisma migration: `Sale`, `SaleItem` (with name/price/cost snapshots), `CustomerPayment`, `PaymentAllocation`
-- [ ] P5-02 Sale service — single transaction implementing the spec's 15-step confirmation: validate shop/products/stock/payment, require customer when `amountDue > 0`, create sale + items + movements, deduct stock via inventory core, create initial CustomerPayment + allocation when money paid
-- [ ] P5-03 Derived debt queries: customer outstanding = Σ active sale `amountDue`; never a stored editable number
-- [ ] P5-04 Sale UI — cart flow: searchable product picker (shows available qty + suggested price), editable unit price per line, qty stepper, running total
+- [x] P5-01 Prisma migration: `Sale`, `SaleItem` (with name/price/cost snapshots), `CustomerPayment`, `PaymentAllocation`  *(Sale + SaleItem landed in Phase 5; CustomerPayment + PaymentAllocation followed in Phase 6 PR-A per schema-review §3)*
+- [x] P5-02 Sale service — single transaction implementing the spec's 15-step confirmation: validate shop/products/stock/payment, require customer when `amountDue > 0`, create sale + items + movements, deduct stock via inventory core, create initial CustomerPayment + allocation when money paid  *(D-012 split: cash-at-sale lives on `Sale.amountPaidAtSale`; the initial CustomerPayment row is not created — later payments only)*
+- [x] P5-03 Derived debt queries: customer outstanding = Σ active sale `amountDue`; never a stored editable number
+- [ ] P5-04 Sale UI — cart flow: searchable product picker (shows available qty + suggested price), editable unit price per line, qty stepper, running total  *(placeholder with construction tape at `/sell` until this ships)*
 - [ ] P5-05 Sale UI — payment step: amount paid now, auto remaining, inline customer create/select, customer forced when remaining > 0, clear confirmation message
-- [ ] P5-06 Sales list (scoped by shop for employees) + sale detail with items, payments, statuses
-- [ ] P5-07 Payment status derivation (Paid / Partially Paid / Unpaid / Cancelled) — computed in one place, reused everywhere
-- [ ] P5-08 Integration tests: paid sale w/o customer, partial sale requires customer, full-debt sale, price change during sale doesn't touch product defaults, editing product later doesn't touch old sale, overselling rejected, concurrent sale of last unit → exactly one succeeds
+- [~] P5-06 Sales list (scoped by shop for employees) + sale detail with items, payments, statuses  *(list endpoint + HTTP tests done; dedicated pages are follow-up alongside the sale flow)*
+- [x] P5-07 Payment status derivation (Paid / Partially Paid / Unpaid / Cancelled) — computed in one place, reused everywhere  *(shared `derivePaymentStatus` in api/src/sales/payment-status.ts)*
+- [x] P5-08 Integration tests: paid sale w/o customer, partial sale requires customer, full-debt sale, price change during sale doesn't touch product defaults, editing product later doesn't touch old sale, overselling rejected, concurrent sale of last unit → exactly one succeeds
 
 **Definition of Done:** the three canonical sales (10,000 paid / 4,000 of 10,000 / 0 of 10,000) produce correct stock, statuses, and customer balances, verified by reading the DB, not the UI.
 

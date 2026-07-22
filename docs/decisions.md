@@ -146,3 +146,32 @@ independent of what has since been paid back. Implementation:
 The phase-7.md §4 table is now out of date on this row; treat this
 memo as the source of truth. Full rationale in the primitive's
 doc-comment.
+
+## D-017 · 2026-07 · Accepted
+**Ledger design system: melhfa-indigo chrome + IBM Plex Sans /
+Arabic + the BalanceBar as the app's single signature element.**
+Sourced from `docs/uploads/design-brief.md` and the Claude Design
+mock (`Ledger UI.dc.html`). Tokens ship as Tailwind v4 `@theme`
+CSS variables so every screen composes `bg-brand`, `text-ink`,
+`text-collected`, `rounded-card` etc. as first-class utilities;
+Arabic RTL is a single-selector font swap
+(`html[dir='rtl'] body { font-family: var(--font-arabic) }`) so
+per-element font overrides never scatter through the codebase.
+
+Load-bearing primitives — the ONLY sanctioned places to render
+money on the app:
+ * `<Money value size>` — tabular-nums + Western digits in every
+   locale + muted currency suffix. Bans scattered `formatMoney(x)`
+   calls in JSX.
+ * `<BalanceBar collected outstanding>` — the app's one signature
+   element. Green/red two-tone bar at exactly proportional widths,
+   rendered on every monetary event (dashboards, shop report,
+   per-shop cards, future customer account). Strict type signature
+   so a screen can't accidentally pass sales-value where collected
+   belongs — the whole reason it exists is to make the
+   "cash-in-drawer vs debt" distinction pre-attentive.
+
+Consequence: any future money display goes through `<Money>` and
+any headline that pairs collected + outstanding goes through
+`<BalanceBar>`. No new patterns should reintroduce raw currency
+strings or ad-hoc progress bars for the same purpose.
