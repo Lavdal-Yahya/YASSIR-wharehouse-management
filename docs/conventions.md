@@ -141,9 +141,16 @@ src/
   one language only fails review.
 - **RTL**: Tailwind logical utilities only (`ms-* me-* ps-* pe-*
   text-start/text-end`). `ml-`/`mr-` in a diff is a bug.
-- **Money display**: one shared `formatMoney()`; one shared `<MoneyInput>`
-  that outputs integers. Never `toFixed` scattered around.
+- **Money display**: **only** through `<Money value size>` in JSX (D-017).
+  `formatMoney()` is kept for non-component sites (alt text, print-only
+  strings). Amount entry goes through `<MoneyInput>` (integer output).
+  Never `toFixed` scattered around. Any headline pairing
+  collected + outstanding renders through `<BalanceBar>`.
 - **Status labels**: text from i18n + color, never color alone (spec §38.4).
+- **Design tokens**: use the Tailwind `@theme` utilities
+  (`bg-brand`, `text-ink`, `text-collected`, `text-debt`,
+  `rounded-card`, etc.) — see `web/src/index.css`. Raw `slate-*` /
+  `red-*` classes shouldn't reappear in new code.
 - Reusable components go to `/components` after the *second* use, not
   speculatively.
 

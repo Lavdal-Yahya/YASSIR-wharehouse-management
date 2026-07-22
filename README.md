@@ -91,4 +91,15 @@ when built.
 
 ## Status
 
-Current phase: **Phase 5** (`docs/phases/phase-5.md`).
+Phases 1–4 shipped end-to-end (foundation, master data, warehouse +
+incoming orders, transfers). Phase 5 and Phase 6 services + tests
+are on `main`; the sale flow + customer money screens are the next
+UI work. Phase 7 shipped both PRs (expenses, dashboards, shop
+report, reports API). The Ledger design system (indigo palette, IBM
+Plex fonts, BalanceBar signature element) is live across every
+screen.
+
+Currently in flight: **Phase 6 PR-B** — sale flow (`P5-04/05`),
+customer account (`P6-01`), register-payment (`P6-05`), print
+receipts (`P6-06/07/08`). See `tasks.md` for the granular checklist
+and `docs/phases/phase-6.md` for the design.
