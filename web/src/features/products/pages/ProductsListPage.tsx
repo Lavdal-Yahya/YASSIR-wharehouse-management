@@ -7,7 +7,7 @@ import { Pagination } from '@/components/Pagination';
 import { StatusBadge } from '@/components/StatusBadge';
 import { Button } from '@/components/Button';
 import { Spinner } from '@/components/Spinner';
-import { formatMoney } from '@/shared/money';
+import { Money } from '@/components/Money';
 import { errorMessage } from '@/shared/error-message';
 import { useCategoriesList } from '@/features/categories/api';
 import { useProductsList } from '../api';
@@ -101,7 +101,7 @@ export default function ProductsListPage() {
                   </div>
                 </div>
                 <div className="hidden text-xs text-muted md:block">
-                  {formatMoney(p.defaultSalePrice)}
+                  <Money value={p.defaultSalePrice} size="sm" />
                 </div>
                 {p.active ? null : (
                   <StatusBadge tone="muted">{t('common.archived')}</StatusBadge>

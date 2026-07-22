@@ -7,7 +7,7 @@ import { Pagination } from '@/components/Pagination';
 import { StatusBadge } from '@/components/StatusBadge';
 import { Button } from '@/components/Button';
 import { Spinner } from '@/components/Spinner';
-import { formatMoney } from '@/shared/money';
+import { Money } from '@/components/Money';
 import { errorMessage } from '@/shared/error-message';
 import { Role } from '@/shared/enums';
 import { useCategoriesList } from '@/features/categories/api';
@@ -174,7 +174,10 @@ export default function ShopStockPage() {
                       {row.categoryName}
                       {row.sku ? <> · {row.sku}</> : null}
                       {row.suggestedSalePrice !== null ? (
-                        <> · {formatMoney(row.suggestedSalePrice)}</>
+                        <>
+                          {' · '}
+                          <Money value={row.suggestedSalePrice} size="sm" />
+                        </>
                       ) : null}
                     </div>
                   </div>

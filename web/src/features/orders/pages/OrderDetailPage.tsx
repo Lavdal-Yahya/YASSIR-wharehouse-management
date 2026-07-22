@@ -7,7 +7,7 @@ import { StatusBadge } from '@/components/StatusBadge';
 import { Spinner } from '@/components/Spinner';
 import { ConfirmDialog } from '@/components/ConfirmDialog';
 import { errorMessage } from '@/shared/error-message';
-import { formatMoney } from '@/shared/money';
+import { Money } from '@/components/Money';
 import { useCancelOrder, useOrder } from '../api';
 import type { OrderStatus } from '../types';
 
@@ -142,7 +142,11 @@ export default function OrderDetailPage() {
                 {it.quantityRemaining}
               </div>
               <div className="text-end text-xs text-muted">
-                {it.unitCost !== null ? formatMoney(it.unitCost) : '—'}
+                {it.unitCost !== null ? (
+                  <Money value={it.unitCost} size="sm" />
+                ) : (
+                  '—'
+                )}
               </div>
             </li>
           ))}

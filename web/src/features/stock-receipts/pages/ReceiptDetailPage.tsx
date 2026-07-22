@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { PageHeader } from '@/components/PageHeader';
 import { Button } from '@/components/Button';
 import { Spinner } from '@/components/Spinner';
-import { formatMoney } from '@/shared/money';
+import { Money } from '@/components/Money';
 import { errorMessage } from '@/shared/error-message';
 import { useReceipt } from '../api';
 
@@ -68,7 +68,11 @@ export default function ReceiptDetailPage() {
               <div className="text-ink">{it.productName}</div>
               <div className="text-end tabular-nums">{it.quantity}</div>
               <div className="text-end text-xs text-muted">
-                {it.unitCost !== null ? formatMoney(it.unitCost) : '—'}
+                {it.unitCost !== null ? (
+                  <Money value={it.unitCost} size="sm" />
+                ) : (
+                  '—'
+                )}
               </div>
             </li>
           ))}
