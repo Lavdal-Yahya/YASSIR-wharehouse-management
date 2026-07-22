@@ -113,14 +113,14 @@ export default function ProductFormPage() {
 
   if (!isNew && product.isLoading) {
     return (
-      <div className="flex items-center gap-2 text-sm text-slate-500">
+      <div className="flex items-center gap-2 text-sm text-muted">
         <Spinner /> {t('loading')}
       </div>
     );
   }
   if (!isNew && product.error) {
     return (
-      <p role="alert" className="text-sm text-red-700">
+      <p role="alert" className="text-sm text-debt-fg">
         {errorMessage(product.error, t)}
       </p>
     );
@@ -136,7 +136,7 @@ export default function ProductFormPage() {
       />
 
       <form onSubmit={onSubmit} className="grid gap-6 lg:grid-cols-3">
-        <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm lg:col-span-2">
+        <div className="rounded-lg border border-line bg-white p-4 shadow-sm lg:col-span-2">
           <div className="grid gap-4 md:grid-cols-2">
             <Input
               label={t('products.form.name')}
@@ -145,12 +145,12 @@ export default function ProductFormPage() {
               error={form.formState.errors.name ? t('errors.BAD_REQUEST') : undefined}
             />
             <div className="flex flex-col gap-1 text-start">
-              <label className="text-sm font-medium text-slate-700" htmlFor="p-cat">
+              <label className="text-sm font-medium text-ink" htmlFor="p-cat">
                 {t('products.form.category')}
               </label>
               <select
                 id="p-cat"
-                className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline focus:outline-2 focus:outline-slate-400"
+                className="w-full rounded-md border border-[#C8C9D4] bg-white px-3 py-2 text-sm text-ink focus:outline focus:outline-2 focus:outline-brand"
                 {...form.register('categoryId')}
               >
                 <option value="">{t('products.form.chooseCategory')}</option>
@@ -161,44 +161,44 @@ export default function ProductFormPage() {
                 ))}
               </select>
               {form.formState.errors.categoryId ? (
-                <p className="text-sm text-red-600">{t('errors.BAD_REQUEST')}</p>
+                <p className="text-sm text-debt-fg">{t('errors.BAD_REQUEST')}</p>
               ) : null}
             </div>
 
             <Input
-              label={<>{t('products.form.sku')} <span className="text-xs text-slate-400">({optional})</span></>}
+              label={<>{t('products.form.sku')} <span className="text-xs text-muted">({optional})</span></>}
               {...form.register('sku', { setValueAs: (v) => (v === '' ? null : v) })}
             />
             <Input
-              label={<>{t('products.form.barcode')} <span className="text-xs text-slate-400">({optional})</span></>}
+              label={<>{t('products.form.barcode')} <span className="text-xs text-muted">({optional})</span></>}
               {...form.register('barcode', { setValueAs: (v) => (v === '' ? null : v) })}
             />
 
             <MoneyInput
-              label={<>{t('products.form.defaultPurchaseCost')} <span className="text-xs text-slate-400">({optional})</span></>}
+              label={<>{t('products.form.defaultPurchaseCost')} <span className="text-xs text-muted">({optional})</span></>}
               value={form.watch('defaultPurchaseCost')}
               onChange={(v) => form.setValue('defaultPurchaseCost', v, { shouldDirty: true })}
             />
             <MoneyInput
-              label={<>{t('products.form.defaultSalePrice')} <span className="text-xs text-slate-400">({optional})</span></>}
+              label={<>{t('products.form.defaultSalePrice')} <span className="text-xs text-muted">({optional})</span></>}
               value={form.watch('defaultSalePrice')}
               onChange={(v) => form.setValue('defaultSalePrice', v, { shouldDirty: true })}
             />
 
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-slate-700 text-start" htmlFor="p-desc">
-                {t('products.form.description')} <span className="text-xs text-slate-400">({optional})</span>
+              <label className="block text-sm font-medium text-ink text-start" htmlFor="p-desc">
+                {t('products.form.description')} <span className="text-xs text-muted">({optional})</span>
               </label>
               <textarea
                 id="p-desc"
                 rows={3}
-                className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline focus:outline-2 focus:outline-slate-400"
+                className="mt-1 w-full rounded-md border border-[#C8C9D4] bg-white px-3 py-2 text-sm text-ink focus:outline focus:outline-2 focus:outline-brand"
                 {...form.register('description', { setValueAs: (v) => (v === '' ? null : v) })}
               />
             </div>
 
             <MoneyInput
-              label={<>{t('products.form.lowStockThreshold')} <span className="text-xs text-slate-400">({optional})</span></>}
+              label={<>{t('products.form.lowStockThreshold')} <span className="text-xs text-muted">({optional})</span></>}
               value={form.watch('lowStockThreshold')}
               onChange={(v) => form.setValue('lowStockThreshold', v, { shouldDirty: true })}
               suffix=""
@@ -206,12 +206,12 @@ export default function ProductFormPage() {
           </div>
 
           {mutationError ? (
-            <p role="alert" className="mt-4 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
+            <p role="alert" className="mt-4 rounded-md bg-debt-bg px-3 py-2 text-sm text-debt-fg">
               {errorMessage(mutationError, t)}
             </p>
           ) : null}
 
-          <div className="sticky bottom-0 mt-4 flex flex-wrap justify-end gap-2 border-t border-slate-100 bg-white pt-3">
+          <div className="sticky bottom-0 mt-4 flex flex-wrap justify-end gap-2 border-t border-line-soft bg-white pt-3">
             <Button type="button" variant="secondary" onClick={() => nav('/products')}>
               {t('common.cancel')}
             </Button>
@@ -223,7 +223,7 @@ export default function ProductFormPage() {
 
         <aside className="space-y-4">
           {isNew ? null : (
-            <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+            <section className="rounded-lg border border-line bg-white p-4 shadow-sm">
               <ImageUploadField
                 label={t('products.form.image')}
                 currentUrl={product.data?.imageUrl ?? null}
@@ -236,8 +236,8 @@ export default function ProductFormPage() {
             </section>
           )}
           {isNew ? null : (
-            <section className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-              <h2 className="mb-2 text-sm font-semibold text-slate-800 text-start">
+            <section className="rounded-lg border border-line bg-white p-4 shadow-sm">
+              <h2 className="mb-2 text-sm font-semibold text-ink text-start">
                 {t('products.dangerZone.title')}
               </h2>
               <div className="flex flex-wrap gap-2">
@@ -259,7 +259,7 @@ export default function ProductFormPage() {
                 </Button>
               </div>
               {remove.error ? (
-                <p role="alert" className="mt-2 text-sm text-red-600">
+                <p role="alert" className="mt-2 text-sm text-debt-fg">
                   {errorMessage(remove.error, t)}
                 </p>
               ) : null}

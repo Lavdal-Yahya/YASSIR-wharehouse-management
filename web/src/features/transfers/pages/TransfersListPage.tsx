@@ -62,7 +62,7 @@ export default function TransfersListPage() {
             setPage(1);
             setSourceLocationId(e.target.value);
           }}
-          className="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+          className="rounded-md border border-[#C8C9D4] bg-white px-3 py-2 text-sm text-ink"
           aria-label={t('transfers.filter.source')}
         >
           <option value="">
@@ -80,7 +80,7 @@ export default function TransfersListPage() {
             setPage(1);
             setDestinationLocationId(e.target.value);
           }}
-          className="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+          className="rounded-md border border-[#C8C9D4] bg-white px-3 py-2 text-sm text-ink"
           aria-label={t('transfers.filter.destination')}
         >
           <option value="">
@@ -99,7 +99,7 @@ export default function TransfersListPage() {
             setPage(1);
             setStatus(e.target.value);
           }}
-          className="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+          className="rounded-md border border-[#C8C9D4] bg-white px-3 py-2 text-sm text-ink"
           aria-label={t('transfers.filter.status')}
         >
           <option value="">{t('transfers.filter.allStatuses')}</option>
@@ -111,35 +111,35 @@ export default function TransfersListPage() {
         </select>
       </div>
 
-      <div className="rounded-xl border border-slate-200 bg-white p-2 shadow-sm">
+      <div className="rounded-lg border border-line bg-white p-2 shadow-sm">
         {list.isLoading ? (
-          <div className="flex items-center gap-2 p-3 text-sm text-slate-500">
+          <div className="flex items-center gap-2 p-3 text-sm text-muted">
             <Spinner /> {t('loading')}
           </div>
         ) : list.error ? (
-          <p role="alert" className="p-3 text-sm text-red-700">
+          <p role="alert" className="p-3 text-sm text-debt-fg">
             {errorMessage(list.error, t)}
           </p>
         ) : list.data && list.data.items.length === 0 ? (
-          <p className="p-3 text-sm text-slate-500">{t('common.emptyList')}</p>
+          <p className="p-3 text-sm text-muted">{t('common.emptyList')}</p>
         ) : (
-          <ul className="divide-y divide-slate-100">
+          <ul className="divide-y divide-line-soft">
             {list.data?.items.map((tr) => (
               <li key={tr.id} className="flex items-center gap-3 p-3 text-start">
                 <div className="min-w-0 grow">
                   <Link
                     to={`/transfers/${tr.id}`}
-                    className="text-sm font-medium text-slate-900 hover:underline"
+                    className="text-sm font-medium text-ink hover:underline"
                   >
                     {tr.referenceNumber}
                   </Link>
-                  <div className="text-xs text-slate-500">
+                  <div className="text-xs text-muted">
                     {tr.sourceLocationName} → {tr.destinationLocationName}
                     {' · '}
                     {new Date(tr.transferDate).toLocaleDateString()}
                   </div>
                 </div>
-                <div className="text-end text-xs text-slate-600 tabular-nums">
+                <div className="text-end text-xs text-muted tabular-nums">
                   {t('transfers.columns.items')}: {tr.itemCount}
                   {' · '}
                   {t('transfers.columns.quantity')}: {tr.totalQuantity}

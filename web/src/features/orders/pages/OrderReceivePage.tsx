@@ -37,14 +37,14 @@ export default function OrderReceivePage() {
 
   if (q.isLoading) {
     return (
-      <div className="flex items-center gap-2 text-sm text-slate-500">
+      <div className="flex items-center gap-2 text-sm text-muted">
         <Spinner /> {t('loading')}
       </div>
     );
   }
   if (q.error || !q.data) {
     return (
-      <p role="alert" className="p-3 text-sm text-red-700">
+      <p role="alert" className="p-3 text-sm text-debt-fg">
         {q.error ? errorMessage(q.error, t) : t('errors.NOT_FOUND')}
       </p>
     );
@@ -52,7 +52,7 @@ export default function OrderReceivePage() {
   const o = q.data;
   if (o.status === 'RECEIVED' || o.status === 'CANCELLED') {
     return (
-      <p className="p-3 text-sm text-slate-700">
+      <p className="p-3 text-sm text-ink">
         {t('orders.receive.notEditable', { status: t(`orders.status.${o.status}`) })}
       </p>
     );
@@ -99,9 +99,9 @@ export default function OrderReceivePage() {
         subtitle={t('orders.receive.subtitle', { ref: o.referenceNumber })}
       />
 
-      <div className="grid gap-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm md:grid-cols-2">
+      <div className="grid gap-3 rounded-lg border border-line bg-white p-4 shadow-sm md:grid-cols-2">
         <label className="block text-sm">
-          <span className="mb-1 block text-slate-700">
+          <span className="mb-1 block text-ink">
             {t('orders.receive.receiptDate')}
           </span>
           <Input
@@ -111,26 +111,26 @@ export default function OrderReceivePage() {
           />
         </label>
         <label className="block text-sm">
-          <span className="mb-1 block text-slate-700">{t('orders.form.notes')}</span>
+          <span className="mb-1 block text-ink">{t('orders.form.notes')}</span>
           <Input value={notes} onChange={(e) => setNotes(e.target.value)} />
         </label>
       </div>
 
-      <div className="rounded-xl border border-slate-200 bg-white shadow-sm">
-        <h2 className="border-b border-slate-100 p-4 text-sm font-semibold text-slate-900">
+      <div className="rounded-lg border border-line bg-white shadow-sm">
+        <h2 className="border-b border-line-soft p-4 text-sm font-semibold text-ink">
           {t('orders.receive.items')}
         </h2>
-        <ul className="divide-y divide-slate-100">
+        <ul className="divide-y divide-line-soft">
           {o.items.map((it) => (
             <li
               key={it.id}
               className="grid gap-2 p-4 text-sm md:grid-cols-[1fr_6rem_6rem_6rem_7rem] md:items-center md:gap-3"
             >
-              <div className="text-slate-900">{it.productName}</div>
-              <div className="text-end text-xs tabular-nums text-slate-500">
+              <div className="text-ink">{it.productName}</div>
+              <div className="text-end text-xs tabular-nums text-muted">
                 {t('orders.detail.ordered')}: {it.quantityOrdered}
               </div>
-              <div className="text-end text-xs tabular-nums text-slate-500">
+              <div className="text-end text-xs tabular-nums text-muted">
                 {t('orders.detail.received')}: {it.quantityReceived}
               </div>
               <div className="text-end text-xs tabular-nums text-amber-700">
@@ -153,7 +153,7 @@ export default function OrderReceivePage() {
       </div>
 
       {(localError || receive.error) ? (
-        <p role="alert" className="rounded-md bg-red-50 p-3 text-sm text-red-700">
+        <p role="alert" className="rounded-md bg-debt-bg p-3 text-sm text-debt-fg">
           {localError ?? (receive.error ? errorMessage(receive.error, t) : '')}
         </p>
       ) : null}

@@ -6,14 +6,8 @@ import { useShopsList } from '@/features/shops/api';
 import type { ReportFilter } from '../types';
 
 // Shared filter strip for every report page. SHOP users don't see the
-// shop dropdown — their scope is fixed by the server anyway. OWNER
-// gets an "all shops" option so cross-shop aggregates are one click
-// away.
-//
-// Kept minimal on purpose (phase-7 §5): the three fields the phase
-// doc calls out (shopId, from, to). Preset ranges like "today / this
-// week / this month" belong on the dashboards where quick answers
-// matter more; the reports pass raw dates through.
+// shop dropdown (their scope is server-forced). OWNER gets an "all
+// shops" option so cross-shop aggregates are one click away.
 
 export function ReportFilters({
   value,
@@ -30,10 +24,10 @@ export function ReportFilters({
   const shops = useShopsList({ page: 1, pageSize: 100 });
 
   return (
-    <div className="mb-4 grid gap-3 md:grid-cols-4">
+    <div className="mb-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
       {!isShop && !hideShop ? (
-        <div className="flex flex-col gap-1 text-start">
-          <label className="text-sm font-medium text-slate-700">
+        <div className="flex flex-col gap-1.5 text-start">
+          <label className="text-[14px] font-semibold text-ink">
             {t('reports.filter.shop')}
           </label>
           <select
@@ -41,7 +35,7 @@ export function ReportFilters({
             onChange={(e) =>
               onChange({ ...value, shopId: e.target.value || undefined })
             }
-            className="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+            className="h-[50px] rounded-input border-[1.5px] border-[#C8C9D4] bg-surface px-3 text-[15px] text-ink focus:outline focus:outline-2 focus:outline-brand"
           >
             <option value="">{t('reports.filter.allShops')}</option>
             {shops.data?.items.map((s) => (

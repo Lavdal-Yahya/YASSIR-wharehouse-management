@@ -1,19 +1,20 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PageHeader } from '@/components/PageHeader';
+import { SectionCard } from '@/components/SectionCard';
+import { BalanceBar } from '@/components/BalanceBar';
+import { Money } from '@/components/Money';
 import { Spinner } from '@/components/Spinner';
-import { formatMoney } from '@/shared/money';
 import { errorMessage } from '@/shared/error-message';
 import { ReportFilters } from '../components/ReportFilters';
 import { StatCard } from '../components/StatCard';
 import { useShopReport } from '../api';
 import type { ReportFilter } from '../types';
 
-// P7-04 · Shop report page. The three headline numbers (sales value,
-// total collected, outstanding) are laid out as `dominant` StatCards
-// so they're visibly distinct at a glance — phase-7 §7 item 1's DoD.
-// Second row breaks down cash into "at sale" + "later" plus new debt
-// and net collected (after expenses).
+// P7-04 · Shop report — the marquee report. Repeats the dashboard's
+// BalanceBar as the visual anchor, then breaks the money quantities
+// out as tiles so an owner can read them one at a time. Filters
+// (shop, date range) sit on top and refresh every tile.
 
 export default function ShopReportPage() {
   const { t } = useTranslation();
@@ -29,59 +30,71 @@ export default function ShopReportPage() {
       <ReportFilters value={filter} onChange={setFilter} />
 
       {q.isLoading ? (
-        <div className="flex items-center gap-2 p-3 text-sm text-slate-500">
+        <div className="flex items-center gap-2 p-3 text-[14px] text-muted">
           <Spinner /> {t('loading')}
         </div>
       ) : q.error ? (
-        <p role="alert" className="rounded-md bg-red-50 p-3 text-sm text-red-700">
+        <p
+          role="alert"
+          className="rounded-input bg-debt-bg p-3 text-[14px] font-medium text-debt-fg"
+        >
           {errorMessage(q.error, t)}
         </p>
       ) : q.data ? (
         <>
-          <div className="grid gap-3 md:grid-cols-3">
+          <SectionCard elevated className="mb-5">
+            <div className="flex items-baseline justify-between gap-3">
+              <span className="text-[14px] font-semibold uppercase tracking-wide text-muted">
+                {t('reports.shop.salesValue')}
+              </span>
+              <Money value={q.data.salesValue} size="xl" />
+            </div>
+            <div className="mt-3">
+              <BalanceBar
+                collected={q.data.totalCollected}
+                outstanding={q.data.outstanding}
+                collectedLabel={t('reports.shop.totalCollected')}
+                outstandingLabel={t('reports.shop.outstanding')}
+              />
+            </div>
+          </SectionCard>
+
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             <StatCard
-              label={t('reports.shop.salesValue')}
-              value={formatMoney(q.data.salesValue)}
-              dominant
+              label={t('reports.shop.cashAtSale')}
+              money={q.data.cashAtSale}
+              tone="positive"
+            />
+            <StatCard
+              label={t('reports.shop.laterPayments')}
+              money={q.data.laterPayments}
               tone="positive"
             />
             <StatCard
               label={t('reports.shop.totalCollected')}
-              value={formatMoney(q.data.totalCollected)}
+              money={q.data.totalCollected}
               dominant
               tone="positive"
             />
             <StatCard
-              label={t('reports.shop.outstanding')}
-              value={formatMoney(q.data.outstanding)}
-              dominant
+              label={t('reports.shop.newDebt')}
+              money={q.data.newDebt}
               tone="debt"
             />
-          </div>
-          <div className="mt-3 grid gap-3 md:grid-cols-4">
             <StatCard
-              label={t('reports.shop.cashAtSale')}
-              value={formatMoney(q.data.cashAtSale)}
-            />
-            <StatCard
-              label={t('reports.shop.laterPayments')}
-              value={formatMoney(q.data.laterPayments)}
-            />
-            <StatCard
-              label={t('reports.shop.newDebt')}
-              value={formatMoney(q.data.newDebt)}
+              label={t('reports.shop.outstanding')}
+              money={q.data.outstanding}
+              dominant
               tone="debt"
             />
             <StatCard
               label={t('reports.shop.netCollected')}
-              value={formatMoney(q.data.netCollected)}
+              money={q.data.netCollected}
               hint={t('reports.shop.netCollectedHint')}
             />
-          </div>
-          <div className="mt-3">
             <StatCard
               label={t('reports.shop.expenses')}
-              value={formatMoney(q.data.expenses)}
+              money={q.data.expenses}
               tone="muted"
             />
           </div>

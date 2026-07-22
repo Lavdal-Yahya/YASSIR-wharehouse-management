@@ -78,9 +78,9 @@ export default function DirectReceiptPage() {
         subtitle={t('receipts.direct.subtitle')}
       />
 
-      <div className="grid gap-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm md:grid-cols-3">
+      <div className="grid gap-3 rounded-lg border border-line bg-white p-4 shadow-sm md:grid-cols-3">
         <label className="block text-sm">
-          <span className="mb-1 block text-slate-700">
+          <span className="mb-1 block text-ink">
             {t('receipts.direct.receiptDate')}
           </span>
           <Input
@@ -90,7 +90,7 @@ export default function DirectReceiptPage() {
           />
         </label>
         <label className="block text-sm">
-          <span className="mb-1 block text-slate-700">
+          <span className="mb-1 block text-ink">
             {t('orders.form.supplier')}
           </span>
           <Input
@@ -100,14 +100,14 @@ export default function DirectReceiptPage() {
           />
         </label>
         <label className="block text-sm">
-          <span className="mb-1 block text-slate-700">{t('orders.form.notes')}</span>
+          <span className="mb-1 block text-ink">{t('orders.form.notes')}</span>
           <Input value={notes} onChange={(e) => setNotes(e.target.value)} />
         </label>
       </div>
 
-      <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+      <div className="rounded-lg border border-line bg-white p-4 shadow-sm">
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-slate-900">
+          <h2 className="text-sm font-semibold text-ink">
             {t('receipts.direct.items')}
           </h2>
           <Button variant="ghost" onClick={() => setItems((p) => [...p, { ...EMPTY }])}>
@@ -118,7 +118,7 @@ export default function DirectReceiptPage() {
           {items.map((it, idx) => (
             <li
               key={idx}
-              className="grid gap-3 rounded-md border border-slate-200 p-3 md:grid-cols-[1fr_10rem_10rem_4rem]"
+              className="grid gap-3 rounded-md border border-line p-3 md:grid-cols-[1fr_10rem_10rem_4rem]"
             >
               <ProductPicker
                 value={it.productId}
@@ -144,7 +144,7 @@ export default function DirectReceiptPage() {
                   onClick={() =>
                     setItems((prev) => prev.filter((_, i) => i !== idx))
                   }
-                  className="text-xs text-red-700 hover:underline"
+                  className="text-xs text-debt-fg hover:underline"
                 >
                   {t('common.delete')}
                 </button>
@@ -155,7 +155,7 @@ export default function DirectReceiptPage() {
       </div>
 
       {(localError || create.error) ? (
-        <p role="alert" className="rounded-md bg-red-50 p-3 text-sm text-red-700">
+        <p role="alert" className="rounded-md bg-debt-bg p-3 text-sm text-debt-fg">
           {localError ?? (create.error ? errorMessage(create.error, t) : '')}
         </p>
       ) : null}

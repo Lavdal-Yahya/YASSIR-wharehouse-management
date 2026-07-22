@@ -58,15 +58,15 @@ export default function CorrectionsPage() {
         subtitle={t('corrections.subtitle')}
       />
 
-      <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-        <h2 className="mb-3 text-sm font-semibold text-slate-900">
+      <div className="rounded-lg border border-line bg-white p-4 shadow-sm">
+        <h2 className="mb-3 text-sm font-semibold text-ink">
           {t('corrections.form.title')}
         </h2>
         <div className="grid gap-3 md:grid-cols-4">
           <select
             value={locationId}
             onChange={(e) => setLocationId(e.target.value)}
-            className="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+            className="rounded-md border border-[#C8C9D4] bg-white px-3 py-2 text-sm text-ink"
             aria-label={t('corrections.form.location')}
           >
             <option value="">{t('corrections.form.chooseLocation')}</option>
@@ -106,45 +106,45 @@ export default function CorrectionsPage() {
             placeholder={`${t('orders.form.notes')} (${t('common.optional')})`}
           />
         </div>
-        <p className="mt-2 text-xs text-slate-500">
+        <p className="mt-2 text-xs text-muted">
           {t('corrections.form.hint')}
         </p>
         {(localError || create.error) ? (
-          <p role="alert" className="mt-3 rounded-md bg-red-50 p-2 text-sm text-red-700">
+          <p role="alert" className="mt-3 rounded-md bg-debt-bg p-2 text-sm text-debt-fg">
             {localError ?? (create.error ? errorMessage(create.error, t) : '')}
           </p>
         ) : null}
       </div>
 
-      <div className="rounded-xl border border-slate-200 bg-white p-2 shadow-sm">
+      <div className="rounded-lg border border-line bg-white p-2 shadow-sm">
         {list.isLoading ? (
-          <div className="flex items-center gap-2 p-3 text-sm text-slate-500">
+          <div className="flex items-center gap-2 p-3 text-sm text-muted">
             <Spinner /> {t('loading')}
           </div>
         ) : list.error ? (
-          <p role="alert" className="p-3 text-sm text-red-700">
+          <p role="alert" className="p-3 text-sm text-debt-fg">
             {errorMessage(list.error, t)}
           </p>
         ) : list.data && list.data.items.length === 0 ? (
-          <p className="p-3 text-sm text-slate-500">{t('common.emptyList')}</p>
+          <p className="p-3 text-sm text-muted">{t('common.emptyList')}</p>
         ) : (
-          <ul className="divide-y divide-slate-100">
+          <ul className="divide-y divide-line-soft">
             {list.data?.items.map((c) => (
               <li
                 key={c.id}
                 className="grid gap-1 p-3 text-sm md:grid-cols-[7rem_1fr_1fr_5rem] md:items-center md:gap-3"
               >
-                <div className="text-xs tabular-nums text-slate-500">
+                <div className="text-xs tabular-nums text-muted">
                   {c.referenceNumber}
                 </div>
-                <div className="text-slate-900">
+                <div className="text-ink">
                   {c.productName}
-                  <div className="text-xs text-slate-500">{c.locationName}</div>
+                  <div className="text-xs text-muted">{c.locationName}</div>
                 </div>
-                <div className="text-xs text-slate-600">{c.reason}</div>
+                <div className="text-xs text-muted">{c.reason}</div>
                 <div
                   className={`text-end text-sm font-semibold tabular-nums ${
-                    c.adjustmentQuantity > 0 ? 'text-emerald-700' : 'text-red-700'
+                    c.adjustmentQuantity > 0 ? 'text-emerald-700' : 'text-debt-fg'
                   }`}
                 >
                   {c.adjustmentQuantity > 0 ? `＋${c.adjustmentQuantity}` : c.adjustmentQuantity}

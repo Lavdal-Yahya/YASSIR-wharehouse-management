@@ -11,7 +11,7 @@ export function RequireAuth() {
 
   if (me.isPending) {
     return (
-      <div className="flex min-h-dvh items-center justify-center gap-2 text-slate-500">
+      <div className="flex min-h-dvh items-center justify-center gap-2 text-muted">
         <Spinner />
         <span>{t('loading')}</span>
       </div>

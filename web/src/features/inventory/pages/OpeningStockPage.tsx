@@ -68,13 +68,13 @@ export default function OpeningStockPage() {
         subtitle={t('openingStock.subtitle')}
       />
 
-      <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+      <div className="rounded-lg border border-line bg-white p-4 shadow-sm">
         <label className="block text-sm">
-          <span className="mb-1 block text-slate-700">{t('openingStock.location')}</span>
+          <span className="mb-1 block text-ink">{t('openingStock.location')}</span>
           <select
             value={locationId}
             onChange={(e) => setLocationId(e.target.value)}
-            className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+            className="w-full rounded-md border border-[#C8C9D4] bg-white px-3 py-2 text-sm text-ink"
             aria-label={t('openingStock.location')}
           >
             <option value="">{t('corrections.form.chooseLocation')}</option>
@@ -87,9 +87,9 @@ export default function OpeningStockPage() {
         </label>
       </div>
 
-      <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+      <div className="rounded-lg border border-line bg-white p-4 shadow-sm">
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-slate-900">
+          <h2 className="text-sm font-semibold text-ink">
             {t('openingStock.items')}
           </h2>
           <Button variant="ghost" onClick={() => setItems((p) => [...p, { ...EMPTY }])}>
@@ -100,7 +100,7 @@ export default function OpeningStockPage() {
           {items.map((it, idx) => (
             <li
               key={idx}
-              className="grid gap-2 rounded-md border border-slate-200 p-3 md:grid-cols-[1fr_8rem_8rem_1fr_4rem]"
+              className="grid gap-2 rounded-md border border-line p-3 md:grid-cols-[1fr_8rem_8rem_1fr_4rem]"
             >
               <ProductPicker
                 value={it.productId}
@@ -131,7 +131,7 @@ export default function OpeningStockPage() {
                   onClick={() =>
                     setItems((prev) => prev.filter((_, i) => i !== idx))
                   }
-                  className="text-xs text-red-700 hover:underline"
+                  className="text-xs text-debt-fg hover:underline"
                 >
                   {t('common.delete')}
                 </button>
@@ -139,14 +139,14 @@ export default function OpeningStockPage() {
             </li>
           ))}
         </ul>
-        <p className="mt-3 text-xs text-slate-500">{t('openingStock.hint')}</p>
+        <p className="mt-3 text-xs text-muted">{t('openingStock.hint')}</p>
       </div>
 
       {success ? (
         <p className="rounded-md bg-emerald-50 p-3 text-sm text-emerald-800">{success}</p>
       ) : null}
       {(localError || create.error) ? (
-        <p role="alert" className="rounded-md bg-red-50 p-3 text-sm text-red-700">
+        <p role="alert" className="rounded-md bg-debt-bg p-3 text-sm text-debt-fg">
           {localError ?? (create.error ? errorMessage(create.error, t) : '')}
         </p>
       ) : null}
