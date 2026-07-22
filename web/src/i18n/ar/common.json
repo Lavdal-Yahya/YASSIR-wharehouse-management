@@ -599,6 +599,119 @@
       "allShops": "كل المحلات",
       "from": "من",
       "to": "إلى"
+    },
+    "index": {
+      "title": "التقارير",
+      "subtitle": "اختر التقرير الذي تريد الاطلاع عليه.",
+      "shop": {
+        "title": "تقرير المحل",
+        "hint": "المبيعات والتحصيلات والديون خلال الفترة."
+      },
+      "sales": {
+        "title": "المبيعات",
+        "hint": "حسب الحالة والمحل والمنتج واليوم."
+      },
+      "debt": {
+        "title": "الديون",
+        "hint": "الدين القائم حسب الزبون والمحل."
+      },
+      "profit": {
+        "title": "الربح المُقدَّر",
+        "hint": "الهامش الإجمالي مع تغطية التكاليف."
+      },
+      "warehouse": {
+        "title": "المستودع",
+        "hint": "المخزون الحالي، الاستلامات، التحويلات، التصحيحات."
+      },
+      "incomingOrders": {
+        "title": "طلبات الشراء",
+        "hint": "المطلوب، المستلم، والمتبقي حسب الحالة."
+      }
+    },
+    "warehouse": {
+      "title": "تقرير المستودع",
+      "subtitle": "المخزون الحالي والتدفقات خلال الفترة.",
+      "asOfSection": "الوضع الحالي",
+      "flowsSection": "التدفقات خلال الفترة",
+      "currentStock": "المخزون الحالي",
+      "distinctProducts": "منتجات مميّزة",
+      "lowStockCount": "مخزون منخفض",
+      "outOfStockCount": "نافد",
+      "received": "الاستلامات",
+      "orderReceipts": "من الطلبات",
+      "directReceipts": "استلامات مباشرة",
+      "receivedTotal": "إجمالي المستلم",
+      "transferredOut": "المُحوَّل إلى المحلات",
+      "corrections": "التصحيحات",
+      "correctionsUp": "زيادة (+)",
+      "correctionsDown": "نقص (−)",
+      "correctionsNet": "الصافي"
+    },
+    "sales": {
+      "title": "تقرير المبيعات",
+      "subtitle": "المبيعات مصنّفة حسب الحالة والمحل والمنتج واليوم.",
+      "byStatus": "حسب حالة الدفع",
+      "byShop": "حسب المحل",
+      "byProduct": "أفضل المنتجات",
+      "byDate": "حسب اليوم",
+      "salesCount_zero": "لا مبيعات",
+      "salesCount_one": "بيع واحد",
+      "salesCount_two": "بيعتان",
+      "salesCount_few": "{{count}} مبيعات",
+      "salesCount_many": "{{count}} مبيعة",
+      "salesCount_other": "{{count}} مبيعة",
+      "unitsSold_zero": "لا وحدات مباعة",
+      "unitsSold_one": "وحدة واحدة",
+      "unitsSold_two": "وحدتان",
+      "unitsSold_few": "{{count}} وحدات مباعة",
+      "unitsSold_many": "{{count}} وحدة مباعة",
+      "unitsSold_other": "{{count}} وحدة مباعة",
+      "due": "الباقي"
+    },
+    "debt": {
+      "title": "تقرير الديون",
+      "subtitle": "من عليه ماذا، ودفعات الفترة.",
+      "byCustomer": "حسب الزبون",
+      "byShop": "حسب المحل",
+      "paymentsInPeriod": "دفعات خلال الفترة",
+      "noDebt": "لا يوجد دين قائم.",
+      "noPayments": "لا توجد دفعات خلال الفترة.",
+      "customerBreakdown": "{{unpaid}} غير مدفوعة · {{partial}} جزئية",
+      "debtorsCount_zero": "لا مدينون",
+      "debtorsCount_one": "زبون مدين واحد",
+      "debtorsCount_two": "زبونان مدينان",
+      "debtorsCount_few": "{{count}} زبائن مدينون",
+      "debtorsCount_many": "{{count}} زبوناً مديناً",
+      "debtorsCount_other": "{{count}} زبون مدين"
+    },
+    "incomingOrders": {
+      "title": "تقرير طلبات الشراء",
+      "subtitle": "المطلوب مقابل المستلم مقابل المتبقي.",
+      "byStatus": "حسب الحالة",
+      "recent": "أحدث الطلبات",
+      "ordersCount": "طلبات",
+      "ordered": "مطلوب",
+      "received": "مستلم",
+      "remaining": "متبقي",
+      "receivedOverOrdered": "{{received}} / {{ordered}}",
+      "status": {
+        "ORDERED": "مطلوب",
+        "SHIPPED": "مُشحن",
+        "PARTIALLY_RECEIVED": "مستلم جزئياً",
+        "RECEIVED": "مستلم",
+        "CANCELLED": "ملغى"
+      }
+    },
+    "profit": {
+      "title": "الربح المُقدَّر",
+      "subtitle": "الهامش الإجمالي بناءً على تكاليف الشراء المسجلة.",
+      "gross": "الهامش الإجمالي",
+      "grossEstimated": "الهامش الإجمالي المُقدَّر",
+      "salesValue": "قيمة المبيعات",
+      "cogs": "تكلفة البضاعة المباعة",
+      "fullCoverage": "تكاليف الشراء معروفة لكل السطور في الفترة.",
+      "coverageLabel": "التكاليف معروفة لـ {{withCost}} / {{total}} سطور",
+      "estimatedHint": "رقم تقديري: بعض السطور لا تحتوي على تكلفة مسجلة."
     }
   },
   "dashboard": {

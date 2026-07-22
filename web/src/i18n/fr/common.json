@@ -599,6 +599,107 @@
       "allShops": "Toutes les boutiques",
       "from": "Depuis",
       "to": "Jusqu'à"
+    },
+    "index": {
+      "title": "Rapports",
+      "subtitle": "Choisissez un rapport à consulter.",
+      "shop": {
+        "title": "Rapport boutique",
+        "hint": "Ventes, encaissements et dettes sur la période."
+      },
+      "sales": {
+        "title": "Ventes",
+        "hint": "Par statut, boutique, produit et jour."
+      },
+      "debt": {
+        "title": "Dettes",
+        "hint": "Dette en cours par client et par boutique."
+      },
+      "profit": {
+        "title": "Bénéfice estimé",
+        "hint": "Marge brute avec la couverture des coûts."
+      },
+      "warehouse": {
+        "title": "Entrepôt",
+        "hint": "Stock actuel, réceptions, transferts, ajustements."
+      },
+      "incomingOrders": {
+        "title": "Commandes fournisseurs",
+        "hint": "Commandé, reçu, restant par statut."
+      }
+    },
+    "warehouse": {
+      "title": "Rapport entrepôt",
+      "subtitle": "Stock actuel et flux sur la période.",
+      "asOfSection": "État actuel",
+      "flowsSection": "Flux sur la période",
+      "currentStock": "Stock actuel",
+      "distinctProducts": "Produits distincts",
+      "lowStockCount": "Stock bas",
+      "outOfStockCount": "En rupture",
+      "received": "Réceptions",
+      "orderReceipts": "Depuis commandes",
+      "directReceipts": "Réceptions directes",
+      "receivedTotal": "Total reçu",
+      "transferredOut": "Transféré vers les boutiques",
+      "corrections": "Ajustements",
+      "correctionsUp": "Trouvé (+)",
+      "correctionsDown": "Retiré (−)",
+      "correctionsNet": "Net"
+    },
+    "sales": {
+      "title": "Rapport ventes",
+      "subtitle": "Ventes ventilées par statut, boutique, produit et jour.",
+      "byStatus": "Par statut de paiement",
+      "byShop": "Par boutique",
+      "byProduct": "Meilleurs produits",
+      "byDate": "Par jour",
+      "salesCount_one": "{{count}} vente",
+      "salesCount_other": "{{count}} ventes",
+      "unitsSold_one": "{{count}} unité vendue",
+      "unitsSold_other": "{{count}} unités vendues",
+      "due": "Reste"
+    },
+    "debt": {
+      "title": "Rapport dettes",
+      "subtitle": "Qui doit combien, et les versements de la période.",
+      "byCustomer": "Par client",
+      "byShop": "Par boutique",
+      "paymentsInPeriod": "Versements sur la période",
+      "noDebt": "Aucune dette en cours.",
+      "noPayments": "Aucun versement sur la période.",
+      "customerBreakdown": "{{unpaid}} non payées · {{partial}} partielles",
+      "debtorsCount_one": "{{count}} client débiteur",
+      "debtorsCount_other": "{{count}} clients débiteurs"
+    },
+    "incomingOrders": {
+      "title": "Rapport commandes fournisseurs",
+      "subtitle": "Commandé vs reçu vs restant.",
+      "byStatus": "Par statut",
+      "recent": "Dernières commandes",
+      "ordersCount": "Commandes",
+      "ordered": "Commandé",
+      "received": "Reçu",
+      "remaining": "Restant",
+      "receivedOverOrdered": "{{received}} / {{ordered}}",
+      "status": {
+        "ORDERED": "Commandé",
+        "SHIPPED": "Expédié",
+        "PARTIALLY_RECEIVED": "Partiellement reçu",
+        "RECEIVED": "Reçu",
+        "CANCELLED": "Annulé"
+      }
+    },
+    "profit": {
+      "title": "Bénéfice estimé",
+      "subtitle": "Marge brute basée sur les coûts d'achat enregistrés.",
+      "gross": "Marge brute",
+      "grossEstimated": "Marge brute estimée",
+      "salesValue": "Valeur des ventes",
+      "cogs": "Coût des ventes",
+      "fullCoverage": "Coûts d'achat connus pour toutes les lignes de la période.",
+      "coverageLabel": "Coûts connus pour {{withCost}} / {{total}} lignes",
+      "estimatedHint": "Chiffre estimé : certaines lignes n'ont pas de coût enregistré."
     }
   },
   "dashboard": {
