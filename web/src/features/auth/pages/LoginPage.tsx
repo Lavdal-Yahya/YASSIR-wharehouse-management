@@ -23,6 +23,10 @@ const KNOWN_ERROR_CODES = new Set([
   'BAD_REQUEST',
 ]);
 
+// Login screen — the design brief opens on this. Big touch targets,
+// indigo brand slab as the top half so first-time users see the
+// app's personality before the form. Nothing else on the page.
+
 export default function LoginPage() {
   const { t } = useTranslation();
   const me = useMe();
@@ -53,48 +57,74 @@ export default function LoginPage() {
       : null;
 
   return (
-    <main className="flex min-h-dvh items-center justify-center bg-slate-50 px-4 py-10">
-      <div className="w-full max-w-sm space-y-6 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-        <div className="flex items-start justify-between gap-4">
-          <div className="flex items-center gap-3">
-            {logoUrl ? (
-              <img
-                src={logoUrl}
-                alt=""
-                className="h-10 w-10 rounded-md object-cover"
-              />
-            ) : null}
-            <div>
-              <h1 className="text-xl font-semibold text-slate-900">{businessName}</h1>
-              <p className="text-sm text-slate-500">{t('login.subtitle')}</p>
-            </div>
-          </div>
-          <LanguageSwitcher />
+    <main className="min-h-dvh bg-app">
+      {/* Indigo band — reads as the brand's identity, no logo file
+          required. LanguageSwitcher pinned to the top corner. */}
+      <div className="relative bg-brand pb-24 pt-4">
+        <div className="mx-auto flex max-w-md items-center justify-end px-4">
+          <LanguageSwitcher variant="onBrand" />
         </div>
-        <form onSubmit={onSubmit} className="space-y-4" noValidate>
-          <Input
-            label={t('login.username')}
-            autoComplete="username"
-            autoFocus
-            {...register('username')}
-            error={errors.username ? t('errors.BAD_REQUEST') : undefined}
-          />
-          <Input
-            label={t('login.password')}
-            type="password"
-            autoComplete="current-password"
-            {...register('password')}
-            error={errors.password ? t('errors.BAD_REQUEST') : undefined}
-          />
-          {errorCode ? (
-            <p role="alert" className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
-              {t(`errors.${errorCode}`)}
-            </p>
-          ) : null}
-          <Button type="submit" loading={login.isPending} className="w-full">
-            {login.isPending ? t('login.loading') : t('login.submit')}
-          </Button>
-        </form>
+        <div className="mx-auto mt-6 flex max-w-md flex-col items-center gap-3 px-4 text-white">
+          {logoUrl ? (
+            <img
+              src={logoUrl}
+              alt=""
+              className="h-16 w-16 rounded-lg object-cover shadow-lg"
+            />
+          ) : (
+            <div
+              className="flex h-16 w-16 items-center justify-center rounded-lg bg-white/10 text-2xl font-bold text-white"
+              aria-hidden
+            >
+              {businessName.slice(0, 1).toUpperCase()}
+            </div>
+          )}
+          <h1 className="text-center text-[22px] font-bold leading-tight text-white">
+            {businessName}
+          </h1>
+          <p className="text-center text-[14px] text-white/75">
+            {t('login.subtitle')}
+          </p>
+        </div>
+      </div>
+
+      {/* Card floats over the band — visual anchor drawing the eye
+          down to the form. */}
+      <div className="mx-auto -mt-16 w-full max-w-md px-4 pb-10">
+        <div className="rounded-[14px] border border-line bg-surface p-5 shadow-[0_12px_32px_rgba(24,25,40,0.08)]">
+          <form onSubmit={onSubmit} className="flex flex-col gap-4" noValidate>
+            <Input
+              label={t('login.username')}
+              autoComplete="username"
+              autoFocus
+              {...register('username')}
+              error={errors.username ? t('errors.BAD_REQUEST') : undefined}
+            />
+            <Input
+              label={t('login.password')}
+              type="password"
+              autoComplete="current-password"
+              inputMode="numeric"
+              {...register('password')}
+              error={errors.password ? t('errors.BAD_REQUEST') : undefined}
+            />
+            {errorCode ? (
+              <p
+                role="alert"
+                className="rounded-input bg-debt-bg px-3 py-2 text-[14px] font-medium text-debt-fg"
+              >
+                {t(`errors.${errorCode}`)}
+              </p>
+            ) : null}
+            <Button
+              type="submit"
+              loading={login.isPending}
+              className="w-full !h-14 !text-[16px]"
+            >
+              {login.isPending ? t('login.loading') : t('login.submit')}
+            </Button>
+          </form>
+        </div>
       </div>
     </main>
   );

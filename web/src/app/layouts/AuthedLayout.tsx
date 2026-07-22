@@ -104,7 +104,7 @@ export function AuthedLayout() {
             </span>
           </div>
           <div className="flex items-center gap-2">
-            <LanguageSwitcher />
+            <LanguageSwitcher variant="onBrand" />
             <Button
               size="sm"
               variant="ghost"
