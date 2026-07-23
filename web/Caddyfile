@@ -1,0 +1,19 @@
+{$DOMAIN} {
+    # API — proxy to the NestJS container.  All /api/* requests forwarded.
+    handle /api/* {
+        reverse_proxy api:3000
+    }
+
+    # Uploads — served by the API (which owns the uploads volume).
+    handle /uploads/* {
+        reverse_proxy api:3000
+    }
+
+    # SPA fallback — every other path serves the React app and lets the
+    # client-side router take over.
+    handle {
+        root * /srv
+        try_files {path} /index.html
+        file_server
+    }
+}
