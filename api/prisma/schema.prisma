@@ -7,7 +7,8 @@
 // See docs/architecture.md §6 for the ORM contract; conventions.md §3 for migration rules.
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
 }
 
 datasource db {

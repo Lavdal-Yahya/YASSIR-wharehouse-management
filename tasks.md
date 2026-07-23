@@ -167,18 +167,18 @@ Goal: the owner can finally *see* the business.
 
 Goal: production on the VPS, safe against the ways it will actually break.
 
-- [ ] P8-01 Permission sweep: scripted API tests hitting every endpoint as every role (incl. cross-shop attempts by URL/ID manipulation)
-- [ ] P8-02 Transaction/integrity sweep: rerun all stock + debt integrity tests against a production-like DB; verify Σ movements = balances for every product/location
+- [x] P8-01 Permission sweep: scripted API tests hitting every endpoint as every role (incl. cross-shop attempts by URL/ID manipulation)
+- [x] P8-02 Transaction/integrity sweep: rerun all stock + debt integrity tests against a production-like DB; verify Σ movements = balances for every product/location
 - [ ] P8-03 Responsive pass on real devices (small Android, iPhone, tablet, laptop) in fr and ar
 - [ ] P8-04 PWA pass: install Android + iOS, standalone mode, session expiry re-auth, logout clears access on shared devices
 - [ ] P8-05 Receipt print pass: browser print + narrow receipt printer if available
-- [ ] P8-06 Dockerfiles (api, web) + production docker-compose: Postgres, API, Caddy (auto-HTTPS, serves web build, proxies /api)
-- [ ] P8-07 Production env setup: secrets in env vars, secure cookie settings, CORS locked down
-- [ ] P8-08 Backup system: nightly `pg_dump` cron, N-day retention, off-box copy (S3/Backblaze); **restore documented and actually tested once**
-- [ ] P8-09 Error logging in production (persistent logs, rotation)
-- [ ] P8-10 Deploy process documented (update, migrate, rollback steps)
+- [x] P8-06 Dockerfiles (api, web) + production docker-compose: Postgres, API, Caddy (auto-HTTPS, serves web build, proxies /api)
+- [x] P8-07 Production env setup: secrets in env vars, secure cookie settings, CORS locked down
+- [x] P8-08 Backup system: nightly `pg_dump` cron, N-day retention, off-box copy (S3/Backblaze); **restore documented and actually tested once**
+- [x] P8-09 Error logging in production (persistent logs, rotation)
+- [x] P8-10 Deploy process documented (update, migrate, rollback steps)
 - [ ] P8-11 Go-live: admin account, shops, categories, users, initial stock entry with client
-- [ ] P8-12 Walk the full acceptance-criteria checklist (spec §46, all 45 items) and record evidence for each
+- [x] P8-12 Walk the full acceptance-criteria checklist (spec §46, all 45 items) and record evidence for each
 
 **Definition of Done:** system live on HTTPS, a backup has been restored successfully to a scratch database, and all 45 acceptance criteria are checked off.
 

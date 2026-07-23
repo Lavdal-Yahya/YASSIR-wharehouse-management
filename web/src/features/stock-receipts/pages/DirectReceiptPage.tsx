@@ -126,13 +126,17 @@ export default function DirectReceiptPage() {
                 ariaLabel={t('receipts.direct.product', { line: idx + 1 })}
                 placeholder={t('orders.form.chooseProduct')}
               />
-              <QuantityInput
-                value={it.quantity}
-                onChange={(v) => update(idx, { quantity: v })}
-                min={1}
-                aria-label={t('orders.form.quantity')}
-                className="w-full"
-              />
+              <label className="block text-sm">
+                <span className="mb-1 block text-xs text-muted">
+                  {t('orders.form.quantity')}
+                </span>
+                <QuantityInput
+                  value={it.quantity}
+                  onChange={(v) => update(idx, { quantity: v })}
+                  min={1}
+                  className="w-full"
+                />
+              </label>
               <MoneyInput
                 label={`${t('orders.form.unitCost')} (${t('common.optional')})`}
                 value={it.unitCost}

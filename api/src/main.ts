@@ -18,11 +18,14 @@ async function bootstrap(): Promise<void> {
     // takes over.
     exclude: ['uploads/(.*)'],
   });
-  app.useStaticAssets(path.resolve(process.cwd(), 'uploads'), {
-    prefix: '/uploads/',
-    // 1 day — files are content-hashed by cuid so a change means a new URL.
-    maxAge: 24 * 60 * 60 * 1000,
-  });
+  app.useStaticAssets(
+    process.env.UPLOAD_DIR ?? path.resolve(process.cwd(), 'uploads'),
+    {
+      prefix: '/uploads/',
+      // 1 day — files are content-hashed by cuid so a change means a new URL.
+      maxAge: 24 * 60 * 60 * 1000,
+    },
+  );
   app.enableCors({
     origin: config.get('WEB_ORIGIN', { infer: true }),
     credentials: true,
