@@ -90,7 +90,7 @@ export default function LoginPage() {
 
       {/* Card floats over the band — visual anchor drawing the eye
           down to the form. */}
-      <div className="mx-auto -mt-16 w-full max-w-md px-4 pb-10">
+      <div className="relative mx-auto -mt-16 w-full max-w-md px-4 pb-10">
         <div className="rounded-[14px] border border-line bg-surface p-5 shadow-[0_12px_32px_rgba(24,25,40,0.08)]">
           <form onSubmit={onSubmit} className="flex flex-col gap-4" noValidate>
             <Input
@@ -104,7 +104,6 @@ export default function LoginPage() {
               label={t('login.password')}
               type="password"
               autoComplete="current-password"
-              inputMode="numeric"
               {...register('password')}
               error={errors.password ? t('errors.BAD_REQUEST') : undefined}
             />

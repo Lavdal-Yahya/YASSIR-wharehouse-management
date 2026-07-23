@@ -2,6 +2,7 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import { VitePWA } from 'vite-plugin-pwa';
+import { qrcode } from 'vite-plugin-qrcode';
 import path from 'node:path';
 
 // https://vite.dev/config/
@@ -9,6 +10,7 @@ export default defineConfig({
   plugins: [
     react(),
     tailwindcss(),
+    qrcode(),
     VitePWA({
       registerType: 'autoUpdate',
       // architecture.md §5: API responses must never be cached.
@@ -64,6 +66,7 @@ export default defineConfig({
   },
   server: {
     port: 5173,
+    host: true,
     // Forward `/api/*` to the Nest dev server. Cookies are same-origin
     // during dev, which mirrors production (Caddy proxies /api → api).
     proxy: {
