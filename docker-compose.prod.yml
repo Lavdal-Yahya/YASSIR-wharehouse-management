@@ -58,7 +58,7 @@ services:
       - traefik.http.services.warehouse.loadbalancer.server.port=80
     networks:
       - default
-      - coolify
+      - traefik-public
     depends_on:
       - api
     logging:
@@ -72,5 +72,5 @@ volumes:
   uploads:
 
 networks:
-  coolify:
+  traefik-public:
     external: true
