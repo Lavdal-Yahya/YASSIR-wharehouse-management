@@ -19,7 +19,7 @@ export function NavItem({ to, label, icon, bottom = false }: Props) {
         to={to}
         end
         className={({ isActive }) =>
-          'flex flex-1 flex-col items-center gap-1 py-1 text-[11.5px] font-semibold transition-colors ' +
+          'flex min-w-[64px] flex-col items-center gap-1 py-1 text-[11.5px] font-semibold transition-colors ' +
           (isActive ? 'text-brand' : 'text-muted')
         }
       >

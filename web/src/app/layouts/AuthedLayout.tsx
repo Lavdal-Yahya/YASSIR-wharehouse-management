@@ -147,7 +147,7 @@ export function AuthedLayout() {
         className="fixed inset-x-0 bottom-0 z-20 border-t border-line bg-surface pb-[max(env(safe-area-inset-bottom),0px)] md:hidden"
         aria-label={t('app.name')}
       >
-        <div className="mx-auto flex max-w-md items-stretch px-1 pt-2">
+        <div className="flex items-stretch overflow-x-auto px-1 pt-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {user.role === Role.SHOP ? (
             <>
               {bottomItems.slice(0, 2).map((n) => (
@@ -159,7 +159,7 @@ export function AuthedLayout() {
                   icon={n.icon ? <n.icon size={22} /> : null}
                 />
               ))}
-              <div className="flex flex-1 flex-col items-center gap-1 -mt-6">
+              <div className="flex min-w-[64px] flex-col items-center gap-1 -mt-6">
                 <Link
                   to="/sell"
                   className="flex h-14 w-14 items-center justify-center rounded-full bg-brand text-white shadow-[0_4px_14px_rgba(47,50,114,0.4)] transition-colors hover:bg-brand-pressed"
