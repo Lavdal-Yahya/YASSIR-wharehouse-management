@@ -1,4 +1,4 @@
-{$DOMAIN} {
+:80 {
     # API — proxy to the NestJS container.  All /api/* requests forwarded.
     handle /api/* {
         reverse_proxy api:3000

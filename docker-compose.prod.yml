@@ -49,15 +49,16 @@ services:
       context: ./web
       dockerfile: Dockerfile
     restart: unless-stopped
-    ports:
-      - "80:80"
-      - "443:443"
-      - "443:443/udp"
-    environment:
-      DOMAIN: ${DOMAIN}
-    volumes:
-      - caddy_data:/data
-      - caddy_config:/config
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.warehouse.rule=Host(`${DOMAIN}`)
+      - traefik.http.routers.warehouse.entrypoints=websecure
+      - traefik.http.routers.warehouse.tls=true
+      - traefik.http.routers.warehouse.tls.certresolver=letsencrypt
+      - traefik.http.services.warehouse.loadbalancer.server.port=80
+    networks:
+      - default
+      - coolify
     depends_on:
       - api
     logging:
@@ -69,5 +70,7 @@ services:
 volumes:
   dbdata:
   uploads:
-  caddy_data:
-  caddy_config:
+
+networks:
+  coolify:
+    external: true
