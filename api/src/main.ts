@@ -39,6 +39,6 @@ async function bootstrap(): Promise<void> {
     }),
   );
 
-  await app.listen(config.get('PORT', { infer: true }));
+  await app.listen(config.get('PORT', { infer: true }), '0.0.0.0');
 }
 void bootstrap();
