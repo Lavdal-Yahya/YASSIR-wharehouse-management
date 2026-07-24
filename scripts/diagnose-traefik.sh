@@ -15,34 +15,49 @@ echo "--- Container status ---"
 docker compose -f docker-compose.prod.yml ps 2>/dev/null || docker ps --filter "name=${COMPOSE_PROJECT}"
 
 echo ""
-echo "--- Networks Traefik is on ---"
-docker inspect "$TRAEFIK_CONTAINER" --format '{{range $net, $v := .NetworkSettings.Networks}}  {{$net}}{{"\n"}}{{end}}' 2>/dev/null \
-  || echo "  [!] Traefik container not found"
+echo "--- Subnet of yassir-wharehouse-management_default ---"
+docker network inspect "${COMPOSE_PROJECT}_default" \
+  --format '{{range .IPAM.Config}}  subnet: {{.Subnet}}{{"\n"}}{{end}}' 2>/dev/null \
+  || echo "  [!] network not found"
 
 echo ""
-echo "--- Networks our web container is on ---"
-docker inspect "$WEB_CONTAINER" --format '{{range $net, $v := .NetworkSettings.Networks}}  {{$net}}{{"\n"}}{{end}}' 2>/dev/null \
-  || echo "  [!] Web container not found"
+echo "--- Subnet of traefik-public ---"
+docker network inspect traefik-public \
+  --format '{{range .IPAM.Config}}  subnet: {{.Subnet}}{{"\n"}}{{end}}' 2>/dev/null \
+  || echo "  [!] network not found"
 
 echo ""
-echo "--- Can web container reach api:3000? ---"
-docker exec "$WEB_CONTAINER" wget -qO- --timeout=5 http://api:3000/api/auth/me 2>&1 \
-  && echo "" \
-  || echo "  [!] wget failed — api:3000 is unreachable from the web container"
+echo "--- API container IP on each network ---"
+docker inspect "$API_CONTAINER" \
+  --format '{{range $net, $v := .NetworkSettings.Networks}}  {{$net}}: {{$v.IPAddress}}{{"\n"}}{{end}}' 2>/dev/null \
+  || echo "  [!] api container not found"
 
 echo ""
-echo "--- Is api container listening on 3000? ---"
-docker exec "$API_CONTAINER" wget -qO- --timeout=5 http://localhost:3000/api/auth/me 2>&1 \
-  && echo "" \
-  || echo "  [!] API not responding on its own localhost:3000"
+echo "--- Web container IP on each network ---"
+docker inspect "$WEB_CONTAINER" \
+  --format '{{range $net, $v := .NetworkSettings.Networks}}  {{$net}}: {{$v.IPAddress}}{{"\n"}}{{end}}' 2>/dev/null \
+  || echo "  [!] web container not found"
 
 echo ""
-echo "--- Last 20 lines of api logs ---"
-docker logs "$API_CONTAINER" --tail=20
+echo "--- What does 'api' resolve to from inside web container? ---"
+docker exec "$WEB_CONTAINER" nslookup api 2>/dev/null \
+  || docker exec "$WEB_CONTAINER" cat /etc/resolv.conf 2>/dev/null \
+  || echo "  [!] nslookup not available"
 
 echo ""
-echo "--- Last 20 lines of web (Caddy) logs ---"
-docker logs "$WEB_CONTAINER" --tail=20
+echo "--- Can web container reach api container by IP directly? ---"
+API_IP=$(docker inspect "$API_CONTAINER" \
+  --format '{{range $net, $v := .NetworkSettings.Networks}}{{if eq $net "'"${COMPOSE_PROJECT}_default"'"}}{{$v.IPAddress}}{{end}}{{end}}' 2>/dev/null)
+echo "  API IP on default network: ${API_IP:-not found}"
+if [ -n "$API_IP" ]; then
+  docker exec "$WEB_CONTAINER" wget -qO- --timeout=5 "http://${API_IP}:3000/api/auth/me" 2>&1 \
+    && echo "" \
+    || echo "  [!] direct IP connection also failed"
+fi
+
+echo ""
+echo "--- Last 5 Caddy error lines ---"
+docker logs "$WEB_CONTAINER" --tail=20 2>&1 | grep '"level":"error"' | tail -5
 
 echo ""
 echo "========================================"
