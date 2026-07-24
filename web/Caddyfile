@@ -1,12 +1,14 @@
 :80 {
     # API — proxy to the NestJS container.  All /api/* requests forwarded.
+    # Use full container name to avoid Docker DNS collisions when another
+    # app on the same host also has a service named "api".
     handle /api/* {
-        reverse_proxy api:3000
+        reverse_proxy yassir-wharehouse-management-api-1:3000
     }
 
     # Uploads — served by the API (which owns the uploads volume).
     handle /uploads/* {
-        reverse_proxy api:3000
+        reverse_proxy yassir-wharehouse-management-api-1:3000
     }
 
     # SPA fallback — every other path serves the React app and lets the
