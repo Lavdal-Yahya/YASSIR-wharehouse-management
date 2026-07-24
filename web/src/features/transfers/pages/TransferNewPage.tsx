@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { PageHeader } from '@/components/PageHeader';
 import { Button } from '@/components/Button';
 import { QuantityInput } from '@/components/QuantityInput';
+import { SearchInput } from '@/components/SearchInput';
 import { Spinner } from '@/components/Spinner';
 import { errorMessage } from '@/shared/error-message';
 import { useLocationsList } from '@/features/locations/api';
@@ -39,12 +40,13 @@ export default function TransferNewPage() {
   const [notes, setNotes] = useState('');
   const [lines, setLines] = useState<Line[]>([{ productId: '', quantity: null }]);
   const [localError, setLocalError] = useState<string | null>(null);
+  const [productSearch, setProductSearch] = useState('');
 
   // Balances at the source — populates the per-line product picker with the
   // available quantity next to each name. Empty until source is picked.
   const sourceBalances = useInventoryBalances(sourceLocationId || undefined, {
     page: 1,
-    pageSize: 200,
+    pageSize: 100,
     includeZero: false,
   });
 
@@ -63,6 +65,17 @@ export default function TransferNewPage() {
     () => new Map(productsAtSource.map((p) => [p.productId, p])),
     [productsAtSource],
   );
+
+  // Client-side name filter. Source balances cap at pageSize=100 (server
+  // max) — small enough to filter in the browser. The selected product on
+  // each line is re-added below so a narrow search never blanks a row.
+  const filteredProducts = useMemo(() => {
+    const q = productSearch.trim().toLowerCase();
+    if (!q) return productsAtSource;
+    return productsAtSource.filter((p) =>
+      p.productName.toLowerCase().includes(q),
+    );
+  }, [productsAtSource, productSearch]);
 
   const updateLine = (idx: number, patch: Partial<Line>) => {
     setLines((prev) => prev.map((l, i) => (i === idx ? { ...l, ...patch } : l)));
@@ -247,9 +260,21 @@ export default function TransferNewPage() {
             {t('transfers.form.sourceEmpty')}
           </p>
         ) : (
-          <ul className="space-y-3">
+          <>
+            <div className="mb-3">
+              <SearchInput
+                value={productSearch}
+                onChange={setProductSearch}
+                placeholder={t('common.search')}
+              />
+            </div>
+            <ul className="space-y-3">
             {lines.map((l, idx) => {
               const p = productById.get(l.productId);
+              const optionsForLine =
+                p && !filteredProducts.some((f) => f.productId === p.productId)
+                  ? [p, ...filteredProducts]
+                  : filteredProducts;
               return (
                 <li key={idx} className="rounded-lg border border-line p-3">
                   <div className="mb-2 flex items-center justify-between">
@@ -279,7 +304,7 @@ export default function TransferNewPage() {
                       className="w-full rounded-md border border-[#C8C9D4] bg-surface px-3 py-2 text-sm text-ink"
                     >
                       <option value="">{t('orders.form.chooseProduct')}</option>
-                      {productsAtSource.map((row) => (
+                      {optionsForLine.map((row) => (
                         <option key={row.productId} value={row.productId}>
                           {row.productName} — {t('transfers.form.available', { qty: row.quantity })}
                         </option>
@@ -307,7 +332,8 @@ export default function TransferNewPage() {
                 </li>
               );
             })}
-          </ul>
+            </ul>
+          </>
         )}
       </div>
 
