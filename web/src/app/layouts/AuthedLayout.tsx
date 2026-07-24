@@ -51,33 +51,10 @@ const NAV: readonly NavEntry[] = [
   { to: '/settings', labelKey: 'nav.settings', allowed: [Role.OWNER], icon: SettingsIcon },
 ];
 
-// Mobile bottom-nav — max 5 items per role (design brief §3.6).
-// Kept as a per-role list so a WAREHOUSE user never sees SHOP screens
-// and vice versa. Empty items get filled with placeholders around the
-// SHOP FAB so the 5-column layout stays visually balanced.
-const BOTTOM_NAV: Record<Role, readonly NavEntry[]> = {
-  OWNER: [
-    { to: '/dashboard', labelKey: 'nav.dashboard', allowed: [Role.OWNER], icon: HomeIcon },
-    { to: '/customers', labelKey: 'nav.customers', allowed: [Role.OWNER], icon: UsersIcon },
-    { to: '/reports', labelKey: 'nav.reports', allowed: [Role.OWNER], icon: ChartIcon },
-    { to: '/warehouse', labelKey: 'nav.warehouse', allowed: [Role.OWNER], icon: PackageIcon },
-    { to: '/settings', labelKey: 'nav.settings', allowed: [Role.OWNER], icon: SettingsIcon },
-  ],
-  WAREHOUSE: [
-    { to: '/warehouse', labelKey: 'nav.warehouse', allowed: [Role.WAREHOUSE], icon: PackageIcon },
-    { to: '/orders', labelKey: 'nav.orders', allowed: [Role.WAREHOUSE], icon: ReceiptIcon },
-    { to: '/transfers', labelKey: 'nav.transfers', allowed: [Role.WAREHOUSE], icon: TruckIcon },
-    { to: '/products', labelKey: 'nav.products', allowed: [Role.WAREHOUSE], icon: CashIcon },
-    { to: '/customers', labelKey: 'nav.customers', allowed: [Role.WAREHOUSE], icon: UsersIcon },
-  ],
-  SHOP: [
-    { to: '/shop', labelKey: 'nav.shop', allowed: [Role.SHOP], icon: HomeIcon },
-    { to: '/customers', labelKey: 'nav.customers', allowed: [Role.SHOP], icon: UsersIcon },
-    // Slot 3 is the elevated Sell FAB — inserted at render time.
-    { to: '/shop/stock', labelKey: 'nav.shopStock', allowed: [Role.SHOP], icon: PackageIcon },
-    { to: '/expenses', labelKey: 'nav.expenses', allowed: [Role.SHOP], icon: CardIcon },
-  ],
-};
+// Mobile bottom-nav mirrors the full role-filtered NAV — the bar scrolls
+// horizontally on narrow screens so nothing is hidden. SHOP still gets
+// the elevated Sell FAB (there is no /sell entry in NAV) inserted after
+// the first two items.
 
 export function AuthedLayout() {
   const { t } = useTranslation();
@@ -89,7 +66,7 @@ export function AuthedLayout() {
   if (!user) return null;
 
   const sidebarItems = NAV.filter((n) => n.allowed.includes(user.role));
-  const bottomItems = BOTTOM_NAV[user.role];
+  const bottomItems = sidebarItems;
 
   return (
     <div className="min-h-dvh bg-app text-ink">
@@ -171,7 +148,7 @@ export function AuthedLayout() {
                   {t('nav.sell')}
                 </span>
               </div>
-              {bottomItems.slice(2, 4).map((n) => (
+              {bottomItems.slice(2).map((n) => (
                 <NavItem
                   key={n.to}
                   to={n.to}
