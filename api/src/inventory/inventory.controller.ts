@@ -58,6 +58,26 @@ export class InventoryController {
     return this.reads.listMovements(q);
   }
 
+  // Global stock-value card on the dashboard. SHOP users only see their
+  // own shop's total — the server clips the query to their assigned
+  // location before it runs.
+  @Roles(Role.OWNER, Role.WAREHOUSE, Role.SHOP)
+  @Get('stock-value')
+  async stockValue(@CurrentUser() user: SessionUser) {
+    if (user.role === Role.SHOP) {
+      if (!user.assignedShopId) {
+        throw new ForbiddenException('Shop user has no assigned shop');
+      }
+      const own = await this.prisma.location.findFirst({
+        where: { shopId: user.assignedShopId },
+        select: { id: true },
+      });
+      if (!own) throw new NotFoundException('Assigned shop has no location');
+      return this.reads.getStockValueBreakdown(own.id);
+    }
+    return this.reads.getStockValueBreakdown();
+  }
+
   // Warehouse-role users see the warehouse via this route; SHOP users
   // silently get their own shop's location no matter what locationId
   // they pass — the ShopScopeGuard contract, applied at the controller

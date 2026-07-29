@@ -12,6 +12,7 @@ import { errorMessage } from '@/shared/error-message';
 import { useCategoriesList } from '@/features/categories/api';
 import { useWarehouseLocation } from '@/features/locations/api';
 import { useInventoryBalances } from '../api';
+import { StockSummaryHeader } from '../components/StockSummaryHeader';
 
 // Warehouse home for OWNER/WAREHOUSE: current balances at the central
 // warehouse (spec §14). Search, category filter, low/out badges (text +
@@ -112,7 +113,14 @@ export default function WarehouseStockPage() {
           <Spinner /> {t('loading')}
         </div>
       ) : (
-        <div className="rounded-lg border border-line bg-surface p-2 shadow-sm">
+        <div>
+          {list.data ? (
+            <StockSummaryHeader
+              productCount={list.data.total}
+              summary={list.data.summary}
+            />
+          ) : null}
+          <div className="rounded-lg border border-line bg-surface p-2 shadow-sm">
           {list.isLoading ? (
             <div className="flex items-center gap-2 p-3 text-sm text-muted">
               <Spinner /> {t('loading')}
@@ -142,10 +150,10 @@ export default function WarehouseStockPage() {
                     <div className="text-xs text-muted">
                       {row.categoryName}
                       {row.sku ? <> · {row.sku}</> : null}
-                      {row.suggestedSalePrice !== null ? (
+                      {row.purchaseCost !== null ? (
                         <>
                           {' · '}
-                          <Money value={row.suggestedSalePrice} size="sm" />
+                          <Money value={row.purchaseCost} size="sm" />
                         </>
                       ) : null}
                     </div>
@@ -175,6 +183,7 @@ export default function WarehouseStockPage() {
               />
             </div>
           ) : null}
+          </div>
         </div>
       )}
     </div>

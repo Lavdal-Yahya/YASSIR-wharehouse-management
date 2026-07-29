@@ -54,41 +54,42 @@ model Session {
 }
 
 model Shop {
-  id         String    @id @default(cuid())
-  name       String
-  address    String?
-  phone      String?
-  active     Boolean   @default(true)
-  archivedAt DateTime?
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  users      User[]
-  location   Location?
+  id            String             @id @default(cuid())
+  name          String
+  address       String?
+  phone         String?
+  active        Boolean            @default(true)
+  archivedAt    DateTime?
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+  users         User[]
+  location      Location?
   // Phase 5 back-relations
-  sales      Sale[]
+  sales         Sale[]
   // Phase 6 back-relations (money-received-by-shop, per phase-6 §3 step 8)
-  payments   CustomerPayment[]
+  payments      CustomerPayment[]
   // Phase 7 back-relations
-  expenses   Expense[]
+  expenses      Expense[]
+  productPrices ShopProductPrice[]
 }
 
 model Location {
-  id        String       @id @default(cuid())
-  name      String
-  type      LocationType
+  id           String              @id @default(cuid())
+  name         String
+  type         LocationType
   // Null for the central warehouse; unique per shop.
-  shopId    String?      @unique
-  shop      Shop?        @relation(fields: [shopId], references: [id])
-  active    Boolean      @default(true)
-  createdAt DateTime     @default(now())
+  shopId       String?             @unique
+  shop         Shop?               @relation(fields: [shopId], references: [id])
+  active       Boolean             @default(true)
+  createdAt    DateTime            @default(now())
   // Phase 3 back-relations
-  balances         InventoryBalance[]
-  movementsOut     InventoryMovement[]  @relation("movementSource")
-  movementsIn      InventoryMovement[]  @relation("movementDestination")
-  corrections      StockCorrection[]
+  balances     InventoryBalance[]
+  movementsOut InventoryMovement[] @relation("movementSource")
+  movementsIn  InventoryMovement[] @relation("movementDestination")
+  corrections  StockCorrection[]
   // Phase 4 back-relations
-  transfersOut     StockTransfer[]      @relation("transferSource")
-  transfersIn      StockTransfer[]      @relation("transferDestination")
+  transfersOut StockTransfer[]     @relation("transferSource")
+  transfersIn  StockTransfer[]     @relation("transferDestination")
 }
 
 model AppSetting {
@@ -109,48 +110,68 @@ model Category {
 }
 
 model Product {
-  id          String   @id @default(cuid())
-  name        String
+  id                  String              @id @default(cuid())
+  name                String
   // sku/barcode are optional but unique when present. Postgres allows
   // multiple NULLs in a UNIQUE column, which is what we want.
-  sku         String?  @unique
-  barcode     String?  @unique
-  categoryId  String
-  category    Category @relation(fields: [categoryId], references: [id])
-  description String?
-  imageUrl    String?
+  sku                 String?             @unique
+  barcode             String?             @unique
+  categoryId          String
+  category            Category            @relation(fields: [categoryId], references: [id])
+  description         String?
+  imageUrl            String?
   // Money is whole MRU (D-004). Both prices optional per spec §10.1.
   defaultPurchaseCost Int?
   defaultSalePrice    Int?
   lowStockThreshold   Int?
-  active     Boolean   @default(true)
-  archivedAt DateTime?
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
+  active              Boolean             @default(true)
+  archivedAt          DateTime?
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
   // Phase 3 back-relations (used by hasHistory + the inventory reads)
-  incomingOrderItems IncomingOrderItem[]
-  stockReceiptItems  StockReceiptItem[]
-  inventoryBalances  InventoryBalance[]
-  inventoryMovements InventoryMovement[]
-  stockCorrections   StockCorrection[]
+  incomingOrderItems  IncomingOrderItem[]
+  stockReceiptItems   StockReceiptItem[]
+  inventoryBalances   InventoryBalance[]
+  inventoryMovements  InventoryMovement[]
+  stockCorrections    StockCorrection[]
   // Phase 4 back-relations
-  stockTransferItems StockTransferItem[]
+  stockTransferItems  StockTransferItem[]
   // Phase 5 back-relations
-  saleItems          SaleItem[]
+  saleItems           SaleItem[]
+  // Per-shop sale price overrides
+  shopPrices          ShopProductPrice[]
 
   @@index([categoryId])
   @@index([name])
 }
 
-model Customer {
+// Per-shop sale price. Shops decide their own sale price (spec §2 —
+// warehouse handles cost, shop handles retail). A missing row means the
+// shop hasn't set a price yet — sale flow lets the clerk type one at
+// point of sale, but the picker shows "—" until an override exists.
+model ShopProductPrice {
   id        String   @id @default(cuid())
+  shopId    String
+  shop      Shop     @relation(fields: [shopId], references: [id])
+  productId String
+  product   Product  @relation(fields: [productId], references: [id])
+  salePrice Int
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+
+  @@unique([shopId, productId])
+  @@index([productId])
+}
+
+model Customer {
+  id        String            @id @default(cuid())
   name      String
   // Phone is deliberately NOT unique — family members share phones (spec §18.4).
   phone     String?
   notes     String?
-  active    Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  active    Boolean           @default(true)
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
   // Phase 5 back-relations
   sales     Sale[]
   // Phase 6 back-relations
@@ -161,10 +182,10 @@ model Customer {
 }
 
 model ExpenseCategory {
-  id        String   @id @default(cuid())
-  name      String   @unique
-  active    Boolean  @default(true)
-  createdAt DateTime @default(now())
+  id        String    @id @default(cuid())
+  name      String    @unique
+  active    Boolean   @default(true)
+  createdAt DateTime  @default(now())
   // Phase 7 back-relations
   expenses  Expense[]
 }
@@ -186,10 +207,10 @@ enum MovementType {
   OPENING_STOCK
   ORDER_RECEIPT
   DIRECT_RECEIPT
-  TRANSFER          // Phase 4
-  SALE              // Phase 5
+  TRANSFER // Phase 4
+  SALE // Phase 5
   SALE_CANCELLATION // Phase 6
-  CUSTOMER_RETURN   // Phase 6 (if built)
+  CUSTOMER_RETURN // Phase 6 (if built)
   STOCK_CORRECTION
 }
 
@@ -392,19 +413,19 @@ enum PaymentStatus {
 // rename/edit of the underlying rows (spec §37.14). See D-012 for why
 // amountPaidAtSale is a distinct field from amountPaid.
 model Sale {
-  id                    String        @id @default(cuid())
-  referenceNumber       String        @unique
+  id                    String              @id @default(cuid())
+  referenceNumber       String              @unique
   shopId                String
-  shop                  Shop          @relation(fields: [shopId], references: [id])
+  shop                  Shop                @relation(fields: [shopId], references: [id])
   customerId            String?
-  customer              Customer?     @relation(fields: [customerId], references: [id])
+  customer              Customer?           @relation(fields: [customerId], references: [id])
   customerNameSnapshot  String?
   customerPhoneSnapshot String?
-  status                SaleStatus    @default(ACTIVE)
+  status                SaleStatus          @default(ACTIVE)
   paymentStatus         PaymentStatus
   totalAmount           Int
   // Cash taken when the sale was made. Never mutated after confirmation.
-  amountPaidAtSale      Int           @default(0)
+  amountPaidAtSale      Int                 @default(0)
   // amountPaidAtSale + Σ active allocations (Phase 6). Kept as an invariant,
   // recomputed by the payments service — never patched.
   amountPaid            Int
@@ -415,8 +436,8 @@ model Sale {
   cancelledBy           String?
   cancelledAt           DateTime?
   cancellationReason    String?
-  createdAt             DateTime      @default(now())
-  updatedAt             DateTime      @updatedAt
+  createdAt             DateTime            @default(now())
+  updatedAt             DateTime            @updatedAt
   items                 SaleItem[]
   // Phase 6 back-relations. Allocations "count" iff BOTH this sale and the
   // parent payment are ACTIVE (D-013) — filter in queries, never here.

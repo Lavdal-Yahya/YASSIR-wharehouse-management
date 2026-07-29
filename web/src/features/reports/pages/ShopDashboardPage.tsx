@@ -9,6 +9,7 @@ import { Money } from '@/components/Money';
 import { Spinner } from '@/components/Spinner';
 import { CardIcon, PackageIcon, UsersIcon } from '@/components/icons';
 import { errorMessage } from '@/shared/error-message';
+import { useStockValue } from '@/features/inventory/api';
 import { useShopReport } from '../api';
 
 // Shop employee home — the design brief's item §4.2. The FAB in the
@@ -47,6 +48,7 @@ export default function ShopDashboardPage() {
   const today = useMemo(() => todayIso(), []);
   const todayReport = useShopReport({ from: today, to: today });
   const allTime = useShopReport({});
+  const stockValue = useStockValue();
 
   const loading = todayReport.isLoading || allTime.isLoading;
   const err = todayReport.error ?? allTime.error;
@@ -108,6 +110,21 @@ export default function ShopDashboardPage() {
                 className="text-debt-fg"
               />
             </div>
+          </SectionCard>
+
+          {/* Stock value in the shop, valued at warehouse purchase cost.
+              A missing-cost hint appears when at least one on-hand
+              product has no cost recorded (so the number understates). */}
+          <SectionCard className="mt-3">
+            <div className="flex items-center justify-between gap-3">
+              <span className="text-[14px] font-semibold text-muted">
+                {t('dashboard.shop.stockValue')}
+              </span>
+              <Money value={stockValue.data?.totalValue ?? 0} size="lg" />
+            </div>
+            <p className="mt-1 text-[12.5px] text-muted">
+              {t('dashboard.shop.stockValueHint')}
+            </p>
           </SectionCard>
 
           <section className="mt-8">

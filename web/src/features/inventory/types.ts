@@ -12,6 +12,20 @@ export type BalanceRow = {
   isLowStock: boolean;
   isOutOfStock: boolean;
   suggestedSalePrice: number | null;
+  purchaseCost: number | null;
+};
+
+export type StockSummary = {
+  totalUnits: number;
+  totalValue: number;
+  productsMissingCost: number;
+};
+
+export type StockValueBreakdown = {
+  warehouseValue: number;
+  shopsValue: number;
+  totalValue: number;
+  productsMissingCost: number;
 };
 
 export type MovementRow = {

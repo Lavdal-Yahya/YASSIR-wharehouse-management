@@ -25,9 +25,20 @@ export type ShopOut = {
 // Live from Phase 3. Backs the archive-time "shop still holds stock" warning
 // (spec §15.4). productCount = distinct products with any positive balance;
 // totalUnits = sum of all positive balances at the shop's location.
+// totalValue sums qty × Product.defaultPurchaseCost across positive balances;
+// products with a null cost contribute 0 and are reported separately so the
+// UI can flag the gap.
 export type ShopStockSummary = {
   productCount: number;
   totalUnits: number;
+  totalValue: number;
+  productsMissingCost: number;
+};
+
+export type ShopPriceRow = {
+  productId: string;
+  salePrice: number;
+  updatedAt: Date;
 };
 
 @Injectable()
@@ -164,15 +175,68 @@ export class ShopsService {
     });
     // A shop with no location row (shouldn't happen — P2-07 pairs them) has
     // no stock by definition.
-    if (!location) return { productCount: 0, totalUnits: 0 };
+    if (!location) {
+      return { productCount: 0, totalUnits: 0, totalValue: 0, productsMissingCost: 0 };
+    }
     const rows = await this.prisma.inventoryBalance.findMany({
       where: { locationId: location.id, quantity: { gt: 0 } },
-      select: { quantity: true },
+      select: { quantity: true, product: { select: { defaultPurchaseCost: true } } },
     });
+    let totalUnits = 0;
+    let totalValue = 0;
+    let productsMissingCost = 0;
+    for (const r of rows) {
+      totalUnits += r.quantity;
+      const cost = r.product.defaultPurchaseCost;
+      if (cost === null || cost === undefined) productsMissingCost += 1;
+      else totalValue += r.quantity * cost;
+    }
     return {
       productCount: rows.length,
-      totalUnits: rows.reduce((sum, r) => sum + r.quantity, 0),
+      totalUnits,
+      totalValue,
+      productsMissingCost,
     };
+  }
+
+  // Per-shop price CRUD (feature: shops decide sale price). Callers must
+  // ensure the acting user is authorized for this shop — the controller
+  // gates OWNER and SHOP-scoped-to-self.
+  async listPrices(shopId: string): Promise<ShopPriceRow[]> {
+    await this.ensureExists(shopId);
+    const rows = await this.prisma.shopProductPrice.findMany({
+      where: { shopId },
+      select: { productId: true, salePrice: true, updatedAt: true },
+      orderBy: { updatedAt: 'desc' },
+    });
+    return rows;
+  }
+
+  async upsertPrice(
+    shopId: string,
+    productId: string,
+    salePrice: number,
+  ): Promise<ShopPriceRow> {
+    await this.ensureExists(shopId);
+    const product = await this.prisma.product.findUnique({
+      where: { id: productId },
+      select: { id: true, active: true },
+    });
+    if (!product) throw new ResourceNotFoundError('Product', productId);
+    const row = await this.prisma.shopProductPrice.upsert({
+      where: { shopId_productId: { shopId, productId } },
+      create: { shopId, productId, salePrice },
+      update: { salePrice },
+      select: { productId: true, salePrice: true, updatedAt: true },
+    });
+    return row;
+  }
+
+  async deletePrice(shopId: string, productId: string): Promise<void> {
+    await this.ensureExists(shopId);
+    await this.prisma.shopProductPrice.deleteMany({
+      where: { shopId, productId },
+    });
   }
 
   private async ensureExists(id: string): Promise<void> {

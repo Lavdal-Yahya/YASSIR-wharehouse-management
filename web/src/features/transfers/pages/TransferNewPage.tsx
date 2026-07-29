@@ -12,19 +12,9 @@ import { useInventoryBalances } from '@/features/inventory/api';
 import { useCreateTransfer } from '../api';
 import type { CreateTransferBody } from '../types';
 
-// TransferForm (P4-05):
-//   1. Pick source location (warehouse + active shops).
-//   2. Pick destination (excludes the chosen source).
-//   3. Add lines: each line's product dropdown lists products that actually
-//      have stock at the source, with the available quantity shown; the
-//      quantity input is capped client-side at that available number. The
-//      server re-validates via the inventory chokepoint.
-//   4. Submit — confirmation is the summary lines visible above the button.
-//
-// Only WAREHOUSE/OWNER see this page (route-guarded); SHOP users have no
-// transfer route at all (D-014).
-
-type Line = { productId: string; quantity: number | null };
+// TransferForm — checklist UX. Pick source, then tick the products to
+// send and set a quantity for each ticked row. Destination + date + notes
+// sit on top; the summary and submit sit below. WAREHOUSE/OWNER only.
 
 const todayISO = () => new Date().toISOString().slice(0, 10);
 
@@ -38,12 +28,10 @@ export default function TransferNewPage() {
   const [destinationLocationId, setDestinationLocationId] = useState('');
   const [transferDate, setTransferDate] = useState(todayISO());
   const [notes, setNotes] = useState('');
-  const [lines, setLines] = useState<Line[]>([{ productId: '', quantity: null }]);
-  const [localError, setLocalError] = useState<string | null>(null);
+  const [selected, setSelected] = useState<Record<string, number | null>>({});
   const [productSearch, setProductSearch] = useState('');
+  const [localError, setLocalError] = useState<string | null>(null);
 
-  // Balances at the source — populates the per-line product picker with the
-  // available quantity next to each name. Empty until source is picked.
   const sourceBalances = useInventoryBalances(sourceLocationId || undefined, {
     page: 1,
     pageSize: 100,
@@ -60,61 +48,66 @@ export default function TransferNewPage() {
     [activeLocations, sourceLocationId],
   );
 
-  const productsAtSource = sourceBalances.data?.items ?? [];
+  const productsAtSource = useMemo(
+    () => sourceBalances.data?.items ?? [],
+    [sourceBalances.data],
+  );
   const productById = useMemo(
     () => new Map(productsAtSource.map((p) => [p.productId, p])),
     [productsAtSource],
   );
 
-  // Client-side name filter. Source balances cap at pageSize=100 (server
-  // max) — small enough to filter in the browser. The selected product on
-  // each line is re-added below so a narrow search never blanks a row.
   const filteredProducts = useMemo(() => {
     const q = productSearch.trim().toLowerCase();
     if (!q) return productsAtSource;
-    return productsAtSource.filter((p) =>
-      p.productName.toLowerCase().includes(q),
-    );
+    return productsAtSource.filter((p) => {
+      const hay = `${p.productName} ${p.sku ?? ''}`.toLowerCase();
+      return hay.includes(q);
+    });
   }, [productsAtSource, productSearch]);
 
-  const updateLine = (idx: number, patch: Partial<Line>) => {
-    setLines((prev) => prev.map((l, i) => (i === idx ? { ...l, ...patch } : l)));
-  };
-  const removeLine = (idx: number) =>
-    setLines((prev) => prev.filter((_, i) => i !== idx));
-  const addLine = () =>
-    setLines((prev) => [...prev, { productId: '', quantity: null }]);
+  const selectedIds = useMemo(
+    () => Object.keys(selected).filter((id) => productById.has(id)),
+    [selected, productById],
+  );
 
   const onSourceChange = (id: string) => {
     setSourceLocationId(id);
-    // If the destination equals the new source, clear it — the picker will
-    // exclude it anyway, but this makes the state consistent.
     if (destinationLocationId === id) setDestinationLocationId('');
-    // Product selections may not exist at the new source. Reset them.
-    setLines((prev) => prev.map((l) => ({ ...l, productId: '', quantity: null })));
+    setSelected({});
   };
 
-  const summary = useMemo(() => {
-    const items = lines
-      .map((l) => {
-        const p = productById.get(l.productId);
-        if (!p || !l.quantity) return null;
-        return { name: p.productName, qty: l.quantity };
-      })
-      .filter((x): x is { name: string; qty: number } => !!x);
-    return items;
-  }, [lines, productById]);
+  const toggleProduct = (productId: string, checked: boolean) => {
+    setSelected((prev) => {
+      const next = { ...prev };
+      if (checked) {
+        // Default to the row's max quantity — a full transfer is the
+        // common case when shipping stock to a shop.
+        const row = productById.get(productId);
+        next[productId] = row?.quantity ?? null;
+      } else {
+        delete next[productId];
+      }
+      return next;
+    });
+  };
 
-  // Same-productId guard purely for the summary UX; the server rejects too.
-  const duplicate = useMemo(() => {
-    const seen = new Set<string>();
-    for (const l of lines) {
-      if (!l.productId) continue;
-      if (seen.has(l.productId)) return l.productId;
-      seen.add(l.productId);
-    }
-    return null;
-  }, [lines]);
+  const setQuantity = (productId: string, quantity: number | null) => {
+    setSelected((prev) => ({ ...prev, [productId]: quantity }));
+  };
+
+  const summary = useMemo(
+    () =>
+      selectedIds
+        .map((id) => {
+          const p = productById.get(id);
+          const qty = selected[id];
+          if (!p || !qty) return null;
+          return { name: p.productName, qty };
+        })
+        .filter((x): x is { name: string; qty: number } => !!x),
+    [selectedIds, selected, productById],
+  );
 
   const onSubmit = async () => {
     setLocalError(null);
@@ -123,23 +116,20 @@ export default function TransferNewPage() {
       return setLocalError(t('transfers.form.errors.destination'));
     if (sourceLocationId === destinationLocationId)
       return setLocalError(t('errors.TRANSFER_SAME_LOCATION'));
-    if (duplicate) return setLocalError(t('errors.DUPLICATE_TRANSFER_ITEM'));
+    if (selectedIds.length === 0)
+      return setLocalError(t('transfers.form.errors.noItems'));
 
     const items: CreateTransferBody['items'] = [];
-    for (const [i, l] of lines.entries()) {
-      if (!l.productId) {
-        return setLocalError(t('transfers.form.errors.itemProduct', { line: i + 1 }));
+    for (const productId of selectedIds) {
+      const p = productById.get(productId);
+      const qty = selected[productId];
+      if (!p) continue;
+      if (!qty || qty < 1) {
+        return setLocalError(
+          t('transfers.form.errors.itemQuantity', { product: p.productName }),
+        );
       }
-      if (!l.quantity || l.quantity < 1) {
-        return setLocalError(t('transfers.form.errors.itemQuantity', { line: i + 1 }));
-      }
-      const p = productById.get(l.productId);
-      // p can be undefined while balances load — refuse rather than sending
-      // an unverified quantity.
-      if (!p) {
-        return setLocalError(t('transfers.form.errors.itemProduct', { line: i + 1 }));
-      }
-      if (l.quantity > p.quantity) {
+      if (qty > p.quantity) {
         return setLocalError(
           t('transfers.form.errors.itemExceeds', {
             product: p.productName,
@@ -147,7 +137,7 @@ export default function TransferNewPage() {
           }),
         );
       }
-      items.push({ productId: l.productId, quantity: l.quantity });
+      items.push({ productId, quantity: qty });
     }
 
     const body: CreateTransferBody = {
@@ -164,6 +154,11 @@ export default function TransferNewPage() {
       /* surfaced via create.error */
     }
   };
+
+  const sourceName =
+    activeLocations.find((l) => l.id === sourceLocationId)?.name ?? '';
+  const destinationName =
+    activeLocations.find((l) => l.id === destinationLocationId)?.name ?? '';
 
   return (
     <div className="space-y-4">
@@ -238,14 +233,19 @@ export default function TransferNewPage() {
       </div>
 
       <div className="rounded-lg border border-line bg-surface p-4 shadow-sm">
-        <div className="mb-3 flex items-center justify-between">
+        <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2">
           <h2 className="text-sm font-semibold text-ink">
             {t('transfers.form.items')}
           </h2>
-          <Button variant="ghost" onClick={addLine} disabled={!sourceLocationId}>
-            {t('transfers.form.addRow')}
-          </Button>
+          <span className="text-xs text-muted tabular-nums">
+            {t('transfers.form.checklistCount', {
+              count: selectedIds.length,
+            })}
+          </span>
         </div>
+        <p className="mb-3 text-xs text-muted">
+          {t('transfers.form.checklistHint')}
+        </p>
 
         {!sourceLocationId ? (
           <p className="text-sm text-muted">
@@ -268,70 +268,48 @@ export default function TransferNewPage() {
                 placeholder={t('common.search')}
               />
             </div>
-            <ul className="space-y-3">
-            {lines.map((l, idx) => {
-              const p = productById.get(l.productId);
-              const optionsForLine =
-                p && !filteredProducts.some((f) => f.productId === p.productId)
-                  ? [p, ...filteredProducts]
-                  : filteredProducts;
-              return (
-                <li key={idx} className="rounded-lg border border-line p-3">
-                  <div className="mb-2 flex items-center justify-between">
-                    <div className="text-xs font-medium text-muted">
-                      {t('transfers.form.line', { n: idx + 1 })}
-                    </div>
-                    {lines.length > 1 ? (
-                      <button
-                        type="button"
-                        onClick={() => removeLine(idx)}
-                        className="text-xs text-debt-fg hover:underline"
-                      >
-                        {t('common.delete')}
-                      </button>
-                    ) : null}
-                  </div>
-                  <div className="grid gap-3 md:grid-cols-[1fr_10rem]">
-                    <select
-                      value={l.productId}
-                      onChange={(e) =>
-                        updateLine(idx, {
-                          productId: e.target.value,
-                          quantity: null,
-                        })
-                      }
-                      aria-label={t('transfers.form.product')}
-                      className="w-full rounded-md border border-[#C8C9D4] bg-surface px-3 py-2 text-sm text-ink"
+            <ul className="max-h-[28rem] divide-y divide-line-soft overflow-y-auto rounded-md border border-line">
+              {filteredProducts.map((row) => {
+                const isChecked = row.productId in selected;
+                const qty = selected[row.productId] ?? null;
+                return (
+                  <li
+                    key={row.productId}
+                    className={`flex items-center gap-3 p-3 ${isChecked ? 'bg-tint' : ''}`}
+                  >
+                    <input
+                      id={`transfer-pick-${row.productId}`}
+                      type="checkbox"
+                      checked={isChecked}
+                      onChange={(e) => toggleProduct(row.productId, e.target.checked)}
+                      className="h-5 w-5 shrink-0 accent-brand"
+                      aria-label={row.productName}
+                    />
+                    <label
+                      htmlFor={`transfer-pick-${row.productId}`}
+                      className="min-w-0 grow cursor-pointer text-start"
                     >
-                      <option value="">{t('orders.form.chooseProduct')}</option>
-                      {optionsForLine.map((row) => (
-                        <option key={row.productId} value={row.productId}>
-                          {row.productName} — {t('transfers.form.available', { qty: row.quantity })}
-                        </option>
-                      ))}
-                    </select>
-                    <label className="block text-sm">
-                      <span className="mb-1 block text-xs text-muted">
-                        {t('transfers.form.quantity')}
-                        {p ? (
-                          <span className="ms-1 text-muted">
-                            ({t('transfers.form.max', { max: p.quantity })})
-                          </span>
-                        ) : null}
-                      </span>
+                      <div className="truncate text-sm font-medium text-ink">
+                        {row.productName}
+                      </div>
+                      <div className="text-xs text-muted">
+                        {t('transfers.form.available', { qty: row.quantity })}
+                        {row.sku ? <> · {row.sku}</> : null}
+                      </div>
+                    </label>
+                    <div className="w-28 shrink-0">
                       <QuantityInput
-                        value={l.quantity}
-                        onChange={(v) => updateLine(idx, { quantity: v })}
+                        value={isChecked ? qty : null}
+                        onChange={(v) => setQuantity(row.productId, v)}
                         min={1}
-                        max={p?.quantity}
-                        disabled={!p}
+                        max={row.quantity}
+                        disabled={!isChecked}
                         className="w-full"
                       />
-                    </label>
-                  </div>
-                </li>
-              );
-            })}
+                    </div>
+                  </li>
+                );
+              })}
             </ul>
           </>
         )}
@@ -346,11 +324,8 @@ export default function TransferNewPage() {
                 {t('transfers.form.summaryLine', {
                   qty: s.qty,
                   product: s.name,
-                  source:
-                    activeLocations.find((l) => l.id === sourceLocationId)?.name ?? '',
-                  destination:
-                    activeLocations.find((l) => l.id === destinationLocationId)?.name ??
-                    '',
+                  source: sourceName,
+                  destination: destinationName,
                 })}
               </li>
             ))}

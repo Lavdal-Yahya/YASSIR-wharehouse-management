@@ -452,7 +452,25 @@
     "subtitle": "Ce que la boutique a en rayon actuellement.",
     "pickShop": "— Choisir une boutique —",
     "sell": "Vendre",
-    "sellSoon": "La vente sera activée en phase 5."
+    "sellSoon": "La vente sera activée en phase 5.",
+    "editPrice": "Modifier le prix",
+    "editPriceTitle": "Prix de vente — {{product}}",
+    "editPriceHint": "La boutique décide de son prix de vente. Laissez vide pour retirer le prix.",
+    "priceSaved": "Prix enregistré",
+    "priceCleared": "Prix retiré",
+    "noPriceSet": "Prix non défini"
+  },
+  "stock": {
+    "summary": {
+      "products_one": "{{count}} produit",
+      "products_other": "{{count}} produits",
+      "units_one": "{{count}} unité",
+      "units_other": "{{count}} unités",
+      "totalValue": "Valeur totale",
+      "totalValueHint": "Basée sur les coûts d'achat enregistrés.",
+      "missingCost_one": "{{count}} produit sans coût enregistré",
+      "missingCost_other": "{{count}} produits sans coût enregistré"
+    }
   },
   "transfers": {
     "title": "Transferts",
@@ -490,7 +508,9 @@
       "date": "Date du transfert",
       "notes": "Notes",
       "items": "Articles à transférer",
-      "addRow": "+ Ajouter une ligne",
+      "checklistHint": "Cochez les produits à envoyer, puis indiquez la quantité pour chacun.",
+      "checklistCount_one": "{{count}} produit coché",
+      "checklistCount_other": "{{count}} produits cochés",
       "line": "Ligne {{n}}",
       "product": "Produit",
       "available": "dispo. {{qty}}",
@@ -504,8 +524,8 @@
       "errors": {
         "source": "Choisissez une source.",
         "destination": "Choisissez une destination.",
-        "itemProduct": "Ligne {{line}} : choisissez un produit.",
-        "itemQuantity": "Ligne {{line}} : quantité invalide.",
+        "noItems": "Cochez au moins un produit.",
+        "itemQuantity": "{{product}} : quantité invalide.",
         "itemExceeds": "{{product}} : le maximum transférable est {{max}}."
       }
     },
@@ -712,7 +732,11 @@
       "pendingOrdersCount": "Commandes en attente ou partielles",
       "perShop": "Par boutique",
       "perShopCount_one": "{{count}} vente",
-      "perShopCount_other": "{{count}} ventes"
+      "perShopCount_other": "{{count}} ventes",
+      "totalStockValue": "Valeur totale du stock",
+      "totalStockValueHint": "Entrepôt + toutes les boutiques.",
+      "warehouseStockValue": "Valeur du stock — entrepôt",
+      "shopsStockValue": "Valeur du stock — boutiques"
     },
     "shop": {
       "title": "Ma boutique",
@@ -721,6 +745,8 @@
       "todayCash": "Encaissé aujourd'hui",
       "todayDebt": "Dette créée aujourd'hui",
       "myOutstanding": "Dette en cours",
+      "stockValue": "Valeur du stock",
+      "stockValueHint": "Coût d'achat × quantité en rayon.",
       "quickActions": "Actions rapides",
       "openStock": "Voir mon stock",
       "openCustomers": "Voir les clients",

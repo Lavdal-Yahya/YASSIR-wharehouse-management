@@ -175,3 +175,31 @@ Consequence: any future money display goes through `<Money>` and
 any headline that pairs collected + outstanding goes through
 `<BalanceBar>`. No new patterns should reintroduce raw currency
 strings or ad-hoc progress bars for the same purpose.
+
+## D-018 · 2026-07 · Accepted
+**Sale price is a per-shop decision. `Product.defaultPurchaseCost`
+is the warehouse's number; retail lives in a new
+`ShopProductPrice(shopId, productId, salePrice)` table (one row
+per shop × product, no fallback).** The old
+`Product.defaultSalePrice` used to be the single price seen
+everywhere; it now survives only as a legacy seed target — the
+migration `20260728000000_shop_product_prices` bulk-copies it
+into `ShopProductPrice` for every (shop × product) pair that
+already has an `InventoryBalance` row at rollout, so existing
+inventory keeps its price. Any new (shop × product) combination
+starts with no price — the shop clerk sets one via the inline
+editor on the shop stock page (or types one directly in the
+sell flow, which snapshots into `SaleItem.unitPrice` as before).
+
+The warehouse stock view drops the sale-price column and shows
+`Product.defaultPurchaseCost` instead (that's the number the
+warehouse cares about). Inventory reads compute
+`suggestedSalePrice` at query time: for a SHOP location, the
+matching `ShopProductPrice.salePrice ?? null`; for a warehouse
+location, always null. `SaleItem.unitPrice` remains a
+snapshot — cancellation / reversal reads it back, so a later
+price edit at the shop doesn't rewrite history.
+
+Why: business rule from the client — warehouse handles cost,
+shop handles retail. Anything else silently coupled the two
+and made shop-level markup impossible.

@@ -13,6 +13,14 @@ export type Shop = {
 export type ShopStockSummary = {
   productCount: number;
   totalUnits: number;
+  totalValue: number;
+  productsMissingCost: number;
+};
+
+export type ShopPriceRow = {
+  productId: string;
+  salePrice: number;
+  updatedAt: string;
 };
 
 export type ShopWriteBody = {

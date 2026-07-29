@@ -13,6 +13,7 @@ import {
   useShopReport,
   useWarehouseReport,
 } from '../api';
+import { useStockValue } from '@/features/inventory/api';
 import { StatCard } from '../components/StatCard';
 
 // P7-10 · Owner dashboard, ledger-designed. The design's signature
@@ -39,6 +40,7 @@ export default function OwnerDashboardPage() {
   const allTime = useShopReport({});
   const warehouse = useWarehouseReport({});
   const orders = useIncomingOrdersReport({});
+  const stockValue = useStockValue();
 
   const pendingOrdersCount =
     orders.data?.byStatus.reduce((n, s) => {
@@ -159,6 +161,27 @@ export default function OwnerDashboardPage() {
                 </Link>
               }
               tone={pendingOrdersCount > 0 ? 'debt' : 'muted'}
+            />
+          </div>
+
+          {/* Stock-value spine — total plus warehouse/shop split.
+              Uses purchase cost × on-hand quantity across every
+              location the user can see. */}
+          <div className="mt-6 grid gap-3 sm:grid-cols-3">
+            <StatCard
+              label={t('dashboard.owner.totalStockValue')}
+              money={stockValue.data?.totalValue ?? 0}
+              hint={t('dashboard.owner.totalStockValueHint')}
+              tone="positive"
+              dominant
+            />
+            <StatCard
+              label={t('dashboard.owner.warehouseStockValue')}
+              money={stockValue.data?.warehouseValue ?? 0}
+            />
+            <StatCard
+              label={t('dashboard.owner.shopsStockValue')}
+              money={stockValue.data?.shopsValue ?? 0}
             />
           </div>
 

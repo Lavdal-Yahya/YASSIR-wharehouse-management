@@ -1,7 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { api, ApiError } from '@/shared/api-client';
 import { toQueryString, type Paginated } from '@/shared/pagination';
-import type { Shop, ShopStockSummary, ShopWriteBody } from './types';
+import { INVENTORY_KEY } from '@/features/inventory/api';
+import type { Shop, ShopPriceRow, ShopStockSummary, ShopWriteBody } from './types';
 
 export const SHOPS_KEY = ['shops'] as const;
 
@@ -62,6 +63,48 @@ export function useShopStockSummary(id: string | undefined) {
       api<ShopStockSummary>(`/shops/${id}/stock-summary`, { signal }),
     enabled: !!id,
     staleTime: 0,
+  });
+}
+
+// Per-shop sale price overrides. Reads + writes touch INVENTORY_KEY too
+// because the stock list surfaces the same numbers as suggestedSalePrice.
+export function useShopPrices(shopId: string | undefined) {
+  return useQuery<ShopPriceRow[], ApiError>({
+    queryKey: [...SHOPS_KEY, 'prices', shopId] as const,
+    queryFn: ({ signal }) =>
+      api<ShopPriceRow[]>(`/shops/${shopId}/prices`, { signal }),
+    enabled: !!shopId,
+  });
+}
+
+export function useUpsertShopPrice(shopId: string) {
+  const qc = useQueryClient();
+  return useMutation<
+    ShopPriceRow,
+    ApiError,
+    { productId: string; salePrice: number }
+  >({
+    mutationFn: ({ productId, salePrice }) =>
+      api<ShopPriceRow>(`/shops/${shopId}/prices/${productId}`, {
+        method: 'PUT',
+        body: { salePrice },
+      }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: [...SHOPS_KEY, 'prices', shopId] });
+      qc.invalidateQueries({ queryKey: INVENTORY_KEY });
+    },
+  });
+}
+
+export function useDeleteShopPrice(shopId: string) {
+  const qc = useQueryClient();
+  return useMutation<void, ApiError, string>({
+    mutationFn: (productId) =>
+      api<void>(`/shops/${shopId}/prices/${productId}`, { method: 'DELETE' }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: [...SHOPS_KEY, 'prices', shopId] });
+      qc.invalidateQueries({ queryKey: INVENTORY_KEY });
+    },
   });
 }
 

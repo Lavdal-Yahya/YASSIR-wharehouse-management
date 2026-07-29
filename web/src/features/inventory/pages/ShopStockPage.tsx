@@ -14,6 +14,8 @@ import { useCategoriesList } from '@/features/categories/api';
 import { useLocationsList } from '@/features/locations/api';
 import { useMe } from '@/features/auth/api';
 import { useInventoryBalances } from '../api';
+import { StockSummaryHeader } from '../components/StockSummaryHeader';
+import { ShopPriceEditor } from '@/features/shops/components/ShopPriceEditor';
 
 // Shop-scoped stock view (P4-07). SHOP employees always see their own
 // shop's location (server enforces via ShopScopeGuard — client passes the
@@ -45,6 +47,14 @@ export default function ShopStockPage() {
   const [search, setSearch] = useState('');
   const [categoryId, setCategoryId] = useState('');
   const [stockFilter, setStockFilter] = useState<'all' | 'low' | 'out'>('all');
+  const [editingProductId, setEditingProductId] = useState<string | null>(null);
+
+  const activeShopId = useMemo(() => {
+    if (isOwner) {
+      return shopLocations.find((l) => l.id === pickedShopLocation)?.shopId ?? null;
+    }
+    return user?.assignedShopId ?? null;
+  }, [isOwner, pickedShopLocation, shopLocations, user?.assignedShopId]);
 
   const list = useInventoryBalances(activeLocationId || undefined, {
     page,
@@ -132,7 +142,14 @@ export default function ShopStockPage() {
           {isOwner ? t('shopStock.pickShop') : t('loading')}
         </p>
       ) : (
-        <div className="rounded-lg border border-line bg-surface p-2 shadow-sm">
+        <div>
+          {list.data ? (
+            <StockSummaryHeader
+              productCount={list.data.total}
+              summary={list.data.summary}
+            />
+          ) : null}
+          <div className="rounded-lg border border-line bg-surface p-2 shadow-sm">
           {list.isLoading ? (
             <div className="flex items-center gap-2 p-3 text-sm text-muted">
               <Spinner /> {t('loading')}
@@ -148,7 +165,7 @@ export default function ShopStockPage() {
               {list.data?.items.map((row) => (
                 <li
                   key={row.productId}
-                  className="flex items-center gap-3 p-3 text-start"
+                  className="relative flex items-center gap-3 p-3 text-start"
                 >
                   <div className="h-12 w-12 shrink-0 overflow-hidden rounded-md bg-tint">
                     {row.imageUrl ? (
@@ -174,7 +191,12 @@ export default function ShopStockPage() {
                           {' · '}
                           <Money value={row.suggestedSalePrice} size="sm" />
                         </>
-                      ) : null}
+                      ) : (
+                        <>
+                          {' · '}
+                          <span className="italic">{t('shopStock.noPriceSet')}</span>
+                        </>
+                      )}
                     </div>
                   </div>
                   <div className="flex flex-col items-end gap-1">
@@ -190,7 +212,31 @@ export default function ShopStockPage() {
                         {t('warehouse.badge.lowStock')}
                       </StatusBadge>
                     ) : null}
+                    {activeShopId ? (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setEditingProductId((cur) =>
+                            cur === row.productId ? null : row.productId,
+                          )
+                        }
+                        className="text-[11.5px] font-semibold text-brand hover:underline"
+                      >
+                        {t('shopStock.editPrice')}
+                      </button>
+                    ) : null}
                   </div>
+                  {editingProductId === row.productId && activeShopId ? (
+                    <div className="absolute end-3 top-full z-20 mt-1">
+                      <ShopPriceEditor
+                        shopId={activeShopId}
+                        productId={row.productId}
+                        productName={row.productName}
+                        currentPrice={row.suggestedSalePrice}
+                        onClose={() => setEditingProductId(null)}
+                      />
+                    </div>
+                  ) : null}
                 </li>
               ))}
             </ul>
@@ -206,6 +252,7 @@ export default function ShopStockPage() {
               />
             </div>
           ) : null}
+          </div>
         </div>
       )}
     </div>

@@ -452,7 +452,25 @@
     "subtitle": "ما يتوفّر حالياً في المحل.",
     "pickShop": "— اختر محلاً —",
     "sell": "بيع",
-    "sellSoon": "سيتم تفعيل البيع في المرحلة 5."
+    "sellSoon": "سيتم تفعيل البيع في المرحلة 5.",
+    "editPrice": "تعديل السعر",
+    "editPriceTitle": "سعر البيع — {{product}}",
+    "editPriceHint": "المحل يقرّر سعر البيع. اتركه فارغاً لإزالة السعر.",
+    "priceSaved": "تم حفظ السعر",
+    "priceCleared": "تم إزالة السعر",
+    "noPriceSet": "السعر غير محدد"
+  },
+  "stock": {
+    "summary": {
+      "products_one": "{{count}} منتج",
+      "products_other": "{{count}} منتجات",
+      "units_one": "{{count}} وحدة",
+      "units_other": "{{count}} وحدات",
+      "totalValue": "القيمة الإجمالية",
+      "totalValueHint": "استناداً إلى تكاليف الشراء المسجّلة.",
+      "missingCost_one": "{{count}} منتج بدون تكلفة مسجّلة",
+      "missingCost_other": "{{count}} منتجات بدون تكلفة مسجّلة"
+    }
   },
   "transfers": {
     "title": "التحويلات",
@@ -490,7 +508,9 @@
       "date": "تاريخ التحويل",
       "notes": "ملاحظات",
       "items": "العناصر المراد تحويلها",
-      "addRow": "+ إضافة سطر",
+      "checklistHint": "أشّر على المنتجات المطلوب إرسالها، ثم أدخل الكمية لكلٍّ منها.",
+      "checklistCount_one": "{{count}} منتج مؤشّر",
+      "checklistCount_other": "{{count}} منتجات مؤشّرة",
       "line": "سطر {{n}}",
       "product": "المنتج",
       "available": "متوفر {{qty}}",
@@ -504,8 +524,8 @@
       "errors": {
         "source": "اختر مصدراً.",
         "destination": "اختر وجهة.",
-        "itemProduct": "السطر {{line}}: اختر منتجاً.",
-        "itemQuantity": "السطر {{line}}: كمية غير صالحة.",
+        "noItems": "أشّر على منتج واحد على الأقل.",
+        "itemQuantity": "{{product}}: كمية غير صالحة.",
         "itemExceeds": "{{product}}: الحد الأقصى للتحويل هو {{max}}."
       }
     },
@@ -728,7 +748,11 @@
       "perShopCount_two": "بيعتان",
       "perShopCount_few": "{{count}} مبيعات",
       "perShopCount_many": "{{count}} مبيعة",
-      "perShopCount_other": "{{count}} مبيعة"
+      "perShopCount_other": "{{count}} مبيعة",
+      "totalStockValue": "القيمة الإجمالية للمخزون",
+      "totalStockValueHint": "المستودع + كل المحلات.",
+      "warehouseStockValue": "قيمة المخزون — المستودع",
+      "shopsStockValue": "قيمة المخزون — المحلات"
     },
     "shop": {
       "title": "محلي",
@@ -737,6 +761,8 @@
       "todayCash": "المُحصَّل اليوم",
       "todayDebt": "الدين اليوم",
       "myOutstanding": "الدين القائم",
+      "stockValue": "قيمة المخزون",
+      "stockValueHint": "تكلفة الشراء × الكمية المتاحة.",
       "quickActions": "إجراءات سريعة",
       "openStock": "عرض مخزوني",
       "openCustomers": "عرض العملاء",

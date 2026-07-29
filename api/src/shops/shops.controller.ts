@@ -1,9 +1,10 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, Patch, Post, Query, ForbiddenException } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, Put, Query, ForbiddenException } from '@nestjs/common';
 import { Role } from '@prisma/client';
 import { Roles } from '../common/decorators/roles.decorator';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import type { SessionUser } from '../common/types/session-user';
 import { CreateShopDto, ListShopsQueryDto, UpdateShopDto } from './dto/shop.dto';
+import { UpsertShopPriceDto } from './dto/shop-price.dto';
 import { ShopsService } from './shops.service';
 
 @Controller('shops')
@@ -60,9 +61,50 @@ export class ShopsController {
     return this.svc.restore(id);
   }
 
-  @Roles(Role.OWNER)
+  @Roles(Role.OWNER, Role.SHOP)
   @Get(':id/stock-summary')
-  stockSummary(@Param('id') id: string) {
+  stockSummary(@Param('id') id: string, @CurrentUser() user: SessionUser) {
+    this.assertShopScope(user, id);
     return this.svc.getStockSummary(id);
+  }
+
+  // Per-shop sale prices. SHOP users can only touch their own shop; OWNER
+  // can touch any. WAREHOUSE has no read/write access — pricing is not
+  // their concern.
+  @Roles(Role.OWNER, Role.SHOP)
+  @Get(':id/prices')
+  listPrices(@Param('id') id: string, @CurrentUser() user: SessionUser) {
+    this.assertShopScope(user, id);
+    return this.svc.listPrices(id);
+  }
+
+  @Roles(Role.OWNER, Role.SHOP)
+  @Put(':id/prices/:productId')
+  upsertPrice(
+    @Param('id') id: string,
+    @Param('productId') productId: string,
+    @Body() dto: UpsertShopPriceDto,
+    @CurrentUser() user: SessionUser,
+  ) {
+    this.assertShopScope(user, id);
+    return this.svc.upsertPrice(id, productId, dto.salePrice);
+  }
+
+  @Roles(Role.OWNER, Role.SHOP)
+  @Delete(':id/prices/:productId')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async deletePrice(
+    @Param('id') id: string,
+    @Param('productId') productId: string,
+    @CurrentUser() user: SessionUser,
+  ) {
+    this.assertShopScope(user, id);
+    await this.svc.deletePrice(id, productId);
+  }
+
+  private assertShopScope(user: SessionUser, shopId: string): void {
+    if (user.role === Role.SHOP && user.assignedShopId !== shopId) {
+      throw new ForbiddenException('Shop-scoped user cannot access another shop');
+    }
   }
 }

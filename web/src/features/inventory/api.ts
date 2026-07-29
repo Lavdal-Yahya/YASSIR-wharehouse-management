@@ -1,7 +1,23 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { api, ApiError } from '@/shared/api-client';
 import { toQueryString, type Paginated } from '@/shared/pagination';
-import type { BalanceRow, MovementRow, StockCorrection } from './types';
+import type {
+  BalanceRow,
+  MovementRow,
+  StockCorrection,
+  StockSummary,
+  StockValueBreakdown,
+} from './types';
+
+export type BalancesResponse = Paginated<BalanceRow> & { summary: StockSummary };
+
+export function useStockValue() {
+  return useQuery<StockValueBreakdown, ApiError>({
+    queryKey: [...INVENTORY_KEY, 'stock-value'] as const,
+    queryFn: ({ signal }) =>
+      api<StockValueBreakdown>('/inventory/stock-value', { signal }),
+  });
+}
 
 export const INVENTORY_KEY = ['inventory'] as const;
 
@@ -19,10 +35,10 @@ export function useInventoryBalances(
   locationId: string | undefined,
   params: ListBalancesParams,
 ) {
-  return useQuery<Paginated<BalanceRow>, ApiError>({
+  return useQuery<BalancesResponse, ApiError>({
     queryKey: [...INVENTORY_KEY, 'balances', locationId, params] as const,
     queryFn: ({ signal }) =>
-      api<Paginated<BalanceRow>>(
+      api<BalancesResponse>(
         `/inventory/${locationId}${toQueryString(params)}`,
         { signal },
       ),
