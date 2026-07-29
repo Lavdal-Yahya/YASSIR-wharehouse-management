@@ -76,6 +76,14 @@ export type SaleOut = {
 
 export type SaleDetail = SaleOut & { items: SaleItemOut[] };
 
+export type SalesSummary = {
+  saleCount: number;
+  totalUnits: number;
+  totalAmount: number;
+  totalAmountPaid: number;
+  totalAmountDue: number;
+};
+
 const withShop = { shop: { select: { name: true } } } as const;
 
 @Injectable()
@@ -348,7 +356,7 @@ export class SalesService {
   async list(
     q: ListSalesQueryDto,
     user: SessionUser,
-  ): Promise<Paginated<SaleOut>> {
+  ): Promise<Paginated<SaleOut> & { summary: SalesSummary }> {
     const where: Prisma.SaleWhereInput = {};
     // SHOP users are forced into their own shop regardless of any shopId
     // they passed — the guard already substituted at the params level for
@@ -375,7 +383,7 @@ export class SalesService {
     }
 
     const { skip, take } = skipTake(q.page, q.pageSize);
-    const [rows, total] = await this.prisma.$transaction([
+    const [rows, total, salesAgg, itemsAgg] = await this.prisma.$transaction([
       this.prisma.sale.findMany({
         where,
         include: {
@@ -387,10 +395,25 @@ export class SalesService {
         take,
       }),
       this.prisma.sale.count({ where }),
+      this.prisma.sale.aggregate({
+        where,
+        _sum: { totalAmount: true, amountPaid: true, amountDue: true },
+      }),
+      this.prisma.saleItem.aggregate({
+        where: { sale: where },
+        _sum: { quantity: true },
+      }),
     ]);
 
     const items = rows.map((r) => mapRow(r, r._count?.items));
-    return toPaginated(items, total, q.page, q.pageSize);
+    const summary: SalesSummary = {
+      saleCount: total,
+      totalUnits: itemsAgg._sum.quantity ?? 0,
+      totalAmount: salesAgg._sum.totalAmount ?? 0,
+      totalAmountPaid: salesAgg._sum.amountPaid ?? 0,
+      totalAmountDue: salesAgg._sum.amountDue ?? 0,
+    };
+    return { ...toPaginated(items, total, q.page, q.pageSize), summary };
   }
 }
 

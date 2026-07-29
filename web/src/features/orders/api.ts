@@ -6,6 +6,7 @@ import type {
   CreateOrderBody,
   IncomingOrder,
   IncomingOrderDetail,
+  OrdersSummary,
   ReceiveOrderBody,
 } from './types';
 
@@ -20,11 +21,13 @@ export type ListOrdersParams = {
   to?: string;
 };
 
+export type OrdersListResponse = Paginated<IncomingOrder> & { summary: OrdersSummary };
+
 export function useOrdersList(params: ListOrdersParams) {
-  return useQuery<Paginated<IncomingOrder>, ApiError>({
+  return useQuery<OrdersListResponse, ApiError>({
     queryKey: [...ORDERS_KEY, 'list', params] as const,
     queryFn: ({ signal }) =>
-      api<Paginated<IncomingOrder>>(
+      api<OrdersListResponse>(
         `/incoming-orders${toQueryString(params)}`,
         { signal },
       ),

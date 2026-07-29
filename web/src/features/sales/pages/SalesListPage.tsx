@@ -12,6 +12,7 @@ import { errorMessage } from '@/shared/error-message';
 import { Role } from '@/shared/enums';
 import { useMe } from '@/features/auth/api';
 import { useShopsList } from '@/features/shops/api';
+import { Money } from '@/components/Money';
 import { SaleRow } from '../components/SaleRow';
 import { useSalesList } from '../api';
 import type { PaymentStatus, SaleStatus } from '../types';
@@ -148,6 +149,38 @@ export default function SalesListPage() {
             className={selectClass}
           />
         </div>
+
+        {list.data && list.data.total > 0 ? (
+          <div className="mb-4 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 rounded-lg border border-line bg-surface px-4 py-3 text-sm">
+            <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1 tabular-nums">
+              <span className="font-semibold text-ink">
+                {t('sales.summary.count', { count: list.data.total })}
+              </span>
+              <span className="text-muted">
+                {t('sales.summary.units', { count: list.data.summary.totalUnits })}
+              </span>
+            </div>
+            <div className="flex flex-col items-end gap-0.5">
+              <span className="text-[12px] font-semibold uppercase tracking-wide text-muted">
+                {t('sales.summary.totalAmount')}
+              </span>
+              <Money value={list.data.summary.totalAmount} size="md" />
+              <div className="flex items-baseline gap-2 text-[11.5px] text-muted tabular-nums">
+                <span className="text-collected">
+                  {t('sales.summary.collected')}
+                  {' '}
+                  <Money value={list.data.summary.totalAmountPaid} size="sm" className="text-collected" />
+                </span>
+                <span>·</span>
+                <span className="text-debt-fg">
+                  {t('sales.summary.due')}
+                  {' '}
+                  <Money value={list.data.summary.totalAmountDue} size="sm" className="text-debt-fg" />
+                </span>
+              </div>
+            </div>
+          </div>
+        ) : null}
 
         {list.isLoading ? (
           <div className="flex items-center gap-2 text-[14px] text-muted">

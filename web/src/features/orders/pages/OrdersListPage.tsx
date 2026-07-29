@@ -7,6 +7,7 @@ import { Pagination } from '@/components/Pagination';
 import { StatusBadge } from '@/components/StatusBadge';
 import { Button } from '@/components/Button';
 import { Spinner } from '@/components/Spinner';
+import { Money } from '@/components/Money';
 import { errorMessage } from '@/shared/error-message';
 import { useOrdersList } from '../api';
 import type { OrderStatus } from '../types';
@@ -85,6 +86,33 @@ export default function OrdersListPage() {
           ))}
         </select>
       </div>
+
+      {list.data && list.data.total > 0 ? (
+        <div className="mb-4 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 rounded-lg border border-line bg-surface px-4 py-3 text-sm">
+          <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1 tabular-nums">
+            <span className="font-semibold text-ink">
+              {t('orders.summary.count', { count: list.data.total })}
+            </span>
+            <span className="text-muted">
+              {t('orders.summary.unitsOrdered', { count: list.data.summary.totalUnitsOrdered })}
+            </span>
+            <span className="text-muted">
+              {t('orders.summary.unitsReceived', { count: list.data.summary.totalUnitsReceived })}
+            </span>
+          </div>
+          <div className="flex flex-col items-end gap-0.5">
+            <span className="text-[12px] font-semibold uppercase tracking-wide text-muted">
+              {t('orders.summary.totalValue')}
+            </span>
+            <Money value={list.data.summary.totalValue} size="md" />
+            {list.data.summary.itemsMissingCost > 0 ? (
+              <span className="mt-0.5 text-[11.5px] text-muted">
+                {t('orders.summary.missingCost', { count: list.data.summary.itemsMissingCost })}
+              </span>
+            ) : null}
+          </div>
+        </div>
+      ) : null}
 
       <div className="rounded-lg border border-line bg-surface p-2 shadow-sm">
         {list.isLoading ? (

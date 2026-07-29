@@ -342,6 +342,17 @@
       "RECEIVED": "مستلم",
       "CANCELLED": "ملغى"
     },
+    "summary": {
+      "count_one": "{{count}} طلبية",
+      "count_other": "{{count}} طلبيات",
+      "unitsOrdered_one": "{{count}} وحدة مطلوبة",
+      "unitsOrdered_other": "{{count}} وحدات مطلوبة",
+      "unitsReceived_one": "{{count}} مُستلَمة",
+      "unitsReceived_other": "{{count}} مُستلَمات",
+      "totalValue": "القيمة الإجمالية",
+      "missingCost_one": "{{count}} سطر بدون تكلفة مسجّلة",
+      "missingCost_other": "{{count}} سطور بدون تكلفة مسجّلة"
+    },
     "form": {
       "newTitle": "طلب مورّد جديد",
       "newSubtitle": "سجّل ما تم طلبه. لن يدخل المخزون إلا عند الاستلام.",
@@ -864,6 +875,15 @@
     "status": {
       "ACTIVE": "نشط",
       "CANCELLED": "ملغى"
+    },
+    "summary": {
+      "count_one": "{{count}} بيع",
+      "count_other": "{{count}} مبيعات",
+      "units_one": "{{count}} وحدة مباعة",
+      "units_other": "{{count}} وحدات مباعة",
+      "totalAmount": "إجمالي المبيعات",
+      "collected": "المُحصَّل",
+      "due": "المتبقي"
     },
     "filter": {
       "shop": "المحل",

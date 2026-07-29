@@ -9,6 +9,7 @@ import type {
   PaymentStatus,
   Sale,
   SaleDetail,
+  SalesSummary,
   SaleStatus,
 } from './types';
 
@@ -27,11 +28,13 @@ export type ListSalesParams = {
   to?: string;
 };
 
+export type SalesListResponse = Paginated<Sale> & { summary: SalesSummary };
+
 export function useSalesList(params: ListSalesParams) {
-  return useQuery<Paginated<Sale>, ApiError>({
+  return useQuery<SalesListResponse, ApiError>({
     queryKey: [...SALES_KEY, 'list', params] as const,
     queryFn: ({ signal }) =>
-      api<Paginated<Sale>>(`/sales${toQueryString(serialize(params))}`, {
+      api<SalesListResponse>(`/sales${toQueryString(serialize(params))}`, {
         signal,
       }),
   });

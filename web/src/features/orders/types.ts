@@ -76,6 +76,14 @@ export type CreateOrderBody = {
   items: CreateOrderItemBody[];
 };
 
+export type OrdersSummary = {
+  orderCount: number;
+  totalUnitsOrdered: number;
+  totalUnitsReceived: number;
+  totalValue: number;
+  itemsMissingCost: number;
+};
+
 export type ReceiveOrderBody = {
   receiptDate?: string;
   notes?: string | null;

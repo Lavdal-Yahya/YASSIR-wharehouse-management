@@ -60,3 +60,11 @@ export type CreateSaleBody = {
 };
 
 export type CancelSaleBody = { reason: string };
+
+export type SalesSummary = {
+  saleCount: number;
+  totalUnits: number;
+  totalAmount: number;
+  totalAmountPaid: number;
+  totalAmountDue: number;
+};

@@ -342,6 +342,17 @@
       "RECEIVED": "Reçu",
       "CANCELLED": "Annulé"
     },
+    "summary": {
+      "count_one": "{{count}} commande",
+      "count_other": "{{count}} commandes",
+      "unitsOrdered_one": "{{count}} unité commandée",
+      "unitsOrdered_other": "{{count}} unités commandées",
+      "unitsReceived_one": "{{count}} reçue",
+      "unitsReceived_other": "{{count}} reçues",
+      "totalValue": "Valeur totale",
+      "missingCost_one": "{{count}} ligne sans coût enregistré",
+      "missingCost_other": "{{count}} lignes sans coût enregistré"
+    },
     "form": {
       "newTitle": "Nouvelle commande fournisseur",
       "newSubtitle": "Enregistrez ce qui a été commandé. Le stock n'entrera qu'à la réception.",
@@ -848,6 +859,15 @@
     "status": {
       "ACTIVE": "Actif",
       "CANCELLED": "Annulé"
+    },
+    "summary": {
+      "count_one": "{{count}} vente",
+      "count_other": "{{count}} ventes",
+      "units_one": "{{count}} article vendu",
+      "units_other": "{{count}} articles vendus",
+      "totalAmount": "Total ventes",
+      "collected": "Encaissé",
+      "due": "Dû"
     },
     "filter": {
       "shop": "Boutique",

@@ -52,6 +52,14 @@ export type IncomingOrderDetail = IncomingOrderOut & {
   receipts: Array<{ id: string; referenceNumber: string; receiptDate: Date }>;
 };
 
+export type OrdersSummary = {
+  orderCount: number;
+  totalUnitsOrdered: number;
+  totalUnitsReceived: number;
+  totalValue: number;
+  itemsMissingCost: number;
+};
+
 @Injectable()
 export class IncomingOrdersService {
   constructor(
@@ -59,7 +67,7 @@ export class IncomingOrdersService {
     private readonly refs: ReferenceService,
   ) {}
 
-  async list(q: ListIncomingOrdersQueryDto): Promise<Paginated<IncomingOrderOut>> {
+  async list(q: ListIncomingOrdersQueryDto): Promise<Paginated<IncomingOrderOut> & { summary: OrdersSummary }> {
     const where: Prisma.IncomingOrderWhereInput = {};
     if (q.status && q.status.length > 0) where.status = { in: q.status };
     if (q.from || q.to) {
@@ -85,7 +93,32 @@ export class IncomingOrdersService {
       }),
       this.prisma.incomingOrder.count({ where }),
     ]);
-    return toPaginated(rows.map(mapOrderRow), total, q.page, q.pageSize);
+
+    const allItems = await this.prisma.incomingOrderItem.findMany({
+      where: { order: where },
+      select: { quantityOrdered: true, quantityReceived: true, unitCost: true },
+    });
+    let totalUnitsOrdered = 0;
+    let totalUnitsReceived = 0;
+    let totalValue = 0;
+    let itemsMissingCost = 0;
+    for (const it of allItems) {
+      totalUnitsOrdered += it.quantityOrdered;
+      totalUnitsReceived += it.quantityReceived;
+      if (it.unitCost !== null) {
+        totalValue += it.quantityOrdered * it.unitCost;
+      } else {
+        itemsMissingCost++;
+      }
+    }
+    const summary: OrdersSummary = {
+      orderCount: total,
+      totalUnitsOrdered,
+      totalUnitsReceived,
+      totalValue,
+      itemsMissingCost,
+    };
+    return { ...toPaginated(rows.map(mapOrderRow), total, q.page, q.pageSize), summary };
   }
 
   async findOne(id: string): Promise<IncomingOrderDetail> {
