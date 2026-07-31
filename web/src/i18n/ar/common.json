@@ -268,7 +268,8 @@
       "passwordMin": "6 أحرف على الأقل (8 للمالك).",
       "role": "الدور",
       "assignedShop": "المحل المُسنَد",
-      "chooseShop": "— اختر محلاً —"
+      "chooseShop": "— اختر محلاً —",
+      "assignedShopRequired": "اختر محلاً للمستخدم صاحب دور المحل."
     },
     "filter": {
       "includeInactive": "إظهار المعطّلين"

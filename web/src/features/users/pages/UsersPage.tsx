@@ -27,13 +27,23 @@ import type { User } from '../types';
 
 const roleValues = [Role.OWNER, Role.WAREHOUSE, Role.SHOP] as const;
 
-const baseSchema = z.object({
-  name: z.string().trim().min(1).max(120),
-  username: z.string().trim().min(3).max(40),
-  password: z.string().min(6).max(200).optional(),
-  role: z.enum(roleValues),
-  assignedShopId: z.string().nullable().optional(),
-});
+const baseSchema = z
+  .object({
+    name: z.string().trim().min(1).max(120),
+    username: z.string().trim().min(3).max(40),
+    password: z.string().min(6).max(200).optional(),
+    role: z.enum(roleValues),
+    assignedShopId: z.string().nullable().optional(),
+  })
+  .superRefine((v, ctx) => {
+    if (v.role === Role.SHOP && !v.assignedShopId) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['assignedShopId'],
+        message: 'required',
+      });
+    }
+  });
 type FormValues = z.infer<typeof baseSchema>;
 
 const EMPTY: FormValues = {
@@ -175,15 +185,30 @@ export default function UsersPage() {
               </label>
               <select
                 id="u-shop"
-                className="w-full rounded-md border border-[#C8C9D4] bg-surface px-3 py-2 text-sm text-ink"
+                className={
+                  'w-full rounded-md border bg-surface px-3 py-2 text-sm text-ink ' +
+                  (form.formState.errors.assignedShopId
+                    ? 'border-debt'
+                    : 'border-[#C8C9D4]')
+                }
                 value={form.watch('assignedShopId') ?? ''}
-                onChange={(e) => form.setValue('assignedShopId', e.target.value || null, { shouldDirty: true })}
+                onChange={(e) =>
+                  form.setValue('assignedShopId', e.target.value || null, {
+                    shouldDirty: true,
+                    shouldValidate: true,
+                  })
+                }
               >
                 <option value="">{t('users.form.chooseShop')}</option>
                 {shops.data?.items.map((s) => (
                   <option key={s.id} value={s.id}>{s.name}</option>
                 ))}
               </select>
+              {form.formState.errors.assignedShopId ? (
+                <p className="text-xs text-debt-fg">
+                  {t('users.form.assignedShopRequired')}
+                </p>
+              ) : null}
             </div>
           ) : null}
 

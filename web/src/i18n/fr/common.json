@@ -268,7 +268,8 @@
       "passwordMin": "Minimum 6 caractères (8 pour un propriétaire).",
       "role": "Rôle",
       "assignedShop": "Boutique assignée",
-      "chooseShop": "— Choisir une boutique —"
+      "chooseShop": "— Choisir une boutique —",
+      "assignedShopRequired": "Choisissez une boutique pour un utilisateur de rôle Boutique."
     },
     "filter": {
       "includeInactive": "Inclure désactivés"
