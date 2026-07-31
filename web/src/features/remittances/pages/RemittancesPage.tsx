@@ -191,7 +191,6 @@ export default function RemittancesPage() {
             onChange={(v) =>
               form.setValue('amount', v ?? 0, { shouldDirty: true })
             }
-            max={selectedShopCash > 0 ? selectedShopCash : undefined}
           />
           <Input
             type="date"
