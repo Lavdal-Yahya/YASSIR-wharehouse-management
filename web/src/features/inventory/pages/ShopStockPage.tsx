@@ -15,6 +15,7 @@ import { useLocationsList } from '@/features/locations/api';
 import { useMe } from '@/features/auth/api';
 import { useInventoryBalances } from '../api';
 import { StockSummaryHeader } from '../components/StockSummaryHeader';
+import { StockLineValue } from '../components/StockLineValue';
 import { ShopPriceEditor } from '@/features/shops/components/ShopPriceEditor';
 
 // Shop-scoped stock view (P4-07). SHOP employees always see their own
@@ -203,6 +204,7 @@ export default function ShopStockPage() {
                     <div className="text-sm font-semibold tabular-nums text-ink">
                       {row.quantity}
                     </div>
+                    <StockLineValue quantity={row.quantity} purchaseCost={row.purchaseCost} />
                     {row.isOutOfStock ? (
                       <StatusBadge tone="danger">
                         {t('warehouse.badge.outOfStock')}

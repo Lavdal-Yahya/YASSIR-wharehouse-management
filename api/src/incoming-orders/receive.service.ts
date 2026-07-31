@@ -15,6 +15,7 @@ import {
   ReceiveExceedsRemainingError,
 } from './errors';
 import type { ReceiveIncomingOrderDto } from './dto/incoming-order.dto';
+import { computeNewWac } from './wac';
 
 // The receive transaction (P3-05). All 15-ish steps live in one
 // prisma.$transaction; a failure at any point rolls back stock, movements,
@@ -131,7 +132,47 @@ export class ReceiveService {
         });
       }
 
-      // 6. Apply stock movements — one call, one sorted lock pass across
+      // 6. Snapshot pre-receive global qty + current WAC per distinct product,
+      //    before movements land. Needed to compute the new weighted-average
+      //    cost — if we read after step 7's movements, oldQty is already
+      //    inflated. Products with any null unitCost line are skipped: mixing
+      //    known and unknown cost would silently corrupt the average.
+      const byProduct = new Map<
+        string,
+        { lines: Array<{ quantity: number; unitCost: number }>; hasNullCost: boolean }
+      >();
+      for (const { item, quantity } of nonZero) {
+        const acc = byProduct.get(item.productId) ?? {
+          lines: [],
+          hasNullCost: false,
+        };
+        if (item.unitCost === null) {
+          acc.hasNullCost = true;
+        } else {
+          acc.lines.push({ quantity, unitCost: item.unitCost });
+        }
+        byProduct.set(item.productId, acc);
+      }
+      const productIds = [...byProduct.keys()];
+      const [preReceiveBalances, productCosts] = await Promise.all([
+        tx.inventoryBalance.groupBy({
+          by: ['productId'],
+          where: { productId: { in: productIds } },
+          _sum: { quantity: true },
+        }),
+        tx.product.findMany({
+          where: { id: { in: productIds } },
+          select: { id: true, defaultPurchaseCost: true },
+        }),
+      ]);
+      const oldQtyByProduct = new Map(
+        preReceiveBalances.map((r) => [r.productId, r._sum.quantity ?? 0]),
+      );
+      const oldWacByProduct = new Map(
+        productCosts.map((p) => [p.id, p.defaultPurchaseCost]),
+      );
+
+      // 7. Apply stock movements — one call, one sorted lock pass across
       //    every affected (warehouse, product) pair (D-011). ORDER_RECEIPT
       //    means destination-only.
       const movements: MovementInput[] = nonZero.map(({ item, quantity }) => ({
@@ -145,7 +186,25 @@ export class ReceiveService {
       }));
       await this.inventory.applyMovements(tx, movements);
 
-      // 7. Recompute order status from current item state (spec §11.5).
+      // 8. Update per-product weighted-average cost. Auto-updates the same
+      //    Product.defaultPurchaseCost field that shop/warehouse stock value
+      //    reads from, and that SaleItem.unitCostSnapshot copies at sell time.
+      //    Skip products where any line lacked unitCost — no valid blend.
+      for (const productId of productIds) {
+        const acc = byProduct.get(productId)!;
+        if (acc.hasNullCost || acc.lines.length === 0) continue;
+        const oldQty = oldQtyByProduct.get(productId) ?? 0;
+        const oldWac = oldWacByProduct.get(productId) ?? null;
+        const newWac = computeNewWac(oldQty, oldWac, acc.lines);
+        if (newWac !== oldWac) {
+          await tx.product.update({
+            where: { id: productId },
+            data: { defaultPurchaseCost: newWac },
+          });
+        }
+      }
+
+      // 9. Recompute order status from current item state (spec §11.5).
       const nextStatus = deriveOrderStatus(
         items.map((it) => {
           const applied = nonZero.find((n) => n.item.id === it.id);

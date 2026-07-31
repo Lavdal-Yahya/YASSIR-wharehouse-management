@@ -2,6 +2,7 @@ import {
   CustomerPaymentStatus,
   ExpenseStatus,
   Prisma,
+  RemittanceStatus,
   SaleStatus,
 } from '@prisma/client';
 
@@ -23,6 +24,10 @@ export const ACTIVE_PAYMENT: Prisma.CustomerPaymentWhereInput = {
 
 export const ACTIVE_EXPENSE: Prisma.ExpenseWhereInput = {
   status: ExpenseStatus.ACTIVE,
+};
+
+export const ACTIVE_REMITTANCE: Prisma.CashRemittanceWhereInput = {
+  status: RemittanceStatus.ACTIVE,
 };
 
 // An allocation is active iff its parent payment is ACTIVE AND its

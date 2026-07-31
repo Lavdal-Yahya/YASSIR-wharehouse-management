@@ -71,6 +71,9 @@ model Shop {
   // Phase 7 back-relations
   expenses      Expense[]
   productPrices ShopProductPrice[]
+  // Cash drops from this shop to the central warehouse. Each active row
+  // debits the shop's cash-on-hand and credits the warehouse's.
+  remittances   CashRemittance[]
 }
 
 model Location {
@@ -121,6 +124,10 @@ model Product {
   description         String?
   imageUrl            String?
   // Money is whole MRU (D-004). Both prices optional per spec §10.1.
+  // defaultPurchaseCost = weighted-average cost across all stock. Auto-updated
+  // on every ORDER_RECEIPT (see incoming-orders/wac.ts + receive.service.ts).
+  // Still user-editable as a manual rebase / opening baseline. Snapshotted
+  // onto SaleItem.unitCostSnapshot at sell time for margin reporting.
   defaultPurchaseCost Int?
   defaultSalePrice    Int?
   lowStockThreshold   Int?
@@ -560,4 +567,36 @@ model Expense {
 
   @@index([shopId, expenseDate])
   @@index([categoryId])
+}
+
+// ---------- Cash remittances (shop → warehouse) ----------
+
+enum RemittanceStatus {
+  ACTIVE
+  CANCELLED
+}
+
+// A CashRemittance is a cash drop from a shop to the central warehouse.
+// Creating one debits the shop's cash-on-hand and credits the
+// warehouse's — cash-on-hand is derived, no persistent balance row.
+// Cancellation-not-deletion (same pattern as Sale / Expense / Payment):
+// status flips ACTIVE→CANCELLED and it drops out of both aggregates.
+model CashRemittance {
+  id                 String           @id @default(cuid())
+  referenceNumber    String           @unique
+  shopId             String
+  shop               Shop             @relation(fields: [shopId], references: [id])
+  amount             Int              // whole MRU (D-004)
+  remittanceDate     DateTime
+  notes              String?
+  status             RemittanceStatus @default(ACTIVE)
+  createdBy          String
+  cancelledBy        String?
+  cancelledAt        DateTime?
+  cancellationReason String?
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+
+  @@index([shopId, remittanceDate])
+  @@index([status])
 }

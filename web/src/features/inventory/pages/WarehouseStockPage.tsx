@@ -13,6 +13,7 @@ import { useCategoriesList } from '@/features/categories/api';
 import { useWarehouseLocation } from '@/features/locations/api';
 import { useInventoryBalances } from '../api';
 import { StockSummaryHeader } from '../components/StockSummaryHeader';
+import { StockLineValue } from '../components/StockLineValue';
 
 // Warehouse home for OWNER/WAREHOUSE: current balances at the central
 // warehouse (spec §14). Search, category filter, low/out badges (text +
@@ -162,6 +163,7 @@ export default function WarehouseStockPage() {
                     <div className="text-sm font-semibold tabular-nums text-ink">
                       {row.quantity}
                     </div>
+                    <StockLineValue quantity={row.quantity} purchaseCost={row.purchaseCost} />
                     {row.isOutOfStock ? (
                       <StatusBadge tone="danger">{t('warehouse.badge.outOfStock')}</StatusBadge>
                     ) : row.isLowStock ? (

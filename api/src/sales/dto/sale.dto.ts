@@ -100,6 +100,48 @@ export class CreateSaleDto {
   items!: CreateSaleItemDto[];
 }
 
+// One line in an OWNER edit payload. The itemId anchors the update to
+// an existing SaleItem row — no new items are created, no items are
+// deleted (spec §37.15 book-correction scope). quantity + unitPrice are
+// the only editable fields; lineTotal is recomputed by the service.
+export class UpdateSaleItemDto {
+  @IsString()
+  @MinLength(1)
+  itemId!: string;
+
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  quantity!: number;
+
+  @Type(() => Number)
+  @IsInt()
+  @Min(0)
+  unitPrice!: number;
+}
+
+// OWNER-only edit (P6-13). saleDate, notes, and per-item quantity/price
+// are all optional patches. Items array (if present) must cover exactly
+// the existing SaleItems — same set of itemIds, no add, no remove.
+export class UpdateSaleDto {
+  @IsOptional()
+  @IsDateString()
+  saleDate?: string;
+
+  @IsOptional()
+  @Transform(emptyToNull)
+  @IsString()
+  @MaxLength(2000)
+  notes?: string | null;
+
+  @IsOptional()
+  @IsArray()
+  @ArrayMinSize(1)
+  @ValidateNested({ each: true })
+  @Type(() => UpdateSaleItemDto)
+  items?: UpdateSaleItemDto[];
+}
+
 // Cancelling a sale (P6-10, P6-11). Reason is mandatory (spec §25) so
 // the audit trail always answers "why did this sale disappear from
 // active totals". Trimmed; empty strings after trim fail validation.

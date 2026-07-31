@@ -3,6 +3,7 @@ import type { PrismaService } from '../../prisma/prisma.service';
 import {
   ACTIVE_EXPENSE,
   ACTIVE_PAYMENT,
+  ACTIVE_REMITTANCE,
   ACTIVE_SALE,
 } from './active-filters';
 import type { OutstandingScope, ReportScope } from './report-scope';
@@ -123,17 +124,95 @@ export async function computeExpenses(
   return agg._sum.amount ?? 0;
 }
 
+// Remittances total (period) — Σ CashRemittance.amount (ACTIVE, by
+// remittanceDate). Cash leaving the shop to be banked at the warehouse.
+// Purely informational on the shop report; cash-on-hand math uses
+// computeShopCashOnHand / computeWarehouseCash below.
+export async function computeRemittancesSent(
+  prisma: PrismaService,
+  scope: ReportScope,
+): Promise<number> {
+  const where: Prisma.CashRemittanceWhereInput = { ...ACTIVE_REMITTANCE };
+  if (scope.shopId) where.shopId = scope.shopId;
+  applyDateBounds(where, 'remittanceDate', scope);
+  const agg = await prisma.cashRemittance.aggregate({
+    where,
+    _sum: { amount: true },
+  });
+  return agg._sum.amount ?? 0;
+}
+
+// Shop cash-on-hand as of `asOf` (defaults to now). Derived, not stored:
+//   Σ cash-at-sale + Σ later payments − Σ expenses − Σ remittances
+// All four legs filtered by their own date column ≤ asOf, ACTIVE only.
+// If shopId is null, aggregates across every shop.
+export async function computeShopCashOnHand(
+  prisma: PrismaService,
+  shopId: string | null,
+  asOf: Date = new Date(),
+): Promise<number> {
+  const saleWhere: Prisma.SaleWhereInput = {
+    ...ACTIVE_SALE,
+    saleDate: { lte: asOf },
+  };
+  const payWhere: Prisma.CustomerPaymentWhereInput = {
+    ...ACTIVE_PAYMENT,
+    paymentDate: { lte: asOf },
+  };
+  const expWhere: Prisma.ExpenseWhereInput = {
+    ...ACTIVE_EXPENSE,
+    expenseDate: { lte: asOf },
+  };
+  const remWhere: Prisma.CashRemittanceWhereInput = {
+    ...ACTIVE_REMITTANCE,
+    remittanceDate: { lte: asOf },
+  };
+  if (shopId) {
+    saleWhere.shopId = shopId;
+    payWhere.shopId = shopId;
+    expWhere.shopId = shopId;
+    remWhere.shopId = shopId;
+  }
+  const [sales, pays, exps, rems] = await Promise.all([
+    prisma.sale.aggregate({ where: saleWhere, _sum: { amountPaidAtSale: true } }),
+    prisma.customerPayment.aggregate({ where: payWhere, _sum: { amount: true } }),
+    prisma.expense.aggregate({ where: expWhere, _sum: { amount: true } }),
+    prisma.cashRemittance.aggregate({ where: remWhere, _sum: { amount: true } }),
+  ]);
+  return (
+    (sales._sum.amountPaidAtSale ?? 0) +
+    (pays._sum.amount ?? 0) -
+    (exps._sum.amount ?? 0) -
+    (rems._sum.amount ?? 0)
+  );
+}
+
+// Warehouse cash-on-hand as of `asOf`. Currently only credited by
+// remittances (there are no warehouse expenses). Same asOf semantics as
+// the shop version — a report layer can compute both consistently.
+export async function computeWarehouseCash(
+  prisma: PrismaService,
+  asOf: Date = new Date(),
+): Promise<number> {
+  const agg = await prisma.cashRemittance.aggregate({
+    where: { ...ACTIVE_REMITTANCE, remittanceDate: { lte: asOf } },
+    _sum: { amount: true },
+  });
+  return agg._sum.amount ?? 0;
+}
+
 // Narrow helper — DRY over the "if from/to are set, add date bounds"
 // pattern each quantity would otherwise repeat. `field` is
 // deliberately typed as the union of every date column we filter on,
 // so a typo like 'saledate' fails at build time.
-type DateField = 'saleDate' | 'paymentDate' | 'expenseDate';
+type DateField = 'saleDate' | 'paymentDate' | 'expenseDate' | 'remittanceDate';
 
 function applyDateBounds(
   where:
     | Prisma.SaleWhereInput
     | Prisma.CustomerPaymentWhereInput
-    | Prisma.ExpenseWhereInput,
+    | Prisma.ExpenseWhereInput
+    | Prisma.CashRemittanceWhereInput,
   field: DateField,
   scope: ReportScope,
 ): void {

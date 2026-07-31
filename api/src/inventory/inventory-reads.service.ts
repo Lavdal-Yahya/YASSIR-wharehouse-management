@@ -26,9 +26,10 @@ export type BalanceRowOut = {
   effectiveThreshold: number; // product's threshold OR settings default OR 0
   isLowStock: boolean;
   isOutOfStock: boolean;
-  // For shop locations: the shop's ShopProductPrice.salePrice, or null if the
-  // shop hasn't set one. For warehouse locations: always null — the warehouse
-  // does not set retail prices.
+  // For shop locations: the shop's ShopProductPrice.salePrice if it exists,
+  // otherwise Product.defaultSalePrice as a fallback, otherwise null. For
+  // warehouse locations: always null — the warehouse does not set retail
+  // prices. UI treats null as "no price set" (badge/pill).
   suggestedSalePrice: number | null;
   // Product.defaultPurchaseCost; drives stock-value math on the frontend.
   purchaseCost: number | null;
@@ -134,7 +135,9 @@ export class InventoryReadsService {
         where: balanceWhere,
         include: {
           product: {
-            include: { category: { select: { id: true, name: true } } },
+            include: {
+              category: { select: { id: true, name: true } },
+            },
           },
         },
         orderBy: [{ product: { name: 'asc' } }],
@@ -158,7 +161,9 @@ export class InventoryReadsService {
     ]);
 
     // Per-shop sale prices — one query keyed on the current shop. Warehouse
-    // locations skip this entirely (they have no shop-level pricing).
+    // locations skip this entirely (they have no shop-level pricing). If a
+    // (shop, product) pair has no override, fall back to Product.defaultSalePrice
+    // — otherwise a global price set on the products page never surfaces here.
     let shopPriceByProduct = new Map<string, number>();
     if (loc.type === LocationType.SHOP && loc.shopId) {
       const productIds = rows.map((r) => r.productId);
@@ -171,9 +176,14 @@ export class InventoryReadsService {
       }
     }
 
-    let items = rows.map((r) =>
-      mapBalance(r, defaultThreshold, shopPriceByProduct.get(r.productId) ?? null),
-    );
+    let items = rows.map((r) => {
+      const shopOverride = shopPriceByProduct.get(r.productId);
+      const effectivePrice =
+        loc.type === LocationType.SHOP
+          ? shopOverride ?? r.product.defaultSalePrice ?? null
+          : null;
+      return mapBalance(r, defaultThreshold, effectivePrice);
+    });
     // lowStockOnly filters after mapping — the summary reflects the filter.
     if (q.lowStockOnly) {
       items = items.filter((r) => r.isLowStock);
@@ -349,6 +359,7 @@ function mapBalance(
       imageUrl: string | null;
       lowStockThreshold: number | null;
       defaultPurchaseCost: number | null;
+      defaultSalePrice: number | null;
       categoryId: string;
       category: { id: string; name: string };
     };

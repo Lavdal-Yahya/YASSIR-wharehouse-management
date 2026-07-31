@@ -61,6 +61,22 @@ export type CreateSaleBody = {
 
 export type CancelSaleBody = { reason: string };
 
+// OWNER book-correction edit (P6-13). Item patches target existing
+// SaleItem rows by itemId — the server enforces set-equality with the
+// current items (no add, no remove). Any field left undefined is left
+// alone; passing `notes: null` clears the notes.
+export type UpdateSaleItemBody = {
+  itemId: string;
+  quantity: number;
+  unitPrice: number;
+};
+
+export type UpdateSaleBody = {
+  saleDate?: string;
+  notes?: string | null;
+  items?: UpdateSaleItemBody[];
+};
+
 export type SalesSummary = {
   saleCount: number;
   totalUnits: number;

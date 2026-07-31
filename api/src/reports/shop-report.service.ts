@@ -7,6 +7,7 @@ import {
   computeExpenses,
   computeNewDebt,
   computeOutstanding,
+  computeRemittancesSent,
   computeSalesValue,
 } from './common/money-quantities';
 import { resolveOutstandingScope, resolveReportScope } from './common/report-scope';
@@ -39,6 +40,7 @@ export type ShopReportOut = {
   outstanding: number;
   expenses: number;
   netCollected: number; // totalCollected − expenses
+  remittances: number; // cash drops shop → warehouse in the window (info)
 };
 
 @Injectable()
@@ -53,13 +55,15 @@ export class ShopReportService {
     // Even so, this is the shape of the report — not a tight loop —
     // and each primitive is a single aggregate query, so the total
     // latency is one round-trip pair (sales-side + payments-side).
-    const [salesValue, cash, newDebt, outstanding, expenses] = await Promise.all([
-      computeSalesValue(this.prisma, scope),
-      computeCashCollected(this.prisma, scope),
-      computeNewDebt(this.prisma, scope),
-      computeOutstanding(this.prisma, outstandingScope),
-      computeExpenses(this.prisma, scope),
-    ]);
+    const [salesValue, cash, newDebt, outstanding, expenses, remittances] =
+      await Promise.all([
+        computeSalesValue(this.prisma, scope),
+        computeCashCollected(this.prisma, scope),
+        computeNewDebt(this.prisma, scope),
+        computeOutstanding(this.prisma, outstandingScope),
+        computeExpenses(this.prisma, scope),
+        computeRemittancesSent(this.prisma, scope),
+      ]);
 
     return {
       scope: { shopId: scope.shopId, from: scope.from, to: scope.to },
@@ -71,6 +75,7 @@ export class ShopReportService {
       outstanding,
       expenses,
       netCollected: cash.total - expenses,
+      remittances,
     };
   }
 }

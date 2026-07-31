@@ -11,6 +11,7 @@ import type {
   SaleDetail,
   SalesSummary,
   SaleStatus,
+  UpdateSaleBody,
 } from './types';
 
 export const SALES_KEY = ['sales'] as const;
@@ -57,6 +58,18 @@ export function useConfirmSale() {
   return useMutation<SaleDetail, ApiError, CreateSaleBody>({
     mutationFn: (body) =>
       api<SaleDetail>('/sales', { method: 'POST', body }),
+    onSuccess: () => invalidateSalesFallout(qc),
+  });
+}
+
+// OWNER book-correction edit. No stock ripple — just rewrites qty/price
+// on existing items and header fields. Reuses the standard sales-fallout
+// invalidation so reports/customer/payment views also refetch.
+export function useUpdateSale(id: string) {
+  const qc = useQueryClient();
+  return useMutation<SaleDetail, ApiError, UpdateSaleBody>({
+    mutationFn: (body) =>
+      api<SaleDetail>(`/sales/${id}`, { method: 'PATCH', body }),
     onSuccess: () => invalidateSalesFallout(qc),
   });
 }

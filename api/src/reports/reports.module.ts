@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ReportsController } from './reports.controller';
+import { CashOnHandService } from './cash-on-hand.service';
 import { DebtReportService } from './debt-report.service';
 import { EstimatedProfitService } from './estimated-profit.service';
 import { IncomingOrdersReportService } from './incoming-orders-report.service';
@@ -25,6 +26,7 @@ import { WarehouseReportService } from './warehouse-report.service';
     DebtReportService,
     IncomingOrdersReportService,
     EstimatedProfitService,
+    CashOnHandService,
   ],
   exports: [
     ShopReportService,
@@ -33,6 +35,7 @@ import { WarehouseReportService } from './warehouse-report.service';
     DebtReportService,
     IncomingOrdersReportService,
     EstimatedProfitService,
+    CashOnHandService,
   ],
 })
 export class ReportsModule {}

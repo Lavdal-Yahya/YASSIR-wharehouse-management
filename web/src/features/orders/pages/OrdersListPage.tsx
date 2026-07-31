@@ -106,7 +106,7 @@ export default function OrdersListPage() {
             </span>
             <Money value={list.data.summary.totalValue} size="md" />
             {list.data.summary.itemsMissingCost > 0 ? (
-              <span className="mt-0.5 text-[11.5px] text-muted">
+              <span className="mt-1 inline-flex items-center rounded-full bg-debt-bg px-2 py-0.5 text-[11.5px] font-semibold text-debt-fg">
                 {t('orders.summary.missingCost', { count: list.data.summary.itemsMissingCost })}
               </span>
             ) : null}

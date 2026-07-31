@@ -95,3 +95,70 @@ html[dir='rtl'] {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Receipt printing. `.print-hide` hides layout chrome (header, side nav,
+   bottom nav, per-page action bars) and the interactive Print controls.
+   `.print-receipt` styles the paper. Two paper sizes: an 80mm thermal
+   roll (default) and A4 — the SaleReceiptPage picks by toggling
+   `data-format` on the container. All colors are forced black/white so
+   the ink footprint stays predictable across printers. */
+@media print {
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+  .print-hide {
+    display: none !important;
+  }
+  main {
+    padding: 0 !important;
+  }
+  .print-receipt {
+    background: #fff !important;
+    color: #000 !important;
+  }
+  .print-receipt * {
+    color: #000 !important;
+  }
+}
+
+.print-receipt {
+  font-family: var(--font-sans);
+  line-height: 1.4;
+}
+
+/* 80mm thermal roll — bumped to 72mm content width to leave a margin the
+   printer's cutter respects. Height auto so a 3-item receipt prints as
+   3-items-tall, not a whole 80mm page. */
+@page thermal80 {
+  size: 80mm auto;
+  margin: 4mm 4mm 4mm 4mm;
+}
+.print-receipt[data-format='thermal'] {
+  width: 72mm;
+  margin: 0 auto;
+  font-size: 12px;
+}
+@media print {
+  .print-receipt[data-format='thermal'] {
+    page: thermal80;
+    width: 100%;
+  }
+}
+
+/* A4 — standard invoice page. Sits centered on screen for the preview. */
+@page a4 {
+  size: A4;
+  margin: 18mm 16mm;
+}
+.print-receipt[data-format='a4'] {
+  width: 178mm;
+  margin: 0 auto;
+  font-size: 13.5px;
+}
+@media print {
+  .print-receipt[data-format='a4'] {
+    page: a4;
+    width: 100%;
+  }
+}

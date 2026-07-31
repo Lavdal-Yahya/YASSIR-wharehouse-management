@@ -5,6 +5,7 @@ import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { ShopScopeGuard } from '../common/guards/shop-scope.guard';
 import type { SessionUser } from '../common/types/session-user';
 import { ReportFilterDto } from './dto/report-filter.dto';
+import { CashOnHandService } from './cash-on-hand.service';
 import { DebtReportService } from './debt-report.service';
 import { EstimatedProfitService } from './estimated-profit.service';
 import { IncomingOrdersReportService } from './incoming-orders-report.service';
@@ -32,6 +33,7 @@ export class ReportsController {
     private readonly debtReport: DebtReportService,
     private readonly incomingOrdersReport: IncomingOrdersReportService,
     private readonly profitService: EstimatedProfitService,
+    private readonly cashOnHand: CashOnHandService,
   ) {}
 
   // Shop report — the marquee. WAREHOUSE never sees shop money
@@ -85,5 +87,17 @@ export class ReportsController {
     @CurrentUser() user: SessionUser,
   ) {
     return this.profitService.build(filter, user);
+  }
+
+  // Cash-on-hand — point-in-time balance per shop + warehouse. Powers
+  // the "Remettre au dépôt" form (default amount = own shop's balance)
+  // and the owner dashboard. `asOf` optional; defaults to now.
+  @Roles(Role.OWNER, Role.SHOP, Role.WAREHOUSE)
+  @Get('cash-on-hand')
+  cashOnHandReport(
+    @Query('asOf') asOf: string | undefined,
+    @CurrentUser() user: SessionUser,
+  ) {
+    return this.cashOnHand.build(asOf, user);
   }
 }

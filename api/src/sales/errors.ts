@@ -76,6 +76,50 @@ export class SaleNotFoundError extends DomainError {
   }
 }
 
+// OWNER-only sale editing (P6-13).
+//
+// The edit is a book correction: it rewrites quantity/unitPrice on
+// existing items and recomputes totalAmount, but does NOT emit stock
+// movements — the physical goods already left the shop. If a caller
+// tries to lower totalAmount below amountPaid (the collected cash + any
+// active customer-payment allocations), we refuse — dropping money
+// silently would corrupt the customer-balance invariant.
+
+export class SaleNotEditableError extends DomainError {
+  readonly code = 'SALE_NOT_EDITABLE';
+  readonly httpStatus = HttpStatus.CONFLICT;
+  readonly status: string;
+  constructor(status: string) {
+    super(`Sale in status ${status} cannot be edited`);
+    this.status = status;
+  }
+}
+
+export class SaleEditWouldOrphanPaymentError extends DomainError {
+  readonly code = 'SALE_EDIT_WOULD_ORPHAN_PAYMENT';
+  readonly httpStatus = HttpStatus.CONFLICT;
+  readonly newTotal: number;
+  readonly amountPaid: number;
+  constructor(newTotal: number, amountPaid: number) {
+    super(
+      `New total ${newTotal} is below already-paid ${amountPaid}; reverse payment allocations first`,
+    );
+    this.newTotal = newTotal;
+    this.amountPaid = amountPaid;
+  }
+  details() {
+    return { newTotal: this.newTotal, amountPaid: this.amountPaid };
+  }
+}
+
+export class SaleEditItemMismatchError extends DomainError {
+  readonly code = 'SALE_EDIT_ITEM_MISMATCH';
+  readonly httpStatus = HttpStatus.BAD_REQUEST;
+  constructor(reason: string) {
+    super(`Sale edit item list mismatch: ${reason}`);
+  }
+}
+
 // Phase 6 — sale cancellation errors.
 //
 // Cancellation refuses on any state other than ACTIVE. Double-cancel

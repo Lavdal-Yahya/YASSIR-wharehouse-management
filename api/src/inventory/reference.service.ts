@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import type { Tx } from './tx';
 
 // Kinds mirror the seeded ReferenceCounter rows (spec §35).
-export type ReferenceKind = 'ORD' | 'REC' | 'TRF' | 'SAL' | 'PAY' | 'EXP' | 'ADJ';
+export type ReferenceKind = 'ORD' | 'REC' | 'TRF' | 'SAL' | 'PAY' | 'EXP' | 'ADJ' | 'RMT';
 
 // Padded width for the numeric part. Six digits gives us a million per kind
 // before wrap — comfortable for a small trading business's lifetime.

@@ -5,6 +5,7 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  Patch,
   Post,
   Query,
   UseGuards,
@@ -14,8 +15,14 @@ import { Roles } from '../common/decorators/roles.decorator';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { ShopScopeGuard } from '../common/guards/shop-scope.guard';
 import type { SessionUser } from '../common/types/session-user';
-import { CancelSaleDto, CreateSaleDto, ListSalesQueryDto } from './dto/sale.dto';
+import {
+  CancelSaleDto,
+  CreateSaleDto,
+  ListSalesQueryDto,
+  UpdateSaleDto,
+} from './dto/sale.dto';
 import { SaleCancellationService } from './sale-cancellation.service';
+import { SaleEditService } from './sale-edit.service';
 import { SalesService } from './sales.service';
 
 // Sales routes (phase-5 §4). WAREHOUSE never appears — sales are shop
@@ -30,6 +37,7 @@ export class SalesController {
   constructor(
     private readonly svc: SalesService,
     private readonly cancellation: SaleCancellationService,
+    private readonly edits: SaleEditService,
   ) {}
 
   @Roles(Role.OWNER, Role.SHOP)
@@ -50,6 +58,17 @@ export class SalesController {
   @Post()
   create(@Body() dto: CreateSaleDto, @CurrentUser() user: SessionUser) {
     return this.svc.confirm(dto, user);
+  }
+
+  // OWNER only — book correction (P6-13). Rewrites item qty/price
+  // and header notes/date without emitting stock movements. Cancelled
+  // sales are frozen; sales with more cash allocated than the new
+  // total return SALE_EDIT_WOULD_ORPHAN_PAYMENT so the owner reverses
+  // payments first.
+  @Roles(Role.OWNER)
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() dto: UpdateSaleDto) {
+    return this.edits.edit(id, dto);
   }
 
   // OWNER only — cancellation is an audit-level operation (spec §24.2).

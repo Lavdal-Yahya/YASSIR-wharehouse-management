@@ -24,12 +24,15 @@ export function StockSummaryHeader({ productCount, summary }: Props) {
         </span>
       </div>
       <div className="flex flex-col items-end">
-        <span className="text-[12px] font-semibold uppercase tracking-wide text-muted">
+        <span
+          className="text-[12px] font-semibold uppercase tracking-wide text-muted"
+          title={t('stock.summary.totalValueHint')}
+        >
           {t('stock.summary.totalValue')}
         </span>
         <Money value={summary.totalValue} size="md" />
         {summary.productsMissingCost > 0 ? (
-          <span className="mt-0.5 text-[11.5px] text-muted">
+          <span className="mt-1 inline-flex items-center rounded-full bg-debt-bg px-2 py-0.5 text-[11.5px] font-semibold text-debt-fg">
             {t('stock.summary.missingCost', { count: summary.productsMissingCost })}
           </span>
         ) : null}

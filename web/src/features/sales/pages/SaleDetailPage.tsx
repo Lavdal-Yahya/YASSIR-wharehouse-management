@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useMemo, useState } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { PageHeader } from '@/components/PageHeader';
 import { SectionCard } from '@/components/SectionCard';
@@ -10,12 +10,12 @@ import { Input } from '@/components/Input';
 import { BalanceBar } from '@/components/BalanceBar';
 import { Money } from '@/components/Money';
 import { Spinner } from '@/components/Spinner';
-import { ConstructionOverlay } from '@/components/ConstructionOverlay';
 import { errorMessage } from '@/shared/error-message';
+import { normalizeDigits } from '@/shared/money';
 import { Role } from '@/shared/enums';
 import { useMe } from '@/features/auth/api';
-import { useCancelSale, useSale } from '../api';
-import type { PaymentStatus } from '../types';
+import { useCancelSale, useSale, useUpdateSale } from '../api';
+import type { PaymentStatus, SaleDetail, UpdateSaleItemBody } from '../types';
 
 // Sale detail — read-only for SHOP; OWNER gets a Cancel button that
 // opens ConfirmDialog with a mandatory reason. The API surfaces
@@ -37,8 +37,10 @@ export default function SaleDetailPage() {
   const isOwner = me.data?.user.role === Role.OWNER;
   const sale = useSale(id);
   const cancel = useCancelSale(id ?? '');
+  const update = useUpdateSale(id ?? '');
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [reason, setReason] = useState('');
+  const [editing, setEditing] = useState(false);
 
   if (sale.isLoading) {
     return (
@@ -116,23 +118,57 @@ export default function SaleDetailPage() {
         ) : null}
       </SectionCard>
 
-      <SectionCard title={t('sales.detail.itemsTitle')} className="mb-4">
-        <ul className="divide-y divide-line-soft">
-          {s.items.map((it) => (
-            <li key={it.id} className="flex items-center justify-between gap-3 py-3 text-start">
-              <div className="grow">
-                <div className="text-[15px] font-semibold text-ink">
-                  {it.productName}
+      {editing && isOwner && !isCancelled ? (
+        <SaleItemsEditor
+          sale={s}
+          submitting={update.isPending}
+          errorText={update.error ? errorMessage(update.error, t) : null}
+          onCancel={() => {
+            update.reset();
+            setEditing(false);
+          }}
+          onSave={async (patch) => {
+            try {
+              await update.mutateAsync(patch);
+              setEditing(false);
+            } catch {
+              /* surfaced inline */
+            }
+          }}
+        />
+      ) : (
+        <SectionCard
+          title={t('sales.detail.itemsTitle')}
+          className="mb-4"
+          action={
+            isOwner && !isCancelled ? (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setEditing(true)}
+              >
+                {t('sales.detail.edit')}
+              </Button>
+            ) : undefined
+          }
+        >
+          <ul className="divide-y divide-line-soft">
+            {s.items.map((it) => (
+              <li key={it.id} className="flex items-center justify-between gap-3 py-3 text-start">
+                <div className="grow">
+                  <div className="text-[15px] font-semibold text-ink">
+                    {it.productName}
+                  </div>
+                  <div className="text-[13px] text-muted tabular-nums">
+                    {it.quantity} × <Money value={it.unitPrice} size="sm" showCurrency={false} />
+                  </div>
                 </div>
-                <div className="text-[13px] text-muted tabular-nums">
-                  {it.quantity} × <Money value={it.unitPrice} size="sm" showCurrency={false} />
-                </div>
-              </div>
-              <Money value={it.lineTotal} size="md" />
-            </li>
-          ))}
-        </ul>
-      </SectionCard>
+                <Money value={it.lineTotal} size="md" />
+              </li>
+            ))}
+          </ul>
+        </SectionCard>
+      )}
 
       {isCancelled ? (
         <SectionCard>
@@ -162,11 +198,9 @@ export default function SaleDetailPage() {
             {t('sales.detail.cancel')}
           </Button>
         ) : null}
-        <ConstructionOverlay variant="ribbon" title={t('wip.receipt')}>
-          <Button variant="secondary" disabled>
-            {t('sales.detail.printReceipt')}
-          </Button>
-        </ConstructionOverlay>
+        <Link to={`/sales/${s.id}/receipt`}>
+          <Button variant="secondary">{t('sales.detail.printReceipt')}</Button>
+        </Link>
       </div>
 
       <ConfirmDialog
@@ -225,5 +259,166 @@ function SummaryLine({ label, value }: { label: string; value: React.ReactNode }
       <span className="text-[13px] text-muted">{label}</span>
       {value}
     </div>
+  );
+}
+
+// OWNER-only inline editor. Item quantity and unit price are the only
+// editable per-line fields (spec §37.15 book-correction scope) — the
+// product itself, the customer, and payment fields stay locked. New
+// total is computed live so the operator sees the impact before saving;
+// the server re-verifies and refuses if new total < amountPaid.
+
+type EditorProps = {
+  sale: SaleDetail;
+  submitting: boolean;
+  errorText: string | null;
+  onCancel: () => void;
+  onSave: (patch: {
+    items: UpdateSaleItemBody[];
+    notes: string | null;
+    saleDate: string;
+  }) => void;
+};
+
+function SaleItemsEditor({ sale, submitting, errorText, onCancel, onSave }: EditorProps) {
+  const { t } = useTranslation();
+  const [lines, setLines] = useState(() =>
+    sale.items.map((it) => ({
+      itemId: it.id,
+      productName: it.productName,
+      quantity: it.quantity,
+      unitPrice: it.unitPrice,
+    })),
+  );
+  const [notes, setNotes] = useState(sale.notes ?? '');
+  const [saleDate, setSaleDate] = useState(sale.saleDate.slice(0, 10));
+
+  // No re-seed effect: the parent unmounts the editor when `editing`
+  // goes false → true, so useState initializers pick up a fresh sale
+  // snapshot each open. A background refetch mid-edit therefore does
+  // NOT clobber the operator's unsaved input.
+
+  const newTotal = useMemo(
+    () => lines.reduce((sum, l) => sum + l.quantity * l.unitPrice, 0),
+    [lines],
+  );
+  const wouldOrphan = newTotal < sale.amountPaid;
+
+  const patchLine = (
+    itemId: string,
+    field: 'quantity' | 'unitPrice',
+    raw: string,
+  ) => {
+    const clean = normalizeDigits(raw).replace(/[\s,]/g, '');
+    if (clean === '') {
+      setLines((prev) =>
+        prev.map((l) => (l.itemId === itemId ? { ...l, [field]: 0 } : l)),
+      );
+      return;
+    }
+    if (!/^\d+$/.test(clean)) return;
+    const n = parseInt(clean, 10);
+    setLines((prev) =>
+      prev.map((l) => (l.itemId === itemId ? { ...l, [field]: n } : l)),
+    );
+  };
+
+  const canSave =
+    !submitting &&
+    !wouldOrphan &&
+    lines.every((l) => l.quantity >= 1 && l.unitPrice >= 0);
+
+  return (
+    <SectionCard
+      title={t('sales.detail.editTitle')}
+      className="mb-4"
+      action={
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" size="sm" onClick={onCancel} disabled={submitting}>
+            {t('common.cancel')}
+          </Button>
+          <Button
+            size="sm"
+            loading={submitting}
+            disabled={!canSave}
+            onClick={() =>
+              onSave({
+                items: lines.map((l) => ({
+                  itemId: l.itemId,
+                  quantity: l.quantity,
+                  unitPrice: l.unitPrice,
+                })),
+                notes: notes.trim() === '' ? null : notes.trim(),
+                saleDate,
+              })
+            }
+          >
+            {t('common.save')}
+          </Button>
+        </div>
+      }
+    >
+      <p className="mb-3 rounded-input bg-tint px-3 py-2 text-[12.5px] text-muted">
+        {t('sales.detail.editHint')}
+      </p>
+      <ul className="divide-y divide-line-soft">
+        {lines.map((l) => (
+          <li key={l.itemId} className="grid grid-cols-1 gap-2 py-3 md:grid-cols-[1fr_120px_140px_120px]">
+            <div className="text-[14.5px] font-semibold text-ink">{l.productName}</div>
+            <Input
+              label={t('sales.detail.editQuantity')}
+              inputMode="numeric"
+              value={String(l.quantity)}
+              onChange={(e) => patchLine(l.itemId, 'quantity', e.target.value)}
+              className="tabular-nums"
+            />
+            <Input
+              label={t('sales.detail.editUnitPrice')}
+              inputMode="numeric"
+              value={String(l.unitPrice)}
+              onChange={(e) => patchLine(l.itemId, 'unitPrice', e.target.value)}
+              className="tabular-nums"
+            />
+            <div className="flex items-end justify-end pb-1.5">
+              <Money value={l.quantity * l.unitPrice} size="sm" />
+            </div>
+          </li>
+        ))}
+      </ul>
+      <div className="mt-3 grid gap-3 border-t border-line-soft pt-3 md:grid-cols-2">
+        <Input
+          label={t('sales.detail.editDate')}
+          type="date"
+          value={saleDate}
+          onChange={(e) => setSaleDate(e.target.value)}
+        />
+        <Input
+          label={t('sales.detail.editNotes')}
+          value={notes}
+          onChange={(e) => setNotes(e.target.value)}
+        />
+      </div>
+      <div className="mt-3 flex flex-wrap items-baseline justify-between gap-2 border-t border-line-soft pt-3">
+        <span className="text-[13px] text-muted">
+          {t('sales.detail.editNewTotal')}
+        </span>
+        <Money value={newTotal} size="md" />
+      </div>
+      {wouldOrphan ? (
+        <p
+          role="alert"
+          className="mt-2 rounded-input bg-debt-bg px-3 py-2 text-[13px] font-medium text-debt-fg"
+        >
+          {t('sales.detail.editOrphanWarning', {
+            amountPaid: sale.amountPaid,
+          })}
+        </p>
+      ) : null}
+      {errorText ? (
+        <p role="alert" className="mt-2 text-[13px] text-debt-fg">
+          {errorText}
+        </p>
+      ) : null}
+    </SectionCard>
   );
 }

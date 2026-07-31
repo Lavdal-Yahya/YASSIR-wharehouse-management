@@ -1,9 +1,18 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { api, ApiError } from '@/shared/api-client';
 import { toQueryString, type Paginated } from '@/shared/pagination';
+import { INVENTORY_KEY } from '@/features/inventory/api';
 import type { Product, ProductWriteBody } from './types';
 
 export const PRODUCTS_KEY = ['products'] as const;
+
+// Product edits change the effective sale price + cost on stock pages
+// (defaultSalePrice fallback for shop stock, defaultPurchaseCost for the
+// value summary). Any mutation must invalidate both caches.
+const invalidateProductAndInventory = (qc: ReturnType<typeof useQueryClient>) => {
+  qc.invalidateQueries({ queryKey: PRODUCTS_KEY });
+  qc.invalidateQueries({ queryKey: INVENTORY_KEY });
+};
 
 export type ProductsListParams = {
   page?: number;
@@ -33,7 +42,7 @@ export function useCreateProduct() {
   const qc = useQueryClient();
   return useMutation<Product, ApiError, ProductWriteBody>({
     mutationFn: (body) => api<Product>('/products', { method: 'POST', body }),
-    onSuccess: () => qc.invalidateQueries({ queryKey: PRODUCTS_KEY }),
+    onSuccess: () => invalidateProductAndInventory(qc),
   });
 }
 
@@ -41,7 +50,7 @@ export function useUpdateProduct(id: string) {
   const qc = useQueryClient();
   return useMutation<Product, ApiError, ProductWriteBody>({
     mutationFn: (body) => api<Product>(`/products/${id}`, { method: 'PATCH', body }),
-    onSuccess: () => qc.invalidateQueries({ queryKey: PRODUCTS_KEY }),
+    onSuccess: () => invalidateProductAndInventory(qc),
   });
 }
 
@@ -49,7 +58,7 @@ export function useArchiveProduct() {
   const qc = useQueryClient();
   return useMutation<Product, ApiError, string>({
     mutationFn: (id) => api<Product>(`/products/${id}/archive`, { method: 'POST' }),
-    onSuccess: () => qc.invalidateQueries({ queryKey: PRODUCTS_KEY }),
+    onSuccess: () => invalidateProductAndInventory(qc),
   });
 }
 
@@ -57,7 +66,7 @@ export function useRestoreProduct() {
   const qc = useQueryClient();
   return useMutation<Product, ApiError, string>({
     mutationFn: (id) => api<Product>(`/products/${id}/restore`, { method: 'POST' }),
-    onSuccess: () => qc.invalidateQueries({ queryKey: PRODUCTS_KEY }),
+    onSuccess: () => invalidateProductAndInventory(qc),
   });
 }
 
@@ -65,7 +74,7 @@ export function useDeleteProduct() {
   const qc = useQueryClient();
   return useMutation<void, ApiError, string>({
     mutationFn: (id) => api<void>(`/products/${id}`, { method: 'DELETE' }),
-    onSuccess: () => qc.invalidateQueries({ queryKey: PRODUCTS_KEY }),
+    onSuccess: () => invalidateProductAndInventory(qc),
   });
 }
 
@@ -95,8 +104,6 @@ export function useUploadProductImage(id: string) {
       }
       return data as Product;
     },
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: PRODUCTS_KEY });
-    },
+    onSuccess: () => invalidateProductAndInventory(qc),
   });
 }

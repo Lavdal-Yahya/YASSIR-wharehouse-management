@@ -174,11 +174,16 @@ export default function ProductFormPage() {
               {...form.register('barcode', { setValueAs: (v) => (v === '' ? null : v) })}
             />
 
-            <MoneyInput
-              label={<>{t('products.form.defaultPurchaseCost')} <span className="text-xs text-muted">({optional})</span></>}
-              value={form.watch('defaultPurchaseCost')}
-              onChange={(v) => form.setValue('defaultPurchaseCost', v, { shouldDirty: true })}
-            />
+            <div>
+              <MoneyInput
+                label={<>{t('products.form.defaultPurchaseCost')} <span className="text-xs text-muted">({optional})</span></>}
+                value={form.watch('defaultPurchaseCost')}
+                onChange={(v) => form.setValue('defaultPurchaseCost', v, { shouldDirty: true })}
+              />
+              <p className="mt-1 text-xs text-muted text-start">
+                {t('products.form.defaultPurchaseCostHint')}
+              </p>
+            </div>
             <MoneyInput
               label={<>{t('products.form.defaultSalePrice')} <span className="text-xs text-muted">({optional})</span></>}
               value={form.watch('defaultSalePrice')}

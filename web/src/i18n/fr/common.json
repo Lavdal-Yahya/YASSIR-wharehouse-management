@@ -15,6 +15,7 @@
     "settings": "Réglages",
     "transfers": "Transferts",
     "expenses": "Dépenses",
+    "remittances": "Remises de caisse",
     "reports": "Rapports",
     "shopStock": "Stock boutique",
     "sell": "Vendre",
@@ -94,6 +95,9 @@
     "EXPENSE_NOT_FOUND": "Dépense introuvable.",
     "EXPENSE_NOT_CANCELLABLE": "Cette dépense ne peut pas être annulée dans son état actuel.",
     "EXPENSE_NOT_EDITABLE": "Impossible de modifier une dépense annulée. Créez-en une nouvelle.",
+    "REMITTANCE_NOT_FOUND": "Remise introuvable.",
+    "REMITTANCE_NOT_CANCELLABLE": "Cette remise ne peut pas être annulée dans son état actuel.",
+    "REMITTANCE_EXCEEDS_CASH_ON_HAND": "Montant supérieur à l'encaisse disponible dans cette boutique.",
     "LOCATION_NOT_FOUND": "Emplacement introuvable.",
     "ORDER_NOT_FOUND": "Commande introuvable.",
     "ORDER_NOT_EDITABLE": "Cette commande ne peut plus être modifiée dans son état actuel.",
@@ -112,7 +116,10 @@
     "DUPLICATE_TRANSFER_ITEM": "Ce produit apparaît plusieurs fois dans le transfert.",
     "LOCATION_ARCHIVED": "Impossible : cet emplacement est archivé.",
     "TRANSFER_NOT_REVERSIBLE": "Ce transfert ne peut plus être annulé.",
-    "DESTINATION_INSUFFICIENT_STOCK": "La destination n'a plus assez de stock pour annuler ce transfert."
+    "DESTINATION_INSUFFICIENT_STOCK": "La destination n'a plus assez de stock pour annuler ce transfert.",
+    "SALE_NOT_EDITABLE": "Cette vente ne peut plus être modifiée dans son état actuel.",
+    "SALE_EDIT_WOULD_ORPHAN_PAYMENT": "Le nouveau total est inférieur au montant déjà encaissé. Annulez d'abord les paiements associés.",
+    "SALE_EDIT_ITEM_MISMATCH": "Les lignes de la vente ne correspondent pas aux articles existants."
   },
   "notFound": {
     "title": "Page introuvable",
@@ -215,7 +222,8 @@
       "sku": "SKU",
       "barcode": "Code-barres",
       "description": "Description",
-      "defaultPurchaseCost": "Coût d'achat par défaut",
+      "defaultPurchaseCost": "Coût moyen pondéré",
+      "defaultPurchaseCostHint": "Recalculé automatiquement à chaque réception. Modifiable pour rebaser.",
       "defaultSalePrice": "Prix de vente par défaut",
       "lowStockThreshold": "Seuil de stock bas",
       "image": "Image du produit"
@@ -477,8 +485,10 @@
       "products_other": "{{count}} produits",
       "units_one": "{{count}} unité",
       "units_other": "{{count}} unités",
-      "totalValue": "Valeur totale",
-      "totalValueHint": "Basée sur les coûts d'achat enregistrés.",
+      "totalValue": "Valeur d'inventaire",
+      "totalValueHint": "Somme des quantités × coût d'achat.",
+      "lineValue": "Valeur",
+      "noCost": "Sans coût",
       "missingCost_one": "{{count}} produit sans coût enregistré",
       "missingCost_other": "{{count}} produits sans coût enregistré"
     }
@@ -609,6 +619,46 @@
       "reasonPlaceholder": "Expliquez pourquoi cette dépense est annulée.",
       "confirm": "Confirmer l'annulation",
       "reasonRequired": "Le motif est obligatoire."
+    }
+  },
+  "remittances": {
+    "title": "Remises de caisse",
+    "subtitle": "Envoyez la caisse de la boutique vers le dépôt central.",
+    "warehouseCash": "Caisse du dépôt",
+    "shopCashOnHand": "Encaisse actuelle",
+    "form": {
+      "title": "Remettre au dépôt",
+      "shop": "Boutique",
+      "chooseShop": "— Choisir une boutique —",
+      "amount": "Montant",
+      "date": "Date de remise",
+      "notes": "Notes",
+      "submit": "Envoyer au dépôt",
+      "flushHint": "Ce montant remettra l'encaisse de la boutique à 0."
+    },
+    "history": {
+      "title": "Historique",
+      "cancelledReason": "Annulée : {{reason}}"
+    },
+    "filter": {
+      "shop": "Boutique",
+      "allShops": "Toutes les boutiques",
+      "status": "Statut",
+      "allStatuses": "Tous les statuts",
+      "from": "Depuis",
+      "to": "Jusqu'à"
+    },
+    "status": {
+      "ACTIVE": "Active",
+      "CANCELLED": "Annulée"
+    },
+    "cancelConfirm": {
+      "button": "Annuler la remise",
+      "title": "Annuler cette remise ?",
+      "body": "L'encaisse de la boutique remontera du même montant, et la caisse du dépôt sera débitée en conséquence.",
+      "reason": "Motif (obligatoire)",
+      "reasonPlaceholder": "Expliquez pourquoi cette remise est annulée.",
+      "confirm": "Confirmer l'annulation"
     }
   },
   "reports": {
@@ -897,7 +947,33 @@
       "cancelReason": "Motif (obligatoire)",
       "cancelReasonPlaceholder": "Expliquez pourquoi cette vente est annulée.",
       "cancelConfirm": "Confirmer l'annulation",
-      "blockingHint": "Ces paiements sont encore actifs sur cette vente — annulez-les d'abord."
+      "blockingHint": "Ces paiements sont encore actifs sur cette vente — annulez-les d'abord.",
+      "edit": "Modifier",
+      "editTitle": "Modifier la vente",
+      "editHint": "Correction comptable — le stock n'est pas ajusté. Vérifiez la quantité physique séparément.",
+      "editQuantity": "Quantité",
+      "editUnitPrice": "Prix unitaire",
+      "editDate": "Date",
+      "editNotes": "Note",
+      "editNewTotal": "Nouveau total",
+      "editOrphanWarning": "Le nouveau total est inférieur au montant déjà encaissé ({{amountPaid}} MRU). Annulez les paiements associés avant d'ajuster."
+    },
+    "receipt": {
+      "back": "Retour",
+      "printNow": "Imprimer",
+      "formatThermal": "Ticket 80 mm",
+      "formatA4": "A4",
+      "reference": "Référence",
+      "date": "Date",
+      "customer": "Client",
+      "item": "Article",
+      "qty": "Qté",
+      "unit": "P.U.",
+      "line": "Total",
+      "total": "Total",
+      "paid": "Payé",
+      "due": "Reste dû",
+      "cancelledStamp": "VENTE ANNULÉE"
     }
   },
   "openingStock": {

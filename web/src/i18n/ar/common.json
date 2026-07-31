@@ -16,6 +16,7 @@
     "transfers": "التحويلات",
     "logout": "تسجيل الخروج",
     "expenses": "المصروفات",
+    "remittances": "تسليم الصندوق",
     "reports": "التقارير",
     "shopStock": "مخزون المحل",
     "sell": "بيع",
@@ -94,6 +95,9 @@
     "EXPENSE_NOT_FOUND": "لم يتم العثور على المصروف.",
     "EXPENSE_NOT_CANCELLABLE": "لا يمكن إلغاء هذا المصروف في حالته الحالية.",
     "EXPENSE_NOT_EDITABLE": "لا يمكن تعديل مصروف ملغى. أنشئ مصروفاً جديداً بدلاً من ذلك.",
+    "REMITTANCE_NOT_FOUND": "لم يتم العثور على التسليم.",
+    "REMITTANCE_NOT_CANCELLABLE": "لا يمكن إلغاء هذا التسليم في حالته الحالية.",
+    "REMITTANCE_EXCEEDS_CASH_ON_HAND": "المبلغ يتجاوز الرصيد المتاح في صندوق المحل.",
     "LOCATION_NOT_FOUND": "الموقع غير موجود.",
     "ORDER_NOT_FOUND": "الطلب غير موجود.",
     "ORDER_NOT_EDITABLE": "لا يمكن تعديل هذا الطلب في حالته الحالية.",
@@ -112,7 +116,10 @@
     "DUPLICATE_TRANSFER_ITEM": "هذا المنتج مكرّر في التحويل.",
     "LOCATION_ARCHIVED": "غير ممكن: هذا الموقع مؤرشف.",
     "TRANSFER_NOT_REVERSIBLE": "لا يمكن إلغاء هذا التحويل.",
-    "DESTINATION_INSUFFICIENT_STOCK": "لم يعد للوجهة مخزون كافٍ لإلغاء هذا التحويل."
+    "DESTINATION_INSUFFICIENT_STOCK": "لم يعد للوجهة مخزون كافٍ لإلغاء هذا التحويل.",
+    "SALE_NOT_EDITABLE": "لا يمكن تعديل هذا البيع في وضعه الحالي.",
+    "SALE_EDIT_WOULD_ORPHAN_PAYMENT": "الإجمالي الجديد أقل من المبلغ المُحصَّل. قم بإلغاء الدفعات المرتبطة أولاً.",
+    "SALE_EDIT_ITEM_MISMATCH": "لا تتطابق سطور البيع مع المواد الحالية."
   },
   "notFound": {
     "title": "الصفحة غير موجودة",
@@ -215,7 +222,8 @@
       "sku": "SKU",
       "barcode": "الباركود",
       "description": "الوصف",
-      "defaultPurchaseCost": "سعر الشراء الافتراضي",
+      "defaultPurchaseCost": "متوسط سعر التكلفة",
+      "defaultPurchaseCostHint": "يُحتسب تلقائياً عند كل استلام. يمكن تعديله لإعادة الضبط.",
       "defaultSalePrice": "سعر البيع الافتراضي",
       "lowStockThreshold": "حد الإنذار للمخزون",
       "image": "صورة المنتج"
@@ -477,8 +485,10 @@
       "products_other": "{{count}} منتجات",
       "units_one": "{{count}} وحدة",
       "units_other": "{{count}} وحدات",
-      "totalValue": "القيمة الإجمالية",
-      "totalValueHint": "استناداً إلى تكاليف الشراء المسجّلة.",
+      "totalValue": "قيمة المخزون",
+      "totalValueHint": "مجموع الكميات × تكلفة الشراء.",
+      "lineValue": "القيمة",
+      "noCost": "بدون تكلفة",
       "missingCost_one": "{{count}} منتج بدون تكلفة مسجّلة",
       "missingCost_other": "{{count}} منتجات بدون تكلفة مسجّلة"
     }
@@ -609,6 +619,46 @@
       "reasonPlaceholder": "اشرح سبب إلغاء هذا المصروف.",
       "confirm": "تأكيد الإلغاء",
       "reasonRequired": "السبب إلزامي."
+    }
+  },
+  "remittances": {
+    "title": "تسليم الصندوق",
+    "subtitle": "أرسل نقدية المحل إلى المستودع المركزي.",
+    "warehouseCash": "صندوق المستودع",
+    "shopCashOnHand": "الرصيد الحالي",
+    "form": {
+      "title": "تسليم إلى المستودع",
+      "shop": "المحل",
+      "chooseShop": "— اختر محلاً —",
+      "amount": "المبلغ",
+      "date": "تاريخ التسليم",
+      "notes": "ملاحظات",
+      "submit": "أرسل إلى المستودع",
+      "flushHint": "هذا المبلغ سيصفّر رصيد صندوق المحل."
+    },
+    "history": {
+      "title": "السجل",
+      "cancelledReason": "ملغاة: {{reason}}"
+    },
+    "filter": {
+      "shop": "المحل",
+      "allShops": "كل المحلات",
+      "status": "الحالة",
+      "allStatuses": "كل الحالات",
+      "from": "من",
+      "to": "إلى"
+    },
+    "status": {
+      "ACTIVE": "نشطة",
+      "CANCELLED": "ملغاة"
+    },
+    "cancelConfirm": {
+      "button": "إلغاء التسليم",
+      "title": "هل تريد إلغاء هذا التسليم؟",
+      "body": "سيعود المبلغ إلى رصيد صندوق المحل، وسيُخصم من صندوق المستودع.",
+      "reason": "السبب (إلزامي)",
+      "reasonPlaceholder": "اشرح سبب إلغاء هذا التسليم.",
+      "confirm": "تأكيد الإلغاء"
     }
   },
   "reports": {
@@ -913,7 +963,33 @@
       "cancelReason": "السبب (إلزامي)",
       "cancelReasonPlaceholder": "اشرح سبب إلغاء هذا البيع.",
       "cancelConfirm": "تأكيد الإلغاء",
-      "blockingHint": "هذه الدفعات ما زالت نشطة على هذا البيع — قم بإلغائها أولاً."
+      "blockingHint": "هذه الدفعات ما زالت نشطة على هذا البيع — قم بإلغائها أولاً.",
+      "edit": "تعديل",
+      "editTitle": "تعديل البيع",
+      "editHint": "تصحيح دفتري — لا يُعدَّل المخزون. تحقّق من الكمية الفعلية بشكل منفصل.",
+      "editQuantity": "الكمية",
+      "editUnitPrice": "سعر الوحدة",
+      "editDate": "التاريخ",
+      "editNotes": "ملاحظة",
+      "editNewTotal": "الإجمالي الجديد",
+      "editOrphanWarning": "الإجمالي الجديد أقل من المبلغ المُحصَّل ({{amountPaid}} أوقية). قم بإلغاء الدفعات أولاً."
+    },
+    "receipt": {
+      "back": "رجوع",
+      "printNow": "طباعة",
+      "formatThermal": "إيصال 80 مم",
+      "formatA4": "A4",
+      "reference": "المرجع",
+      "date": "التاريخ",
+      "customer": "الزبون",
+      "item": "المادة",
+      "qty": "الكمية",
+      "unit": "السعر",
+      "line": "الإجمالي",
+      "total": "الإجمالي",
+      "paid": "المُحصَّل",
+      "due": "الباقي",
+      "cancelledStamp": "بيع مُلغى"
     }
   },
   "openingStock": {

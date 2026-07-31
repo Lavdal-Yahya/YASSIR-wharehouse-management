@@ -39,6 +39,7 @@ const NAV: readonly NavEntry[] = [
   { to: '/customers', labelKey: 'nav.customers', allowed: [Role.OWNER, Role.WAREHOUSE, Role.SHOP], icon: UsersIcon },
   { to: '/sales', labelKey: 'nav.sales', allowed: [Role.OWNER, Role.SHOP], icon: ReceiptIcon },
   { to: '/expenses', labelKey: 'nav.expenses', allowed: [Role.OWNER, Role.SHOP], icon: CardIcon },
+  { to: '/remittances', labelKey: 'nav.remittances', allowed: [Role.OWNER, Role.WAREHOUSE, Role.SHOP], icon: CashIcon },
   { to: '/reports', labelKey: 'nav.reports', allowed: [Role.OWNER, Role.WAREHOUSE, Role.SHOP], icon: ChartIcon },
   { to: '/shop/stock', labelKey: 'nav.shopStock', allowed: [Role.OWNER, Role.SHOP], icon: PackageIcon },
   { to: '/warehouse', labelKey: 'nav.warehouse', allowed: [Role.OWNER, Role.WAREHOUSE], icon: PackageIcon },
@@ -71,7 +72,7 @@ export function AuthedLayout() {
   return (
     <div className="min-h-dvh bg-app text-ink">
       {/* Indigo brand header — melhfa colour carries the chrome. */}
-      <header className="sticky top-0 z-20 bg-brand text-white">
+      <header className="print-hide sticky top-0 z-20 bg-brand text-white">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3">
           <div className="flex flex-col text-start">
             <span className="text-[15px] font-semibold leading-tight">
@@ -100,7 +101,7 @@ export function AuthedLayout() {
 
       <div className="mx-auto flex max-w-6xl gap-6 px-3 py-4 sm:px-4 md:py-6">
         {/* Sidebar — md+ */}
-        <aside className="hidden w-56 shrink-0 md:block">
+        <aside className="print-hide hidden w-56 shrink-0 md:block">
           <nav className="sticky top-[80px] flex flex-col gap-0.5">
             {sidebarItems.map((n) => (
               <NavItem
@@ -121,7 +122,7 @@ export function AuthedLayout() {
       {/* Mobile bottom nav — role-shaped. SHOP gets the elevated Sell FAB;
           OWNER and WAREHOUSE get the flat 5-item bar (advisor note). */}
       <nav
-        className="fixed inset-x-0 bottom-0 z-20 border-t border-line bg-surface pb-[max(env(safe-area-inset-bottom),0px)] md:hidden"
+        className="print-hide fixed inset-x-0 bottom-0 z-20 border-t border-line bg-surface pb-[max(env(safe-area-inset-bottom),0px)] md:hidden"
         aria-label={t('app.name')}
       >
         <div className="flex items-stretch overflow-x-auto px-1 pt-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
