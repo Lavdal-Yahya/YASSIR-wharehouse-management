@@ -1,4 +1,4 @@
-import { useMemo, useReducer, useState } from 'react';
+import { useEffect, useMemo, useReducer, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { PageHeader } from '@/components/PageHeader';
@@ -6,6 +6,7 @@ import { SectionCard } from '@/components/SectionCard';
 import { Button } from '@/components/Button';
 import { MoneyInput } from '@/components/MoneyInput';
 import { Money } from '@/components/Money';
+import { Spinner } from '@/components/Spinner';
 import { errorMessage } from '@/shared/error-message';
 import { Role } from '@/shared/enums';
 import { useMe } from '@/features/auth/api';
@@ -57,6 +58,19 @@ export default function SellPage() {
     ({ shopId, locationId }) => initialCartState(shopId, locationId),
   );
 
+  // Locations load async — on the first mount the useReducer initializer
+  // runs before `useLocationsList` has settled, so ownShop is null and
+  // state.shopId is ''. Once the SHOP user's shop resolves, sync it in.
+  useEffect(() => {
+    if (ownShop && !state.shopId) {
+      dispatch({
+        type: 'SET_SHOP',
+        shopId: ownShop.shopId,
+        locationId: ownShop.locationId,
+      });
+    }
+  }, [ownShop, state.shopId]);
+
   const cartProductIds = useMemo(
     () => new Set(state.items.map((i) => i.productId)),
     [state.items],
@@ -65,6 +79,21 @@ export default function SellPage() {
   const remaining = total - state.amountPaidAtSale;
   const needsCustomer = remaining > 0;
   const customerMissing = needsCustomer && state.customer === null;
+
+  // Wait for locations before deciding — otherwise the SHOP user sees
+  // the "no assigned shop" error during the first fetch window.
+  if (!state.shopId && locations.isLoading) {
+    return (
+      <div>
+        <PageHeader title={t('sell.title')} />
+        <SectionCard>
+          <div className="flex items-center gap-2 text-[14px] text-muted">
+            <Spinner /> {t('loading')}
+          </div>
+        </SectionCard>
+      </div>
+    );
+  }
 
   // OWNER landing state — needs to pick a shop first.
   if (isOwner && !state.shopId) {
