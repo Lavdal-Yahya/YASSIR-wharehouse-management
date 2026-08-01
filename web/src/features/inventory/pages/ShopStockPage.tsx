@@ -179,7 +179,7 @@ export default function ShopStockPage() {
                   </div>
                   <div className="min-w-0 grow">
                     <Link
-                      to={`/warehouse/movements?productId=${row.productId}&locationId=${activeLocationId}`}
+                      to={`/products/${row.productId}`}
                       className="text-sm font-medium text-ink hover:underline"
                     >
                       {row.productName}
