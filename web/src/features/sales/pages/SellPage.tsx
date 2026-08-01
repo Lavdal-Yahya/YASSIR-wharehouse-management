@@ -81,8 +81,10 @@ export default function SellPage() {
   const customerMissing = needsCustomer && state.customer === null;
 
   // Wait for locations before deciding — otherwise the SHOP user sees
-  // the "no assigned shop" error during the first fetch window.
-  if (!state.shopId && locations.isLoading) {
+  // the "no assigned shop" error during the first fetch window. Also
+  // wait if ownShop is resolved but the sync effect hasn't fired yet,
+  // otherwise the noAssignedShop branch flashes for a render.
+  if (!state.shopId && (locations.isLoading || ownShop)) {
     return (
       <div>
         <PageHeader title={t('sell.title')} />
