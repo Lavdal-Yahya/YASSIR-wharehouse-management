@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { PageHeader } from '@/components/PageHeader';
 import { Button } from '@/components/Button';
 import { Input } from '@/components/Input';
+import { Money } from '@/components/Money';
 import { MoneyInput } from '@/components/MoneyInput';
 import { ImageUploadField } from '@/components/ImageUploadField';
 import { ConfirmDialog } from '@/components/ConfirmDialog';
@@ -181,7 +182,21 @@ export default function ProductFormPage() {
               {...form.register('barcode', { setValueAs: (v) => (v === '' ? null : v) })}
             />
 
-            {isShop ? null : (
+            {isShop ? (
+              // Read-only display for SHOP — the WAC is the warehouse's
+              // number, visible for context but never editable here.
+              <div className="flex flex-col gap-1.5 text-start">
+                <span className="text-[14px] font-semibold text-ink">
+                  {t('products.form.defaultPurchaseCost')}
+                </span>
+                <div className="flex h-16 items-center rounded-[10px] border-[2px] border-line-soft bg-tint px-4">
+                  <Money value={product.data?.defaultPurchaseCost ?? null} size="lg" />
+                </div>
+                <p className="text-xs text-muted">
+                  {t('products.form.defaultPurchaseCostHint')}
+                </p>
+              </div>
+            ) : (
               <div>
                 <MoneyInput
                   label={<>{t('products.form.defaultPurchaseCost')} <span className="text-xs text-muted">({optional})</span></>}
