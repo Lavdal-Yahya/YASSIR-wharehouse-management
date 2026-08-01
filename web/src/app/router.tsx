@@ -58,6 +58,12 @@ export function AppRoutes() {
           {/* Customers — accessible to all authenticated roles (spec §31). */}
           <Route path="customers" element={<CustomersPage />} />
 
+          {/* Products — list + edit open to all roles. SHOP can edit
+              everything except the purchase cost (service strips it).
+              Creation stays OWNER/WAREHOUSE (see the block below). */}
+          <Route path="products" element={<ProductsListPage />} />
+          <Route path="products/:id" element={<ProductFormPage />} />
+
           {/* Cash remittances — SHOP creates, OWNER cancels, WAREHOUSE
               reads. Role gating is enforced by the API; every
               authenticated role can land on this route. */}
@@ -89,9 +95,7 @@ export function AppRoutes() {
             <Route path="orders/new" element={<OrderNewPage />} />
             <Route path="orders/:id" element={<OrderDetailPage />} />
             <Route path="orders/:id/receive" element={<OrderReceivePage />} />
-            <Route path="products" element={<ProductsListPage />} />
             <Route path="products/new" element={<ProductFormPage />} />
-            <Route path="products/:id" element={<ProductFormPage />} />
             <Route path="transfers" element={<TransfersListPage />} />
             <Route path="transfers/new" element={<TransferNewPage />} />
             <Route path="transfers/:id" element={<TransferDetailPage />} />

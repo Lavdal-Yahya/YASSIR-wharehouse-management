@@ -45,7 +45,7 @@ const NAV: readonly NavEntry[] = [
   { to: '/warehouse', labelKey: 'nav.warehouse', allowed: [Role.OWNER, Role.WAREHOUSE], icon: PackageIcon },
   { to: '/orders', labelKey: 'nav.orders', allowed: [Role.OWNER, Role.WAREHOUSE], icon: ReceiptIcon },
   { to: '/transfers', labelKey: 'nav.transfers', allowed: [Role.OWNER, Role.WAREHOUSE], icon: TruckIcon },
-  { to: '/products', labelKey: 'nav.products', allowed: [Role.OWNER, Role.WAREHOUSE], icon: CashIcon },
+  { to: '/products', labelKey: 'nav.products', allowed: [Role.OWNER, Role.WAREHOUSE, Role.SHOP], icon: CashIcon },
   { to: '/categories', labelKey: 'nav.categories', allowed: [Role.OWNER], icon: PackageIcon },
   { to: '/shops', labelKey: 'nav.shops', allowed: [Role.OWNER], icon: PackageIcon },
   { to: '/users', labelKey: 'nav.users', allowed: [Role.OWNER], icon: UsersIcon },

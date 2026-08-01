@@ -11,7 +11,9 @@ import { MoneyInput } from '@/components/MoneyInput';
 import { ImageUploadField } from '@/components/ImageUploadField';
 import { ConfirmDialog } from '@/components/ConfirmDialog';
 import { Spinner } from '@/components/Spinner';
+import { Role } from '@/shared/enums';
 import { errorMessage } from '@/shared/error-message';
+import { useMe } from '@/features/auth/api';
 import { useCategoriesList } from '@/features/categories/api';
 import {
   useArchiveProduct,
@@ -53,6 +55,8 @@ export default function ProductFormPage() {
 
   const { t } = useTranslation();
   const nav = useNavigate();
+  const me = useMe();
+  const isShop = me.data?.user.role === Role.SHOP;
   const product = useProduct(productId);
   const cats = useCategoriesList({ page: 1, pageSize: 100 });
   const create = useCreateProduct();
@@ -91,7 +95,10 @@ export default function ProductFormPage() {
       sku: values.sku ?? null,
       barcode: values.barcode ?? null,
       description: values.description ?? null,
-      defaultPurchaseCost: values.defaultPurchaseCost ?? null,
+      // SHOP users don't own the purchase cost — omit the field entirely
+      // rather than sending the (unchanged) value back. Server strips it
+      // anyway, but this keeps the payload honest.
+      ...(isShop ? {} : { defaultPurchaseCost: values.defaultPurchaseCost ?? null }),
       defaultSalePrice: values.defaultSalePrice ?? null,
       lowStockThreshold: values.lowStockThreshold ?? null,
     };
@@ -174,16 +181,18 @@ export default function ProductFormPage() {
               {...form.register('barcode', { setValueAs: (v) => (v === '' ? null : v) })}
             />
 
-            <div>
-              <MoneyInput
-                label={<>{t('products.form.defaultPurchaseCost')} <span className="text-xs text-muted">({optional})</span></>}
-                value={form.watch('defaultPurchaseCost')}
-                onChange={(v) => form.setValue('defaultPurchaseCost', v, { shouldDirty: true })}
-              />
-              <p className="mt-1 text-xs text-muted text-start">
-                {t('products.form.defaultPurchaseCostHint')}
-              </p>
-            </div>
+            {isShop ? null : (
+              <div>
+                <MoneyInput
+                  label={<>{t('products.form.defaultPurchaseCost')} <span className="text-xs text-muted">({optional})</span></>}
+                  value={form.watch('defaultPurchaseCost')}
+                  onChange={(v) => form.setValue('defaultPurchaseCost', v, { shouldDirty: true })}
+                />
+                <p className="mt-1 text-xs text-muted text-start">
+                  {t('products.form.defaultPurchaseCostHint')}
+                </p>
+              </div>
+            )}
             <MoneyInput
               label={<>{t('products.form.defaultSalePrice')} <span className="text-xs text-muted">({optional})</span></>}
               value={form.watch('defaultSalePrice')}
@@ -240,7 +249,7 @@ export default function ProductFormPage() {
               />
             </section>
           )}
-          {isNew ? null : (
+          {isNew || isShop ? null : (
             <section className="rounded-lg border border-line bg-surface p-4 shadow-sm">
               <h2 className="mb-2 text-sm font-semibold text-ink text-start">
                 {t('products.dangerZone.title')}

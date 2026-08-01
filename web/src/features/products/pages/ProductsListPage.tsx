@@ -8,12 +8,16 @@ import { StatusBadge } from '@/components/StatusBadge';
 import { Button } from '@/components/Button';
 import { Spinner } from '@/components/Spinner';
 import { Money } from '@/components/Money';
+import { Role } from '@/shared/enums';
 import { errorMessage } from '@/shared/error-message';
+import { useMe } from '@/features/auth/api';
 import { useCategoriesList } from '@/features/categories/api';
 import { useProductsList } from '../api';
 
 export default function ProductsListPage() {
   const { t } = useTranslation();
+  const me = useMe();
+  const canCreate = me.data?.user.role !== Role.SHOP;
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const [categoryId, setCategoryId] = useState<string>('');
@@ -36,9 +40,11 @@ export default function ProductsListPage() {
         title={t('products.title')}
         subtitle={t('products.subtitle')}
         actions={
-          <Link to="/products/new">
-            <Button>{t('products.new')}</Button>
-          </Link>
+          canCreate ? (
+            <Link to="/products/new">
+              <Button>{t('products.new')}</Button>
+            </Link>
+          ) : null
         }
       />
 

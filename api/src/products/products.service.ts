@@ -1,14 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { Prisma, Role } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { UniqueConflictError, ResourceNotFoundError } from '../common/errors/generic-errors';
 import { Paginated, skipTake, toPaginated } from '../common/pagination';
+import type { SessionUser } from '../common/types/session-user';
 import { processImage } from '../common/uploads/image-processor';
-import {
-  CreateProductDto,
-  ListProductsQueryDto,
-  UpdateProductDto,
-} from './dto/product.dto';
+import { CreateProductDto, ListProductsQueryDto, UpdateProductDto } from './dto/product.dto';
 import { ProductHasHistoryError } from './errors';
 
 // Return shape — snake-cases removed, category name projected for list rows so
@@ -43,30 +40,16 @@ export class ProductsService {
   // P5 → sale items. Each phase adds its own count in the same PR that
   // introduces the table. One round-trip: six parallel counts.
   async hasHistory(productId: string): Promise<boolean> {
-    const [
-      orderItems,
-      receiptItems,
-      movements,
-      corrections,
-      transferItems,
-      saleItems,
-    ] = await Promise.all([
-      this.prisma.incomingOrderItem.count({ where: { productId } }),
-      this.prisma.stockReceiptItem.count({ where: { productId } }),
-      this.prisma.inventoryMovement.count({ where: { productId } }),
-      this.prisma.stockCorrection.count({ where: { productId } }),
-      this.prisma.stockTransferItem.count({ where: { productId } }),
-      this.prisma.saleItem.count({ where: { productId } }),
-    ]);
-    return (
-      orderItems +
-        receiptItems +
-        movements +
-        corrections +
-        transferItems +
-        saleItems >
-      0
-    );
+    const [orderItems, receiptItems, movements, corrections, transferItems, saleItems] =
+      await Promise.all([
+        this.prisma.incomingOrderItem.count({ where: { productId } }),
+        this.prisma.stockReceiptItem.count({ where: { productId } }),
+        this.prisma.inventoryMovement.count({ where: { productId } }),
+        this.prisma.stockCorrection.count({ where: { productId } }),
+        this.prisma.stockTransferItem.count({ where: { productId } }),
+        this.prisma.saleItem.count({ where: { productId } }),
+      ]);
+    return orderItems + receiptItems + movements + corrections + transferItems + saleItems > 0;
   }
 
   async list(q: ListProductsQueryDto): Promise<Paginated<ProductOut>> {
@@ -128,9 +111,17 @@ export class ProductsService {
     }
   }
 
-  async update(id: string, dto: UpdateProductDto): Promise<ProductOut> {
+  async update(id: string, dto: UpdateProductDto, user?: SessionUser): Promise<ProductOut> {
     await this.ensureExists(id);
     if (dto.categoryId) await this.ensureCategoryActive(dto.categoryId);
+    // SHOP users may not touch the purchase cost — it's the warehouse's WAC.
+    // Drop it silently so a stale form value doesn't 400 the request.
+    const purchaseCost =
+      user?.role === Role.SHOP
+        ? undefined
+        : dto.defaultPurchaseCost === undefined
+          ? undefined
+          : dto.defaultPurchaseCost;
     try {
       const row = await this.prisma.product.update({
         where: { id },
@@ -140,10 +131,8 @@ export class ProductsService {
           sku: dto.sku === undefined ? undefined : dto.sku,
           barcode: dto.barcode === undefined ? undefined : dto.barcode,
           description: dto.description === undefined ? undefined : dto.description,
-          defaultPurchaseCost:
-            dto.defaultPurchaseCost === undefined ? undefined : dto.defaultPurchaseCost,
-          defaultSalePrice:
-            dto.defaultSalePrice === undefined ? undefined : dto.defaultSalePrice,
+          defaultPurchaseCost: purchaseCost,
+          defaultSalePrice: dto.defaultSalePrice === undefined ? undefined : dto.defaultSalePrice,
           lowStockThreshold:
             dto.lowStockThreshold === undefined ? undefined : dto.lowStockThreshold,
         },
@@ -208,9 +197,7 @@ export class ProductsService {
   }
 }
 
-function mapRow(
-  row: Prisma.ProductGetPayload<{ include: typeof withCategory }>,
-): ProductOut {
+function mapRow(row: Prisma.ProductGetPayload<{ include: typeof withCategory }>): ProductOut {
   return {
     id: row.id,
     name: row.name,

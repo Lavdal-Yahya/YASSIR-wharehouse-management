@@ -15,13 +15,11 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Role } from '@prisma/client';
 import { memoryStorage } from 'multer';
+import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { Roles } from '../common/decorators/roles.decorator';
+import type { SessionUser } from '../common/types/session-user';
 import { MAX_IMAGE_BYTES } from '../common/uploads/image-processor';
-import {
-  CreateProductDto,
-  ListProductsQueryDto,
-  UpdateProductDto,
-} from './dto/product.dto';
+import { CreateProductDto, ListProductsQueryDto, UpdateProductDto } from './dto/product.dto';
 import { ProductsService } from './products.service';
 
 @Controller('products')
@@ -46,10 +44,13 @@ export class ProductsController {
     return this.svc.create(dto);
   }
 
-  @Roles(Role.OWNER, Role.WAREHOUSE)
+  // SHOP users can edit product master data too, but the service strips
+  // defaultPurchaseCost from their payload — that field is the warehouse's
+  // number (WAC / cost baseline) and shops must not rewrite it.
+  @Roles(Role.OWNER, Role.WAREHOUSE, Role.SHOP)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() dto: UpdateProductDto) {
-    return this.svc.update(id, dto);
+  update(@Param('id') id: string, @Body() dto: UpdateProductDto, @CurrentUser() user: SessionUser) {
+    return this.svc.update(id, dto, user);
   }
 
   @Roles(Role.OWNER)
@@ -73,7 +74,7 @@ export class ProductsController {
     await this.svc.remove(id);
   }
 
-  @Roles(Role.OWNER, Role.WAREHOUSE)
+  @Roles(Role.OWNER, Role.WAREHOUSE, Role.SHOP)
   @Post(':id/image')
   @UseInterceptors(
     // Memory storage — image-processor validates + re-encodes to disk. Limit
