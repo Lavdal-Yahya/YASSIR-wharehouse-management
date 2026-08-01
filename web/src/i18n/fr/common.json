@@ -829,7 +829,7 @@
     "noAssignedShop": "Aucune boutique assignée à votre compte. Contactez le propriétaire.",
     "backToCart": "Retour au panier",
     "goToPayment": "Continuer vers le paiement",
-    "confirm": "Confirmer la vente",
+    "confirmSale": "Confirmer la vente",
     "cart": {
       "pickTitle": "Choisir un produit",
       "title": "Panier",

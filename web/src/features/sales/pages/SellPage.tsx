@@ -440,7 +440,7 @@ function PaymentStep({
           disabled={!canConfirm}
           className="!h-14 !text-[16px]"
         >
-          {t('sell.confirm')}
+          {t('sell.confirmSale')}
         </Button>
 
         <Button
